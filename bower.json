@@ -1,0 +1,50 @@
+{
+  "name": "px-vis-demos",
+  "version": "0.0.1",
+  "main": [
+    "px-vis-demos.html"
+  ],
+  "ignore": [
+    ".*",
+    "npm-debug.log",
+    "gulpfile.js",
+    "sass",
+    "bower_components",
+    "node_modules",
+    "test",
+    "OSS_Notice.pdf",
+    "scripts",
+    ".github",
+    "px-vis-demos.png",
+    "LICENSE.md",
+    "CONTRIBUTING.md",
+    "HISTORY.md",
+    "README.md",
+    ".jshintrc",
+    ".editorconfig",
+    "*.enc"
+  ],
+  "dependencies": {
+    "polymer": "^1.7.1",
+    "px-theme": "^2.0.3",
+    "px-vis-timeseries": "^1.0.0",
+    "px-vis-radar": "^1.0.0",
+    "px-vis-polar": "^1.0.0",
+    "px-vis-xy-chart": "^1.0.0",
+    "px-vis-pie-chart": "^1.0.0",
+    "px-vis-parallel-coordinates": "^1.0.0",
+    "px-dropdown": "^2.4.0",
+    "px-tooltip": "^0.10.18"
+  },
+  "devDependencies": {
+    "px-meta-buttons-design": "^0.6.2",
+    "px-meta-lists-design": "^0.4.1",
+    "px-forms-design": "^1.1.4",
+    "px-layout-design": "^0.4.3",
+    "px-toggle-design": "^1.1.4",
+    "px-spacing-design": "^0.4.4",
+    "px-input-group-design": "^1.1.1",
+    "px-starter-kit-design": "^0.7.3",
+    "px-demo": "^1.3.2"
+  }
+}

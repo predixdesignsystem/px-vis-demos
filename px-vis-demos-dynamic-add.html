@@ -1,0 +1,178 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-vis-timeseries/px-vis-timeseries.html"/>
+<link rel="import" href="../px-vis-xy-chart/px-vis-xy-chart.html"/>
+<link rel="import" href="../px-vis-polar/px-vis-polar.html"/>
+<link rel="import" href="../px-vis-radar/px-vis-radar.html"/>
+<link rel="import" href="../px-vis-parallel-coordinates/px-vis-parallel-coordinates.html"/>
+<link rel="import" href="../px-vis-pie-chart/px-vis-pie-chart.html"/>
+<link rel="import" href="../px-dropdown/px-dropdown.html"/>
+<link rel="import" href="../px-tooltip/px-tooltip.html"/>
+
+<link rel="import" href="css/px-vis-demos-styles.html">
+
+<!--
+demonstrating dynamically adding/removing charts
+
+##### Usage
+
+    <px-vis-demos-dynamic-add counter-value="1"></px-vis-demos-dynamic-add>
+
+@element px-vis-demos-dynamic-add
+@blurb demonstrating dynamically adding/removing charts
+@homepage index.html
+@demo index.html
+-->
+
+<dom-module id="px-vis-demos-dynamic-add">
+  <template>
+    <style include="px-vis-demos-styles"></style>
+
+
+    <div class="flex">
+      <!-- chart type + data-->
+      <div>
+        <p class="epsilon">Chart type and data</p>
+        <div class="flex flex--col flex__item u-p" style="border:1px black solid">
+          <label class="">Chart type</label>
+          <!-- select chart type -->
+          <div style="width:150px">
+            <px-dropdown display-value="px-vis-timeseries" value="{{selectedChartType}}">
+              <px-dropdown-content items="[[chartTypes]]"></px-dropdown-content>
+            </px-dropdown>
+          </div>
+          <label class="">Dataset</label>
+          <div style="width:450px">
+            <px-dropdown id="dataSetDropdown" display-value="placeholder" >
+              <px-dropdown-content items="[[_currentDataSets]]"></px-dropdown-content>
+            </px-dropdown>
+          </div>
+          <label>Number of charts</label>
+          <input id="chartNumber" type="number" class="text-input input--tiny" value="1"></input>
+
+          <label>Resize debounce timing (ms)</label>
+          <input id="resizeDebounce" type="number" class="text-input input--tiny" value="{{_chartOptions.resizeDebounce::change}}"></input>
+
+          <div>
+            <input id="reuse" type="checkbox"></input>
+            <label for="reuse" class="label--inline">Reuse chart from pool (instead of dynamically recreating one)</label>
+          </div>
+
+          <div>
+            <input id="prvResize" type="checkbox"></input>
+            <label for="prvResize" class="label--inline">Prevent resize</label>
+          </div>
+
+          <div>
+            <input id="cleanOnDetached" type="checkbox" checked="{{_chartOptions.cleanOnDetached::change}}"></input>
+            <label for="cleanOnDetached" class="label--inline">Clean on detached (turn on for reusing the chart, off for moving it around the dom)</label>
+          </div>
+
+        </div>
+      </div>
+
+      <!--Chart options-->
+      <div>
+        <p class="epsilon">Chart Options</p>
+        <div class="flex flex--col flex__item u-p" style="border:1px black solid">
+
+         <template is="dom-if" if="[[_isTimeseries(selectedChartType)]]">
+            <div>
+              <input id="disableNav" type="checkbox" checked="{{_chartOptions.disableNav::change}}"></input>
+              <label for="disableNav" class="label--inline">disable Navigator</label>
+            </div>
+            <div>
+              <input id="addEvents" type="checkbox" checked="{{_chartOptions.addEvents::change}}"></input>
+              <label for="addEvents" class="label--inline">Add some events</label>
+            </div>
+            <div>
+              <input id="addThresholds" type="checkbox" checked="{{_chartOptions.addThresholds::change}}"></input>
+              <label for="addThresholds" class="label--inline">Add some thresholds</label>
+            </div>
+          </template>
+
+          <div>
+            <input id="addDynamicMenus" type="checkbox" checked="{{_chartOptions.addDynamicMenus::change}}"></input>
+            <label for="addDynamicMenus" class="label--inline">Add register dynamic menus</label>
+          </div>
+
+          <template is="dom-if" if="[[_canMultiY(selectedChartType)]]">
+            <div>
+              <input id="multiY" type="checkbox" checked="{{_chartOptions.multiAxis::change}}"></input>
+              <label for="multiY" class="label--inline">Use multi Y axes</label>
+            </div>
+          </template>
+
+          <template is="dom-if" if="[[_canScatter(selectedChartType)]]">
+            <div>
+              <input id="scatterType" type="checkbox" checked="{{_chartOptions.scatter::change}}"></input>
+              <label for="scatterType" class="label--inline">Use scatter</label>
+            </div>
+          </template>
+
+
+          <template is="dom-if" if="[[_canCanvas(selectedChartType)]]">
+            <div>
+              <input id="rendToCanvas" type="checkbox" checked="{{_chartOptions.canvas::change}}"></input>
+              <label for="rendToCanvas" class="label--inline">Render to canvas</label>
+            </div>
+          </template>
+
+          <template is="dom-if" if="[[_canSvg(selectedChartType)]]">
+            <div>
+              <input id="rendToSvg" type="checkbox" checked="{{_chartOptions.rendToSvg::change}}"></input>
+              <label for="rendToSvg" class="label--inline">Render to svg</label>
+            </div>
+          </template>
+
+
+
+          <!-- progr rendering options-->
+          <template is="dom-if" if="[[_canCanvas(selectedChartType)]]">
+            <template is="dom-if" if="[[_chartOptions.canvas]]">
+              <div class="u-pl">
+                <div>
+                  <input id="noProgr" type="checkbox" checked="{{_chartOptions.noProgressiveRendering::change}}"></input>
+                  <label for="noProgr" class="label--inline">Disable progressive rendering (only applicable for canvas)</label>
+                </div>
+
+                <label>Points per frame</label>
+                <input id="pointsPerFrame" type="number" class="text-input input--tiny" value="{{_chartOptions.pointsPerFrame::input}}"></input>
+
+                <label>Minimum number of frames</label>
+                <input id="minFrames" type="number" class="text-input input--tiny" value="{{_chartOptions.minFrames::input}}"></input>
+              </div>
+            </template>
+          </template>
+        </div>
+
+      </div>
+
+      <!-- data generation -->
+      <div>
+        <p class="epsilon">Data Generation for selected chart type</p>
+        <div class="flex flex--col flex__item u-p" style="border:1px black solid">
+          <label for="pointsPerSeries" >Points Per Series</label>
+          <input id="pointsPerSeries" placeholder="number of points per series" class="text-input input--tiny" type="number" value="1000">
+          <label for="seriesNumber" class="u-mt-">Number of series</label>
+          <input class="text-input input--tiny" id="seriesNumber" type="number" value="4"></input>
+          <div>
+            <input id="randomise" type="checkbox" checked="{{_generateOptions.randomise::change}}"></input>
+            <label for="randomise" class="label--inline">fully randomise data</label>
+          </div>
+          <label for="variance" class="u-mt-">"Variance" (impacts "how much" the data changes). > 0</label>
+          <input class="text-input input--tiny" disabled="[[_generateOptions.randomise]]" id="variance" type="number" value="{{_generateOptions.variance::input}}"></input>
+          <button style="width:100px" class="flex__item btn u-mt- btn--primary" id="generate">Generate!</button>
+        </div>
+      </div>
+    </div>
+    <px-tooltip for="btnCreate" delay="50" tooltip-message="Create charts and append them to the dom. Measures the time taken from before chart creation to the last drawing." orientation="auto"></px-tooltip>
+    <button id="btnCreate" class="btn btn--primary">Create chart(s)</button>
+    <button id="btnRemove" class="btn">Remove last creation</button>
+    <px-tooltip for="btnMove" delay="50" tooltip-message="Removes the last set of charts created and after 500ms append them to the dom again. The time measured does not take the 500ms into account. Don't use 'Clean on detached' when moving charts around the dom for better performance and ensuring the chart will redraw automatically rather than having to force it" orientation="top"></px-tooltip>
+    <button id="btnMove" class="btn">Move last creation in DOM</button>
+    <div id="chartHolder">
+    </div>
+
+  </template>
+</dom-module>
+<script src="dist/px-vis-demos-dynamic-add.js"></script>
