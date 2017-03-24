@@ -1,4 +1,4 @@
-sudo: required
+sudo: false
 dist: trusty
 language: node_js
 node_js:
@@ -6,26 +6,15 @@ node_js:
 branches:
   except:
   - gh-pages
-addons:
-  firefox: latest
-  apt:
-    sources:
-    - google-chrome
-    packages:
-    - google-chrome-stable
 before_script:
-- npm install web-component-tester
 - npm install bower
 - export PATH=$PWD/node_modules/.bin:$PATH
 - bower install
 script:
-- xvfb-run wct --skip-plugin sauce
-- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then wct --plugin sauce --skip-plugin
-  local; fi
-before_install:
-- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then openssl aes-256-cbc -k "$password"
-  -in id_rsa.enc -out deploy_key -d; fi
+- echo "No tests for demos"
 after_success:
+- if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then openssl aes-256-cbc -k "$DEPLOYSECRET"
+  -in deploy.enc -out deploy_key -d; fi
 - cd $TRAVIS_BUILD_DIR/scripts
 - chmod 755 ghp.sh
 - "./ghp.sh"
