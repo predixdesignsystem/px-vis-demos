@@ -56,8 +56,9 @@
         <li><strong>using the navigator doesn't come free</strong> since this is almost a chart itself. It can double the number of points to draw. If performance is an issue consider: not displaying the navigator/using canvas rendering on the navigator/not displaying all series on the navigator by changing the navigator series config</li>
         <li><strong>reusing charts</strong> previously created rather than dynamically creating one every time can help significantly. If using this strategy one thing to keep in mind is making sure the chart is re-appended in the dom *before* changing its properties to their new values. In most cases it would work even if appending it after, but some edge cases scenarios might fail to clean some visual artifact (for example switching from canvas to svg while deleting a few series at the same time). This demo presents a crude example of reusing charts types that have been removed previously</li>
         <li>Having the devtools open has an impact on performance (up to 100%). If you want to measure real timing then close the devtools when creating the charts and reopen afterward to see how long it took. IE devtools don't log messages when they're closed but the last measure will be available in window.performance.getEntriesByName('lastMeasure')[0]</li>
-        <li>Before benchmarking it's usually a good idea to force a garbage collection if possible (bin icon on the 'timeline' tab on chrome) or reload a "fresh" page</li>
+        <li>Before benchmarking it's usually a good idea to force a garbage collection if possible (bin icon on the 'timeline' tab on chrome)</li>
         <li>Scrolling while creating the charts can have a negative impact on performance.</li>
+        <li>First chart creation is always a bit slower due to Polymer lazy loading the element definitions.</li>
       </ul>
       <px-vis-demos-dynamic-add></px-vis-demos-dynamic-add>
       <script>
