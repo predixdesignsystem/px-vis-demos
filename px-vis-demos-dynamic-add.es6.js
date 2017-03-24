@@ -17,7 +17,7 @@
         chartTypes: {
           type: Array,
           value: function() {
-            return [{"key":"px-vis-timeseries","val":"px-vis-timeseries"},{"key":"px-vis-xy-chart","val":"px-vis-xy-chart"},{"key":"px-vis-polar","val":"px-vis-polar"},{"key":"px-vis-radar","val":"px-vis-radar"},{"key":"px-vis-parallel-coordinates","val":"px-vis-parallel-coordinates"},{"key":"px-vis-pie-chart","val":"px-vis-pie-chart"}];
+            return [{"key":"px-vis-timeseries","val":"px-vis-timeseries"},{"key":"px-vis-xy-chart","val":"px-vis-xy-chart"},{"key":"px-vis-polar","val":"px-vis-polar"},{"key":"px-vis-radar","val":"px-vis-radar"},{"key":"px-vis-parallel-coordinates","val":"px-vis-parallel-coordinates"},/*{"key":"px-vis-pie-chart","val":"px-vis-pie-chart"}*/];
           },
           readOnly: true
         },
@@ -28,12 +28,12 @@
           type: Object,
           value: function() {
             return {
-              'px-vis-timeseries': [{ 'key': 'dummy', 'val': 'please generate data'}],
-              'px-vis-xy-chart': [{ 'key': 'dummy', 'val': 'please generate data'}],
-              'px-vis-polar': [{ 'key': 'dummy', 'val': 'please generate data'}],
-              'px-vis-radar': [{ 'key': 'dummy', 'val': 'please generate data'}],
-              'px-vis-parallel-coordinates': [{ 'key': 'dummy', 'val': 'please generate data'}],
-              'px-vis-pie-chart': [{ 'key': 'dummy', 'val': 'please generate data'}]
+              'px-vis-timeseries': [{ 'key': 'dummy', 'val': 'PLEASE GENERATE DATA'}],
+              'px-vis-xy-chart': [{ 'key': 'dummy', 'val': 'PLEASE GENERATE DATA'}],
+              'px-vis-polar': [{ 'key': 'dummy', 'val': 'PLEASE GENERATE DATA'}],
+              'px-vis-radar': [{ 'key': 'dummy', 'val': 'PLEASE GENERATE DATA'}],
+              'px-vis-parallel-coordinates': [{ 'key': 'dummy', 'val': 'PLEASE GENERATE DATA'}]
+              // 'px-vis-pie-chart': [{ 'key': 'dummy', 'val': 'please generate data'}]
             };
           }
         },
@@ -48,20 +48,6 @@
               'px-vis-parallel-coordinates': [],
               'px-vis-pie-chart': []
             };
-          }
-        },
-        /**
-         * List of pregenerated datasets to fetch
-         */
-        preGeneratedDatasets: {
-          type: Array,
-          value: function() {
-            return [
-              { 'type': 'px-vis-parallel-coordinates', 'path': '../px-demo-data/demo-data/apm/timeseries.json'},
-              { 'type': 'px-vis-polar', 'path': '../px-demo-data/demo-data/apm/polar.json'},
-              { 'type': 'px-vis-xy-chart', 'name': 'timeseries.json'},
-              { 'type': 'parallel', 'name': 'timeseries.json'}
-            ];
           }
         },
         _currentDataSets: {
@@ -112,7 +98,11 @@
               'multiAxis': false,
               'rendToSvg': false,
               'cleanOnDetached': true,
-              'resizeDebounce': 250
+              'resizeDebounce': 250,
+              'noProgressiveRendering': false,
+              'width': 800,
+              'height': 500,
+              'preventResize': false
             };
           }
         },
@@ -241,6 +231,10 @@
       return selectedChartType === 'px-vis-parallel-coordinates' || selectedChartType === 'px-vis-radar';
     }
 
+    _canProgRender(selectedChartType, canvas, svg) {
+      return (this._canCanvas(selectedChartType) && canvas) || (this._canSvg(selectedChartType) && !svg);
+    }
+
     _isTimeseries(selectedChartType) {
       return selectedChartType === 'px-vis-timeseries';
     }
@@ -252,18 +246,29 @@
     _createChart() {
 
       var data = this.$.dataSetDropdown.selectedKey;
+
+      if(data === 'dummy') {
+        console.log(`No data selected, please generate data for ${this.selectedChartType}`);
+        return;
+      }
+
       if(data) {
         this._drawingCounter = 0;
         this._drawingsPerChart = this._getNumberOfDrawingPerCharts(data);
         this._drawingNumberOfCharts = this.$.chartNumber.value;
-        //TODO: more info on timer
         this._drawingTimerName = `draw ${this._drawingNumberOfCharts} ${this.selectedChartType}`;
 
         var newDiv = document.createElement('div'),
                 newChart;
 
         newDiv.classList.add('divwrapper');
-        console.time(this._drawingTimerName);
+        window.performance.clearMarks();
+        window.performance.mark('start');
+
+
+        //finally append all charts in our element
+        Polymer.dom(this.$.chartHolder).appendChild(newDiv);
+
 
         //create the requested number of charts
         for(var i=0;i <this._drawingNumberOfCharts; i++) {
@@ -282,24 +287,25 @@
             newChart = document.createElement(this.selectedChartType);
           }
 
-          //process all options
+          //adjust div height if needed
+          newChart.preventResize = this._chartOptions.preventResize;
+          if(!newChart.preventResize) {
+            newDiv.style['height'] = `${this._chartOptions.height}px`;
+          }
 
-          newChart.height = 400;
-          newChart.preventResize = this.$.prvResize.checked;
+          //append chart in div
+          Polymer.dom(newDiv).appendChild(newChart);
+
+          //process all chart options
           if(newChart.preventResize) {
-            newChart.width = 800;
+            newChart.height = this._chartOptions.height;
+            newChart.width = this._chartOptions.width;
           }
           newChart.cleanOnDetached = this._chartOptions.cleanOnDetached;
           newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
           this._processOptions(newChart);
           newChart.chartData = data;
-
-          //add chart to current new div
-          Polymer.dom(newDiv).appendChild(newChart);
         }
-
-        //finally append all charts in our element
-        Polymer.dom(this.$.chartHolder).appendChild(newDiv);
 
       } else {
         console.log('please select data');
@@ -331,7 +337,8 @@
         Polymer.dom(this.$.chartHolder).removeChild(lastWrap);
 
         setTimeout(function() {
-          console.time(this._drawingTimerName);
+          window.performance.clearMarks();
+          window.performance.mark('start');
         Polymer.dom(this.$.chartHolder).appendChild(lastWrap);
         }.bind(this),500);
 
@@ -342,7 +349,11 @@
       this._drawingCounter++;
 
       if(this._drawingCounter%(this._drawingsPerChart*Number(this._drawingNumberOfCharts)) === 0) {
-        console.timeEnd(this._drawingTimerName);
+        window.performance.mark('end');
+        performance.clearMeasures();
+        window.performance.measure('lastMeasure', 'start', 'end');
+        var duration = window.performance.getEntriesByName('lastMeasure')[0].duration;
+        console.log(`${this._drawingTimerName}: ${duration} (average per chart: ${duration/Number(this._drawingNumberOfCharts)})`);
       }
     }
 
@@ -419,6 +430,15 @@
           };
         }
       }
+
+      chart.set('seriesConfig', seriesConfig);
+      chart.set('renderToCanvas', this._chartOptions.canvas);
+      if(chart.renderToCanvas) {
+        chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
+        chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
+        chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
+      }
+
       chart.chartExtents = {
         "x": ["dynamic", "dynamic"],
         "y": ["dynamic","dynamic"]
@@ -428,12 +448,6 @@
             "orientation": "bottom"};
       chart.yAxisConfig = {"title": "An Axis"};
 
-      chart.set('renderToCanvas', this._chartOptions.canvas);
-      if(chart.renderToCanvas) {
-        chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
-        chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
-        chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
-      }
       if(this._chartOptions.addEvents) {
         chart.eventData = [{"id":"123","time":1271474800000,"label":"Recalibrate"},{"id":"456","time":771474800000,"label":"Fan start"},{"id":"789","time":927525220000,"label":"Fan stop"},{"id":"333","time":1412163600000,"label":"Default"}];
         chart.eventConfig = {
@@ -452,8 +466,9 @@
                   "offset":[1,0]
                 },
                 "Fan stop":{
-                  "icon": "ge_logo.png",
-                  "type": "image",
+                  "color": "blue",
+                  "icon": "fa-coffee",
+                  "type": "fa",
                   "offset":[0,-20],
                   "size":"20"
                 }
@@ -466,11 +481,11 @@
 
       if(this._chartOptions.addThresholds) {
         chart.thresholdData = [
-            { "for":"y0", "type":"max", "value":8.4784 },
-            { "for":"y0", "type":"min", "value":-9.6531 },
-            { "for":"y0", "type":"mean", "value":0.330657585139331 },
-            { "for":"y1", "type":"mean", "value":2 },
-            { "for":"y1", "type":"quartile", "value":-3 }
+            { "for":"series0", "type":"max", "value":8.4784 },
+            { "for":"series0", "type":"min", "value":-9.6531 },
+            { "for":"series0", "type":"mean", "value":0.330657585139331 },
+            { "for":"series1", "type":"mean", "value":2 },
+            { "for":"series1", "type":"quartile", "value":-3 }
           ];
         chart.thresholdConfig = {
             "max": {
@@ -506,7 +521,8 @@
       }
 
       chart.disableNavigator = this._chartOptions.disableNav;
-      chart.seriesConfig = seriesConfig;
+
+
     }
 
     _processOptionsXY(chart) {
@@ -613,6 +629,9 @@
       chart.seriesKey = 'timeStamp';
       chart.skipKeys = {"x":true, "timeStamp": true};
       chart.renderToSvg = this._chartOptions.rendToSvg;
+      chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
+      chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
+      chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
 
       if(this._chartOptions.addDynamicMenus) {
         chart.dynamicMenuConfig = [{
@@ -635,6 +654,9 @@
       chart.seriesKey = 'timeStamp';
       chart.skipKeys = {"x":true, "timeStamp": true};
       chart.renderToSvg = this._chartOptions.rendToSvg;
+      chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
+      chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
+      chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
 
       if(this._chartOptions.addDynamicMenus) {
         chart.dynamicMenuConfig = [{

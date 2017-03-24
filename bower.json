@@ -34,7 +34,8 @@
     "px-vis-pie-chart": "^1.0.0",
     "px-vis-parallel-coordinates": "^1.0.0",
     "px-dropdown": "^2.4.0",
-    "px-tooltip": "^0.10.18"
+    "px-tooltip": "^0.10.18",
+    "px-box-design": "^0.4.4"
   },
   "devDependencies": {
     "px-meta-buttons-design": "^0.6.2",
