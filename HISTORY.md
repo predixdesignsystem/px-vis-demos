@@ -1,3 +1,7 @@
+v0.0.3
+==================
+* update dependencies
+
 v0.0.2
 ==================
 * github pages
