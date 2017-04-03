@@ -97,7 +97,6 @@
               'addThresholds': false,
               'multiAxis': false,
               'rendToSvg': false,
-              'cleanOnDetached': true,
               'resizeDebounce': 250,
               'noProgressiveRendering': false,
               'width': 800,
@@ -301,14 +300,13 @@
             newChart.height = this._chartOptions.height;
             newChart.width = this._chartOptions.width;
           }
-          newChart.cleanOnDetached = this._chartOptions.cleanOnDetached;
           newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
           this._processOptions(newChart);
           newChart.chartData = data;
         }
 
       } else {
-        console.log('please select data');
+        console.log('please select data');g
       }
     }
 
@@ -505,7 +503,7 @@
       if(this._chartOptions.addDynamicMenus) {
         chart.dynamicMenuConfig = [{
               "name": "Delete",
-              "action": "function(data) { var conf = this.seriesConfig;  delete conf[data.additionalDetail.name]; this.set(\"seriesConfig\", {}); this.set(\"seriesConfig\", conf);}",
+              'action': "function(data) {var conf = this.seriesConfig;delete conf[data.additionalDetail.name];this.set(\"seriesConfig\", {}); this.set(\"seriesConfig\", conf);}",
               "eventName": "delete",
               "icon": "fa-trash"
             },
