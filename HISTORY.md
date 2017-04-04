@@ -1,3 +1,7 @@
+v0.0.4
+==================
+* removed cleanOnDetached
+
 v0.0.3
 ==================
 * update dependencies
