@@ -101,7 +101,8 @@
               'noProgressiveRendering': false,
               'width': 800,
               'height': 500,
-              'preventResize': false
+              'preventResize': false,
+              'customToolbar': false
             };
           }
         },
@@ -172,7 +173,7 @@
       //TODO: sort by size
     }
 
-    _generateData(pointsNumber, seriesNumber, chartType) {
+    _generateData(pointsNumber, seriesNumber, chartType, seriesNames) {
 
 
       console.time(`generating ${pointsNumber*seriesNumber} total (${seriesNumber} series each ${pointsNumber} points) for ${chartType}`);
@@ -190,11 +191,12 @@
 
         for(var j=0; j<seriesNumber; j++) {
 
+          var name = seriesNames ? seriesNames[j] : `y${j}`;
           if(result.length === 0 || this._generateOptions.randomise) {
-            newData[`y${j}`] = Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin;
+            newData[name] = Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin;
           } else {
             //contain change within 10% of previous value
-            newData[`y${j}`] = result[i-1][`y${j}`] + (Math.random() * 2 -1) * this._generateOptions.variance;
+            newData[name] = result[i-1][name] + (Math.random() * 2 -1) * this._generateOptions.variance;
           }
           newData['x'] = isPolar ? i%360 : i;
         }
@@ -261,8 +263,7 @@
                 newChart;
 
         newDiv.classList.add('divwrapper');
-        window.performance.clearMarks();
-        window.performance.mark('start');
+        this._startPerfMeasure();
 
 
         //finally append all charts in our element
@@ -303,11 +304,286 @@
           newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
           this._processOptions(newChart);
           newChart.chartData = data;
+          if(this._chartOptions.customToolbar) {
+            var newConf = {};
+
+            newConf.config = {};
+            if(newChart.toolbarConfig) {
+
+              var keys = Object.keys(newChart.toolbarConfig.config);
+              for(var j=0; j<keys.length; j++) {
+                newConf.config[keys[j]] = newChart.toolbarConfig.config[keys[j]];
+              }
+            }
+            newConf.config.addSerie = {
+              'tooltipLabel': 'Add a serie to the chart',
+              'title': '+1',
+              'onClick': this._addSerie,
+              'onClickContext': this,
+              'chart': newChart
+            };
+            newConf.config.removeSerie = {
+              'tooltipLabel': 'Remove a serie from the chart',
+              'title': '-1',
+              'onClick': this._removeSerie,
+              'onClickContext': this,
+              'chart': newChart
+            };
+            newConf.config.modifyData = {
+              'tooltipLabel': 'Changes the data for the current series',
+              'title': '~',
+              'onClick': this._changeData,
+              'onClickContext': this,
+              'chart': newChart
+            };
+            newConf.config.modifyDataAndSeries = {
+              'tooltipLabel': 'Changes the data and the series',
+              'title': '~~',
+              'onClick': this._changeDataAndSeries,
+              'onClickContext': this,
+              'chart': newChart
+            };
+            newConf.config.addAndModify = {
+              'tooltipLabel': 'Changes the data for the current series and add 1 series',
+              'title': '+1/~',
+              'onClick': this._addSerieAndModifyData,
+              'onClickContext': this,
+              'chart': newChart
+            };
+            newConf.config.removeAndModify = {
+              'tooltipLabel': 'Changes the data for the current series and remove 1 series',
+              'title': '-1/~',
+              'onClick': this._removeSerieAndModifyData,
+              'onClickContext': this,
+              'chart': newChart
+            };
+            newChart.set('toolbarConfig', newConf);
+          }
         }
 
       } else {
-        console.log('please select data');g
+        console.log('please select data');
       }
+    }
+
+    _generateSeriesName() {
+      return `y${Math.floor(Math.random()*1000)}`;
+    }
+
+    _addSerieAndModifyData(info) {
+      var numberOfSeries = Object.keys(info.chart.chartData[0]).length - 2,
+          seriesNames = Object.keys(info.chart.chartData[0]).filter(function(d, i) { return d[0] === 'y';}),
+          data,
+          seriesName  = this._generateSeriesName();
+
+      seriesNames.push(seriesName);
+
+      data = this._generateData(info.chart.chartData.length, numberOfSeries + 1, info.chart.nodeName.toLowerCase(), seriesNames);
+
+      info.chart.set('chartData', data.key);
+
+      this._addOneSerieFromConfig(info.chart, numberOfSeries, seriesName);
+    }
+
+    _removeSerieAndModifyData(info) {
+      var data,
+          seriesNames = Object.keys(info.chart.chartData[0]).filter(function(d, i) { return d[0] === 'y';});
+
+      data = this._generateData(info.chart.chartData.length, Object.keys(info.chart.chartData[0]).length - 3, info.chart.nodeName.toLowerCase(), seriesNames);
+
+      var missing,
+          keys = Object.keys(data.key[0]);
+
+      for(var i=0; i<seriesNames.length; i++) {
+        if(!data.key[0][seriesNames[i]]) {
+          missing = seriesNames[i];
+          break;
+        }
+      }
+
+      info.chart.set('chartData', data.key);
+      this._deleteOneSerieFromConfig(info.chart, missing);
+    }
+
+    _changeData(info) {
+
+      var data,
+          seriesNames = Object.keys(info.chart.chartData[0]).filter(function(d, i) { return d[0] === 'y';});
+
+      data = this._generateData(info.chart.chartData.length, Object.keys(info.chart.chartData[0]).length - 2, info.chart.nodeName.toLowerCase(), seriesNames);
+
+      info.chart.set('chartData', data.key);
+    }
+
+    _changeDataAndSeries(info) {
+      var numberOfSeries = Object.keys(info.chart.chartData[0]).length - 2,
+          seriesNames = [],
+          currentNames = Object.keys(info.chart.chartData[0]).filter(function(d, i) { return d[0] === 'y'}),
+        data;
+
+
+      for(var i=0; i< currentNames.length; i++) {
+        seriesNames.push(this._generateSeriesName());
+      }
+
+      data = this._generateData(info.chart.chartData.length, numberOfSeries, info.chart.nodeName.toLowerCase(), seriesNames);
+
+      info.chart.set('chartData', data.key);
+
+      if(info.chart.nodeName.toLowerCase() === 'px-vis-timeseries' ||
+          info.chart.nodeName.toLowerCase() === 'px-vis-xy-chart' ) {
+
+        //find the series names: y +  a random number
+        var newConf = {};
+
+        for(var i=0; i<numberOfSeries ;i++) {
+
+          newConf[seriesNames[i]] = this._generateSeriesConfigXYTS(seriesNames[i].slice(1), false, info.chart.nodeName.toLowerCase() === 'px-vis-timeseries', info.chart);
+        }
+
+        info.chart.set('seriesConfig', newConf);
+      } else if(info.chart.nodeName.toLowerCase() === 'px-vis-parallel-coordinates' ||           info.chart.nodeName.toLowerCase() === 'px-vis-radar') {
+
+    //    info.chart.push('axes', `y${numberOfSeries}`);
+        //todo:expose a metho on the info.chart to redraw
+        info.chart._computeAxes();
+      }
+    }
+
+    _removeSerie(info) {
+
+      var currentNames = Object.keys(info.chart.chartData[0]).filter(function(d, i) { return d[0] === 'y'}),
+          seriesName = currentNames[currentNames.length-1];
+
+      this._deleteOneSeriesData(info.chart.chartData, seriesName);
+      this._deleteOneSerieFromConfig(info.chart, seriesName);
+    }
+
+    _deleteOneSerieFromConfig(chart, seriesName) {
+      if(chart.nodeName.toLowerCase() === 'px-vis-timeseries' ||
+          chart.nodeName.toLowerCase() === 'px-vis-xy-chart' ) {
+        var newConf = {},
+            confKeys = Object.keys(chart.seriesConfig);
+
+        //copy current conf to bypass dirty check
+        for(var i=0; i<confKeys.length; i++) {
+          if(seriesName !== confKeys[i]) {
+            newConf[confKeys[i]] = chart.seriesConfig[confKeys[i]];
+          }
+        }
+
+        chart.set('seriesConfig', newConf);
+      } else if(chart.nodeName.toLowerCase() === 'px-vis-parallel-coordinates' || chart.nodeName.toLowerCase() === 'px-vis-radar') {
+
+    //    chart.push('axes', `y${numberOfSeries}`);
+        //todo:expose a metho on the chart to redraw
+        chart._computeAxes();
+      }
+    }
+
+    _addOneSerieFromConfig(chart, numberOfSeries, seriesName) {
+      //add serie
+      if(chart.nodeName.toLowerCase() === 'px-vis-timeseries' ||
+          chart.nodeName.toLowerCase() === 'px-vis-xy-chart' ) {
+        var newConf = {},
+            confKeys = Object.keys(chart.seriesConfig),
+            isTS = chart.nodeName.toLowerCase() === 'px-vis-timeseries';
+
+        //copy current conf to bypass dirty check
+        for(var i=0; i<confKeys.length; i++) {
+          newConf[confKeys[i]] = chart.seriesConfig[confKeys[i]];
+        }
+        newConf[seriesName] = this._generateSeriesConfigXYTS(seriesName.slice(1), false, isTS, chart);
+
+        chart.set('seriesConfig', newConf);
+      } else if(chart.nodeName.toLowerCase() === 'px-vis-parallel-coordinates' || chart.nodeName.toLowerCase() === 'px-vis-radar') {
+
+    //    chart.push('axes', `y${numberOfSeries}`);
+        //todo:expose a metho on the chart to redraw
+        chart._computeAxes();
+      }
+    }
+
+    _addSerie(info) {
+
+      if(info.chart.nodeName.toLowerCase() == 'px-vis-polar') {
+        //TODO when polar supports multi serie
+        return;
+      }
+
+      //add the data
+      var numberOfSeries = Object.keys(info.chart.chartData[0]).length - 2,
+          seriesName  = this._generateSeriesName();
+      this._addOneSeriesData(info.chart.chartData, seriesName);
+      this._addOneSerieFromConfig(info.chart, numberOfSeries, seriesName);
+    }
+
+    _addOneSeriesData(data, seriesName) {
+      var number = Object.keys(data[0]).length - 2;
+      for(var i=0; i<data.length; i++) {
+
+        if(i===0) {
+
+            data[i][seriesName] = Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin;
+
+        } else {
+          //contain change within 10% of previous value
+          data[i][seriesName] = data[i-1][seriesName] + (Math.random() * 2 -1) * this._generateOptions.variance;
+        }
+      }
+    }
+
+    _deleteOneSeriesData(data, seriesName) {
+      var number = Object.keys(data[0]).length - 3;
+      for(var i=0; i<data.length; i++) {
+
+        delete data[i][seriesName];
+      }
+    }
+
+    _generateSeriesConfigXYTS(numberId, useGenerationConfig, isTS, chart) {
+      var result = {},
+          seriesNumber,
+          isMultiAxis = useGenerationConfig ? this._chartOptions.multiAxis : (Object.keys(chart.y).length > 1),
+          type;
+
+      if(useGenerationConfig) {
+        seriesNumber = (this._chartOptions.disableNav || !isTS) ? this._drawingsPerChart : this._drawingsPerChart/2;
+        type = this._chartOptions.scatter ? 'scatter' : 'line';
+      } else {
+        var configKey = Object.keys(chart.seriesConfig);
+        seriesNumber = (Object.keys(chart.chartData[0]).length -2);
+        type = chart.seriesConfig[configKey[0]].type;
+      }
+
+      if(isMultiAxis) {
+
+        var side;
+        if(useGenerationConfig) {
+          side = numberId < seriesNumber/2 ? 'left' : 'right';
+        } else {
+          side = chart.numLeftAxes === chart.numRightAxes ? 'left' : 'right';
+        }
+
+        result = {
+          'x': isTS ? 'timeStamp' : 'x',
+          'y': `y${numberId}`,
+          'type': type,
+          'axis': {
+            'id': `axis${numberId}`,
+            'number': numberId,
+            'side': side
+          }
+        };
+      } else {
+        result = {
+          'x': isTS ? 'timeStamp' : 'x',
+          'y': `y${numberId}`,
+          'type': type
+        };
+      }
+
+      return result;
     }
 
     _removeChart() {
@@ -335,12 +611,16 @@
         Polymer.dom(this.$.chartHolder).removeChild(lastWrap);
 
         setTimeout(function() {
-          window.performance.clearMarks();
-          window.performance.mark('start');
-        Polymer.dom(this.$.chartHolder).appendChild(lastWrap);
+          this._startPerfMeasure();
+          Polymer.dom(this.$.chartHolder).appendChild(lastWrap);
         }.bind(this),500);
 
       }
+    }
+
+    _startPerfMeasure() {
+      window.performance.clearMarks();
+      window.performance.mark('start');
     }
 
     _drawingListen() {
@@ -407,26 +687,7 @@
           seriesNumber = this._chartOptions.disableNav ? this._drawingsPerChart : this._drawingsPerChart/2;
 
       for(var i=0; i<seriesNumber; i++) {
-
-
-        if(this._chartOptions.multiAxis) {
-          seriesConfig[`series${i}`] = {
-            'x': 'timeStamp',
-            'y': `y${i}`,
-            'type': this._chartOptions.scatter ? 'scatter' : 'line',
-            'axis': {
-              'id': `axis${i}`,
-              'number': i,
-              'side': i < seriesNumber/2 ? 'left' : 'right'
-            }
-          };
-        } else {
-          seriesConfig[`series${i}`] = {
-            'x': 'timeStamp',
-            'y': `y${i}`,
-            'type': this._chartOptions.scatter ? 'scatter' : 'line'
-          };
-        }
+          seriesConfig[`y${i}`] = this._generateSeriesConfigXYTS(i, true, true);
       }
 
       chart.set('seriesConfig', seriesConfig);
@@ -436,6 +697,10 @@
         chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
         chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
       }
+      chart.toolbarConfig = {'config': {
+        'advancedZoom': true,
+        'pan': true
+      }};
 
       chart.chartExtents = {
         "x": ["dynamic", "dynamic"],
@@ -527,27 +792,13 @@
 
       var seriesConfig = {};
       for(var i=0; i<this._drawingsPerChart; i++) {
-
-        if(this._chartOptions.multiAxis) {
-          seriesConfig[`series${i}`] = {
-            'x': 'x',
-            'y': `y${i}`,
-            'type': this._chartOptions.scatter ? 'scatter' : 'line',
-            'axis': {
-              'id': `axis${i}`,
-              'number': i,
-              'side': i < this._drawingsPerChart/2 ? 'left' : 'right'
-            }
-          };
-        } else {
-          seriesConfig[`series${i}`] = {
-            'x': 'x',
-            'y': `y${i}`,
-            'type': this._chartOptions.scatter ? 'scatter' : 'line'
-          };
-        }
+          seriesConfig[`y${i}`] = this._generateSeriesConfigXYTS(i, true, false);
       }
 
+      chart.toolbarConfig = {'config': {
+        'advancedZoom': true,
+        'pan': true
+      }};
       chart.xAxisConfig = {"title": "X",
             "labelPosition": "center",
             "orientation": "bottom"};
@@ -590,7 +841,7 @@
        var seriesConfig = {};
       for(var i=0; i<this._drawingsPerChart; i++) {
 
-        seriesConfig[`series${i}`] = {
+        seriesConfig[`y${i}`] = {
           'x': 'x',
           'y': `y${i}`
         };

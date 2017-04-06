@@ -1,3 +1,7 @@
+v0.0.5
+==================
+* Added ability to add/remove/changer series on a cahrt via the toolbar in dynamic_add.html
+
 v0.0.4
 ==================
 * removed cleanOnDetached

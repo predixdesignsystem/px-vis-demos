@@ -84,6 +84,12 @@ demonstrating dynamically adding/removing charts
         <p class="epsilon">Chart Options</p>
         <div class=" flex flex--col flex__item u-p" style="border: 1px solid #b6c3cc">
 
+          <div id="modifyToolbarGroup">
+            <input id="modifyingToolbar" type="checkbox" value="{{_chartOptions.customToolbar::change}}"></input>
+            <label for="modifyingToolbar" class="label--inline" id="modifyingToolbarLabel">Toolbar to modify series</label>
+          </div>
+          <px-tooltip for="modifyToolbarGroup" delay="50" tooltip-message="includes custom buttons in the toolbar to dynamically add/delete/modify series on the chart" orientation="auto"></px-tooltip>
+
          <template is="dom-if" if="[[_isTimeseries(selectedChartType)]]">
             <div>
               <input id="disableNav" type="checkbox" checked="{{_chartOptions.disableNav::change}}"></input>
