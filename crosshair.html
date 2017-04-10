@@ -1,0 +1,265 @@
+<!doctype html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Crosshair example</title>
+        <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+        <!--<script src="../webcomponentsjs/webcomponents-lite.min.js"></script>-->
+        <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+        <link rel="import" href="../px-theme/px-theme-styles.html" defer>
+        <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
+        <style include="px-theme-styles" is="custom-style"></style>
+
+        <link rel="import" href="../px-vis/px-vis-data-converter.html" defer />
+        <link rel="import" href="../px-vis-timeseries/px-vis-timeseries.html" defer />
+        <link rel="import" href="../px-vis-xy-chart/px-vis-xy-chart.html" defer />
+        <link rel="import" href="../px-vis-parallel-coordinates/px-vis-parallel-coordinates.html" defer />
+        <link rel="import" href="../px-vis-radar/px-vis-radar.html" defer />
+        <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
+
+        <link rel="import" href="css/px-vis-demos-styles.html" defer>
+        <style include="px-vis-demos-styles" is="custom-style"></style>
+
+    </head>
+
+    <body style="padding:30px; ">
+      <template is="dom-bind">
+        <style>
+          .minHeight {
+            min-height: 300px;
+          }
+        </style>
+        <div class="layout">
+          <div class="layout__item minHeight">
+            <px-vis-timeseries
+              id="timeseries"
+              disable-navigator
+              chart-extents='{
+                "x": ["dynamic","dynamic"],
+                "y": ["dynamic","dynamic"]
+              }'
+              series-config='{
+                "y0":{},
+                "y1":{},
+                "y2":{},
+                "y3":{}
+              }'
+              default-series-config='{
+                  "type": "line",
+                  "x": "timeStamp"
+                }'
+              chart-data="[[chartData]]"
+              toolbar-config='{
+                "config": {
+                  "crosshair": "true"
+                  }
+              }'
+              highlighter-config='{
+                "fuzz": 10000000000,
+                "differentDataset": "true"
+              }'
+              crosshair-data="{{crosshairData}}">
+            </px-vis-timeseries>
+          </div>
+          <div class="layout__item minHeight">
+            <px-vis-xy-chart
+              id="xy"
+              x="{{xXY}}"
+              y="{{yXY}}"
+              series-config='{
+                "y1":{
+                  "type": "scatter",
+                  "markerSymbol": "triangle-up",
+                  "name": "serie 1",
+                  "x": "y0",
+                  "y": "y1",
+                  "color": "rgb(96,189,104)"
+                },
+                "y2":{
+                  "type": "scatter",
+                  "markerSymbol": "square",
+                  "name": "serie 2",
+                  "x": "y0",
+                  "y": "y2",
+                  "color": "rgb(0,0,104)"
+                },
+                "y3":{
+                  "type": "scatter",
+                  "markerSymbol": "circle",
+                  "name": "serie 3",
+                  "x": "y0",
+                  "y": "y3",
+                  "color": "rgb(96,50,10)"
+                }
+              }'
+              chart-extents='{
+                "x": ["dynamic","dynamic"],
+                "y": ["dynamic","dynamic"]
+              }'
+              default-series-config='{
+                  "type": "line",
+                  "x": "timeStamp"
+                }'
+              chart-data="[[chartData]]"
+              complete-series-config="{{completeSeriesConfigXY}}"
+              register-config='{
+                "forceDateTimeDisplay": true
+              }'
+              toolbar-config='{
+                "config": {
+                  "crosshair": "true"
+                  }
+              }'
+              time-data="timeStamp"
+              crosshair-data="{{crosshairData}}">
+            </px-vis-xy-chart>
+          </div>
+        </div>
+        <div class="layout">
+          <div class="layout__item minHeight">
+            <px-vis-parallel-coordinates
+              id="para"
+              chart-data="[[chartData]]"
+              skip-keys='{"x":true}'
+              series-key="timeStamp"
+              match-ticks
+              generate-axes-from-data
+              highlighter-config='{
+                "drawWithLocalCrosshairData": true
+              }'
+              crosshair-data="{{crosshairData}}"
+              toolbar-config='{
+                "config": {
+                  "crosshair": "true"
+                  }
+              }'>
+            </px-vis-parallel-coordinates>
+          </div>
+          <div class="layout__item minHeight">
+            <px-vis-radar
+              id="radar"
+              chart-data="[[chartData]]"
+              skip-keys='{"x":true}'
+              series-key="timeStamp"
+              generate-axes-from-data
+              highlighter-config='{
+                "drawWithLocalCrosshairData": true
+              }'
+              crosshair-data="{{crosshairData}}"
+              toolbar-config='{
+                "config": {
+                  "crosshair": "true"
+                  }
+              }'>
+            </px-vis-radar>
+          </div>
+        </div>
+
+        <iron-ajax
+          id="random1"
+          url="../px-demo-data/demo-data/random/d4x1000.json"
+          handle-as="json"
+          last-response="{{chartData}}"
+          auto>
+        </iron-ajax>
+        <!-- <iron-ajax
+          id="fetch1"
+          url="../px-demo-data/demo-data/aviation/delta-egt-cruise.json"
+          handle-as="json"
+          auto>
+        </iron-ajax>
+        <iron-ajax
+          id="fetch2"
+          url="../px-demo-data/demo-data/aviation/hpt-acc-position-cruise.json"
+          handle-as="json"
+          auto>
+        </iron-ajax> -->
+        <!-- <px-vis-data-converter
+          id="converter"
+          data-key = "series"
+          id-key = "name"
+          chart-data="{{chartData}}"
+          series-config="{{seriesConfig}}">
+        </px-vis-data-converter> -->
+      </template>
+
+      <script type="text/javascript">
+        document.addEventListener('WebComponentsReady', function() {
+          setTimeout(function() {
+            var fetch1 = document.getElementById('fetch1'),
+                fetch2 = document.getElementById('fetch2'),
+                converter = document.getElementById('converter'),
+                timeseries = document.getElementById('timeseries'),
+                tsCursor = document.getElementById('tsCursor'),
+                xy = document.getElementById('xy'),
+                xyCursor = document.getElementById('xyCursor'),
+                para = document.getElementById('para'),
+                paraCursor = document.getElementById('paraCursor'),
+                aggregatedData = [];
+
+            // var processData = function(data) {
+            //   aggregatedData.push(data);
+            //   if(aggregatedData.length === 2) {
+            //     converter.set('originalData', aggregatedData);
+            //   }
+            // };
+            //
+            // //get both set of data for 1st chart
+            // var handleResponse = function(evt) {
+            //   processData(evt.detail.response);
+            // }
+            //
+            // fetch1.addEventListener('response', handleResponse);
+            // fetch2.addEventListener('response', handleResponse);
+            //
+            // // if the data has been fetched already manually kick the event handler
+            // if(fetch1.lastResponse) {
+            //   processData(fetch1.lastResponse);
+            // }
+            // if(fetch2.lastResponse) {
+            //   processData(fetch2.lastResponse);
+            // }
+            // tsCursor.set('margin', timeseries._internalMargin);
+            // xyCursor.set('margin', xy._internalMargin);
+            // tsCursor.set('svg', timeseries.layer[3]);
+            // xyCursor.set('svg', xy.layer[3]);
+
+            // paraCursor.set('svg', para.layer[1]);
+            // paraCursor.set('dimensions', para.dimensions);
+          });
+        });
+
+
+        (function() {
+          'use strict';
+
+          var onload = function() {
+            // For native Imports, manually fire WebComponentsReady so user code
+            // can use the same code path for native and polyfill'd imports.
+            if (!window.HTMLImports) {
+              document.dispatchEvent(
+                new CustomEvent('WebComponentsReady', {bubbles: true})
+              );
+            }
+          };
+
+          var webComponentsSupported = (
+            'registerElement' in document && 'import' in document.createElement('link') && 'content' in document.createElement('template')
+          );
+
+          if (!webComponentsSupported) {
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = '../webcomponentsjs/webcomponents-lite.min.js';
+            script.onload = onload;
+            document.head.appendChild(script);
+          } else {
+            onload();
+          }
+        })();
+      </script>
+    </body>
+
+</html>
