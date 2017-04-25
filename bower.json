@@ -5,6 +5,7 @@
     "px-vis-demos.html"
   ],
   "ignore": [
+    "*.enc",
     ".*",
     "npm-debug.log",
     "gulpfile.js",
@@ -21,8 +22,7 @@
     "HISTORY.md",
     "README.md",
     ".jshintrc",
-    ".editorconfig",
-    "*.enc"
+    ".editorconfig"
   ],
   "dependencies": {
     "polymer": "^1.7.1",
