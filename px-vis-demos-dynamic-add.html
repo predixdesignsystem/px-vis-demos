@@ -124,14 +124,6 @@ demonstrating dynamically adding/removing charts
             </div>
           </template>
 
-
-          <template is="dom-if" if="[[_canCanvas(selectedChartType)]]">
-            <div>
-              <input id="rendToCanvas" type="checkbox" checked="{{_chartOptions.canvas::change}}"></input>
-              <label for="rendToCanvas" class="label--inline">Render to canvas</label>
-            </div>
-          </template>
-
           <template is="dom-if" if="[[_canSvg(selectedChartType)]]">
             <div>
               <input id="rendToSvg" type="checkbox" checked="{{_chartOptions.rendToSvg::change}}"></input>
@@ -139,8 +131,25 @@ demonstrating dynamically adding/removing charts
             </div>
           </template>
 
+          <div>
+            <input id="hideRegister" type="checkbox" checked="{{_chartOptions.hideRegister::change}}"></input>
+            <label for="hideRegister" class="label--inline">Hide register</label>
+          </div>
+
+          <template is="dom-if" if="[[_canChartExtents(selectedChartType)]]">
+            <div>
+              <input id="includeChartExtents" type="checkbox" checked="{{_chartOptions.includeChartExtents::change}}"></input>
+              <label for="includeChartExtents" class="label--inline">Include chart extents</label>
+            </div>
+          </template>
 
 
+          <template is="dom-if" if="[[_canCanvas(selectedChartType)]]">
+            <div>
+              <input id="rendToCanvas" type="checkbox" checked="{{_chartOptions.canvas::change}}"></input>
+              <label for="rendToCanvas" class="label--inline">Render to canvas</label>
+            </div>
+          </template>
           <!-- progr rendering options-->
 
             <template is="dom-if" if="[[_canProgRender(selectedChartType, _chartOptions.canvas, _chartOptions.rendToSvg)]]">

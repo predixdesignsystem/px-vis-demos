@@ -102,7 +102,9 @@
               'width': 800,
               'height': 500,
               'preventResize': false,
-              'customToolbar': false
+              'customToolbar': false,
+              'hideRegister': false,
+              'includeChartExtents': false
             };
           }
         },
@@ -180,7 +182,16 @@
 
       var result = [],
           step = Math.floor((this._generateOptions.endTime - this._generateOptions.startTime)/pointsNumber),
-          isPolar = chartType === 'px-vis-polar';
+          isPolar = chartType === 'px-vis-polar',
+          extents = {},
+          yMins = {},
+          yMaxs = {};
+
+      if(chartType === 'px-vis-timeseries') {
+        extents.x = [this._generateOptions.startTime, this._generateOptions.startTime + pointsNumber*step];
+      } else if(chartType === 'px-vis-xy-chart') {
+        extents.x = [0, pointsNumber];
+      }
 
       this._generateOptions.counter++;
 
@@ -191,7 +202,9 @@
 
         for(var j=0; j<seriesNumber; j++) {
 
-          var name = seriesNames ? seriesNames[j] : `y${j}`;
+          var name = seriesNames ? seriesNames[j] : `y${j}`,
+              axisName = `axis${j}`;
+
           if(result.length === 0 || this._generateOptions.randomise) {
             newData[name] = Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin;
           } else {
@@ -199,13 +212,45 @@
             newData[name] = result[i-1][name] + (Math.random() * 2 -1) * this._generateOptions.variance;
           }
           newData['x'] = isPolar ? i%360 : i;
+
+          if(!extents[axisName]) {
+            extents[axisName] = [Number.MAX_VALUE, Number.MIN_VALUE];
+          }
+          //search for extents
+          if(newData[name] < extents[axisName][0]) {
+            extents[axisName][0] = newData[name];
+          }
+
+          if(newData[name] > extents[axisName][1]) {
+            extents[axisName][1] = newData[name];
+          }
         }
+
+
+        //find y extents in case we're not multi Y
+        var extKeys = Object.keys(extents),
+            min = Number.MAX_VALUE,
+            max = Number.MIN_VALUE;
+
+        for(var k =0; k<extKeys.length; k++) {
+          if(extKeys[k] !== 'x') {
+            if(extents[extKeys[k]][1] > max ) {
+              max = extents[extKeys[k]][1];
+            }
+            if(extents[extKeys[k]][0] < min) {
+              min = extents[extKeys[k]][0];
+            }
+          }
+        }
+
+        extents.y = [min,max];
+
         result.push(newData);
       }
 
       console.timeEnd(`generating ${pointsNumber*seriesNumber} total (${seriesNumber} series each ${pointsNumber} points) for ${chartType}`);
 
-      return {'val': `[Gen][${this._generateOptions.counter}] ${pointsNumber*seriesNumber} total (${seriesNumber} series each ${pointsNumber} points)`  , 'key': result};
+      return {'val': `[Gen][${this._generateOptions.counter}] ${pointsNumber*seriesNumber} total (${seriesNumber} series each ${pointsNumber} points)`  , 'key': { 'data': result, 'extents': extents}};
     }
 
     _computeCurrentDataSets() {
@@ -244,11 +289,16 @@
       return selectedChartType === 'px-vis-timeseries' || selectedChartType === 'px-vis-xy-chart';
     }
 
+    _canChartExtents(selectedChartType) {
+      return selectedChartType !== 'px-vis-parallel-coordinates' && selectedChartType !== 'px-vis-polar';
+    }
+
     _createChart() {
 
-      var data = this.$.dataSetDropdown.selectedKey;
+      var data = this.$.dataSetDropdown.selectedKey.data,
+          extents = this.$.dataSetDropdown.selectedKey.extents;
 
-      if(data === 'dummy') {
+      if(this.$.dataSetDropdown.selectedKey === 'dummy') {
         console.log(`No data selected, please generate data for ${this.selectedChartType}`);
         return;
       }
@@ -263,7 +313,6 @@
                 newChart;
 
         newDiv.classList.add('divwrapper');
-        this._startPerfMeasure();
 
 
         //finally append all charts in our element
@@ -293,8 +342,7 @@
             newDiv.style['height'] = `${this._chartOptions.height}px`;
           }
 
-          //append chart in div
-          Polymer.dom(newDiv).appendChild(newChart);
+
 
           //process all chart options
           if(newChart.preventResize) {
@@ -302,8 +350,9 @@
             newChart.width = this._chartOptions.width;
           }
           newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
-          this._processOptions(newChart);
+          this._processOptions(newChart, extents);
           newChart.chartData = data;
+
           if(this._chartOptions.customToolbar) {
             var newConf = {};
 
@@ -359,7 +408,10 @@
             };
             newChart.set('toolbarConfig', newConf);
           }
+            //append chart in div
+            Polymer.dom(newDiv).appendChild(newChart);
         }
+        this._startPerfMeasure();
 
       } else {
         console.log('please select data');
@@ -380,7 +432,7 @@
 
       data = this._generateData(info.chart.chartData.length, numberOfSeries + 1, info.chart.nodeName.toLowerCase(), seriesNames);
 
-      info.chart.set('chartData', data.key);
+      info.chart.set('chartData', data.key.data);
 
       this._addOneSerieFromConfig(info.chart, numberOfSeries, seriesName);
     }
@@ -392,16 +444,16 @@
       data = this._generateData(info.chart.chartData.length, Object.keys(info.chart.chartData[0]).length - 3, info.chart.nodeName.toLowerCase(), seriesNames);
 
       var missing,
-          keys = Object.keys(data.key[0]);
+          keys = Object.keys(data.key.data[0]);
 
       for(var i=0; i<seriesNames.length; i++) {
-        if(!data.key[0][seriesNames[i]]) {
+        if(!data.key.data[0][seriesNames[i]]) {
           missing = seriesNames[i];
           break;
         }
       }
 
-      info.chart.set('chartData', data.key);
+      info.chart.set('chartData', data.key.data);
       this._deleteOneSerieFromConfig(info.chart, missing);
     }
 
@@ -412,7 +464,7 @@
 
       data = this._generateData(info.chart.chartData.length, Object.keys(info.chart.chartData[0]).length - 2, info.chart.nodeName.toLowerCase(), seriesNames);
 
-      info.chart.set('chartData', data.key);
+      info.chart.set('chartData', data.key.data);
     }
 
     _changeDataAndSeries(info) {
@@ -428,7 +480,7 @@
 
       data = this._generateData(info.chart.chartData.length, numberOfSeries, info.chart.nodeName.toLowerCase(), seriesNames);
 
-      info.chart.set('chartData', data.key);
+      info.chart.set('chartData', data.key.data);
 
       if(info.chart.nodeName.toLowerCase() === 'px-vis-timeseries' ||
           info.chart.nodeName.toLowerCase() === 'px-vis-xy-chart' ) {
@@ -631,6 +683,7 @@
         performance.clearMeasures();
         window.performance.measure('lastMeasure', 'start', 'end');
         var duration = window.performance.getEntriesByName('lastMeasure')[0].duration;
+
         console.log(`${this._drawingTimerName}: ${duration} (average per chart: ${duration/Number(this._drawingNumberOfCharts)})`);
       }
     }
@@ -658,14 +711,14 @@
       }
     }
 
-    _processOptions(chart) {
+    _processOptions(chart, extents) {
 
       switch(this.selectedChartType) {
         case 'px-vis-timeseries':
-          this._processOptionsTS(chart);
+          this._processOptionsTS(chart, extents);
           break;
         case 'px-vis-xy-chart':
-          this._processOptionsXY(chart);
+          this._processOptionsXY(chart, extents);
           break;
         case 'px-vis-polar':
           this._processOptionsPolar(chart);
@@ -674,14 +727,14 @@
           this._processOptionsParallel(chart);
           break;
         case 'px-vis-radar':
-          this._processOptionsRadar(chart);
+          this._processOptionsRadar(chart, extents);
           break;
         case 'px-vis-pie-chart':
           //TODO
       }
     }
 
-    _processOptionsTS(chart) {
+    _processOptionsTS(chart, extents) {
 
       var seriesConfig = {},
           seriesNumber = this._chartOptions.disableNav ? this._drawingsPerChart : this._drawingsPerChart/2;
@@ -702,14 +755,24 @@
         'pan': true
       }};
 
-      chart.chartExtents = {
-        "x": ["dynamic", "dynamic"],
-        "y": ["dynamic","dynamic"]
-      };
+      chart.hideRegister = this._chartOptions.hideRegister;
+
+      if(this._chartOptions.includeChartExtents) {
+        chart.chartExtents = extents;
+      } else {
+        chart.chartExtents = {
+          "x": ["dynamic", "dynamic"],
+          "y": ["dynamic","dynamic"]
+        };
+      }
+
       chart.xAxisConfig = {"title": "X",
             "labelPosition": "center",
             "orientation": "bottom"};
       chart.yAxisConfig = {"title": "An Axis"};
+      if(!this._chartOptions.multiAxis) {
+        chart.yAxisConfig.preventSeriesBar = true;
+      }
 
       if(this._chartOptions.addEvents) {
         chart.eventData = [{"id":"123","time":1271474800000,"label":"Recalibrate"},{"id":"456","time":771474800000,"label":"Fan start"},{"id":"789","time":927525220000,"label":"Fan stop"},{"id":"333","time":1412163600000,"label":"Default"}];
@@ -788,13 +851,14 @@
 
     }
 
-    _processOptionsXY(chart) {
+    _processOptionsXY(chart, extents) {
 
       var seriesConfig = {};
       for(var i=0; i<this._drawingsPerChart; i++) {
           seriesConfig[`y${i}`] = this._generateSeriesConfigXYTS(i, true, false);
       }
 
+      chart.hideRegister = this._chartOptions.hideRegister;
       chart.toolbarConfig = {'config': {
         'advancedZoom': true,
         'pan': true
@@ -803,13 +867,21 @@
             "labelPosition": "center",
             "orientation": "bottom"};
       chart.yAxisConfig = {"title": "An Axis"};
+      if(!this._chartOptions.multiAxis) {
+        chart.yAxisConfig.preventSeriesBar = true;
+      }
       chart.seriesConfig = seriesConfig;
       chart.margin={ "top": "30", "bottom": "60", "left": "80", "right": "100" };
       chart.timeData = 'timeStamp';
-      chart.chartExtents = {
-        "x": ["dynamic", "dynamic"],
-        "y": ["dynamic","dynamic"]
-      };
+
+      if(this._chartOptions.includeChartExtents) {
+        chart.chartExtents = extents;
+      } else {
+        chart.chartExtents = {
+          "x": ["dynamic", "dynamic"],
+          "y": ["dynamic","dynamic"]
+        };
+      }
 
       chart.renderToCanvas = this._chartOptions.canvas;
       if(chart.renderToCanvas) {
@@ -846,6 +918,7 @@
           'y': `y${i}`
         };
       }
+      chart.hideRegister = this._chartOptions.hideRegister;
       chart.height = 800;
       chart.seriesConfig = seriesConfig;
       chart.useDegrees = true;
@@ -881,6 +954,7 @@
       chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
       chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
       chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
+      chart.hideAxisRegister = this._chartOptions.hideRegister;
 
       if(this._chartOptions.addDynamicMenus) {
         chart.dynamicMenuConfig = [{
@@ -896,7 +970,7 @@
 
     }
 
-    _processOptionsRadar(chart) {
+    _processOptionsRadar(chart, extents) {
 
       chart.generateAxesFromData = true;
       chart.matchTicks = true;
@@ -906,6 +980,15 @@
       chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
       chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
       chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
+      chart.hideAxisRegister = this._chartOptions.hideRegister;
+
+      if(this._chartOptions.includeChartExtents) {
+        chart.chartExtents = extents;
+      } else {
+        chart.chartExtents = {
+          "y": ["dynamic","dynamic"]
+        };
+      }
 
       if(this._chartOptions.addDynamicMenus) {
         chart.dynamicMenuConfig = [{
