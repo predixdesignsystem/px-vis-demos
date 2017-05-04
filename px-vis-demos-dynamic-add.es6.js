@@ -224,7 +224,7 @@
     }
 
     _canCanvas(selectedChartType) {
-      return selectedChartType === 'px-vis-timeseries' || selectedChartType === 'px-vis-xy-chart';
+      return selectedChartType === 'px-vis-timeseries' || selectedChartType === 'px-vis-xy-chart' || selectedChartType === 'px-vis-polar';
     }
 
     _canSvg(selectedChartType) {
@@ -603,11 +603,12 @@
       chart.margin={ "top": "0", "bottom": "0", "left": "10", "right": "10" };
       chart.timeData = 'timeStamp';
 
-      // chart.renderToCanvas = this._chartOptions.canvas;
-      // if(chart.renderToCanvas) {
-      //   chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
-      //   chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
-      // }
+      chart.renderToCanvas = this._chartOptions.canvas;
+      if(chart.renderToCanvas) {
+        chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
+        chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
+        chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
+      }
 
       if(this._chartOptions.addDynamicMenus) {
         chart.dynamicMenuConfig = [{
