@@ -985,10 +985,6 @@
 
       if(this._chartOptions.includeChartExtents) {
         chart.chartExtents = extents;
-      } else {
-        chart.chartExtents = {
-          "y": ["dynamic","dynamic"]
-        };
       }
 
       if(this._chartOptions.addDynamicMenus) {
