@@ -76,12 +76,6 @@ demonstrating dynamically adding/removing charts
             </template>
           </div>
 
-          <div>
-            <input id="cleanOnDetached" type="checkbox" checked="{{_chartOptions.cleanOnDetached::change}}"></input>
-            <label id="cleanOnDetachedLabel" for="cleanOnDetached" class="label--inline">Clean on detached</label>
-            <px-tooltip for="cleanOnDetachedLabel" delay="50" tooltip-message="turn on for reusing the chart, off for moving it around the dom. Can be dynamically changed in your app" orientation="auto"></px-tooltip>
-          </div>
-
         </div>
       </div>
 
@@ -89,6 +83,12 @@ demonstrating dynamically adding/removing charts
       <div class="">
         <p class="epsilon">Chart Options</p>
         <div class=" flex flex--col flex__item u-p" style="border: 1px solid #b6c3cc">
+
+          <div id="modifyToolbarGroup">
+            <input id="modifyingToolbar" type="checkbox" value="{{_chartOptions.customToolbar::change}}"></input>
+            <label for="modifyingToolbar" class="label--inline" id="modifyingToolbarLabel">Toolbar to modify series</label>
+          </div>
+          <px-tooltip for="modifyToolbarGroup" delay="50" tooltip-message="includes custom buttons in the toolbar to dynamically add/delete/modify series on the chart" orientation="auto"></px-tooltip>
 
          <template is="dom-if" if="[[_isTimeseries(selectedChartType)]]">
             <div>
@@ -124,14 +124,6 @@ demonstrating dynamically adding/removing charts
             </div>
           </template>
 
-
-          <template is="dom-if" if="[[_canCanvas(selectedChartType)]]">
-            <div>
-              <input id="rendToCanvas" type="checkbox" checked="{{_chartOptions.canvas::change}}"></input>
-              <label for="rendToCanvas" class="label--inline">Render to canvas</label>
-            </div>
-          </template>
-
           <template is="dom-if" if="[[_canSvg(selectedChartType)]]">
             <div>
               <input id="rendToSvg" type="checkbox" checked="{{_chartOptions.rendToSvg::change}}"></input>
@@ -139,8 +131,25 @@ demonstrating dynamically adding/removing charts
             </div>
           </template>
 
+          <div>
+            <input id="hideRegister" type="checkbox" checked="{{_chartOptions.hideRegister::change}}"></input>
+            <label for="hideRegister" class="label--inline">Hide register</label>
+          </div>
+
+          <template is="dom-if" if="[[_canChartExtents(selectedChartType)]]">
+            <div>
+              <input id="includeChartExtents" type="checkbox" checked="{{_chartOptions.includeChartExtents::change}}"></input>
+              <label for="includeChartExtents" class="label--inline">Include chart extents</label>
+            </div>
+          </template>
 
 
+          <template is="dom-if" if="[[_canCanvas(selectedChartType)]]">
+            <div>
+              <input id="rendToCanvas" type="checkbox" checked="{{_chartOptions.canvas::change}}"></input>
+              <label for="rendToCanvas" class="label--inline">Render to canvas</label>
+            </div>
+          </template>
           <!-- progr rendering options-->
 
             <template is="dom-if" if="[[_canProgRender(selectedChartType, _chartOptions.canvas, _chartOptions.rendToSvg)]]">
@@ -184,7 +193,7 @@ demonstrating dynamically adding/removing charts
     </div>
     <div class="u-mt-">
       <px-tooltip for="btnCreate" delay="50" tooltip-message="Create charts and append them to the dom. Measures the time taken from before chart creation to the last drawing." orientation="auto"></px-tooltip>
-      <px-tooltip for="btnMove" delay="50" tooltip-message="Removes the last set of charts created and after 500ms append them to the dom again. The time measured does not take the 500ms into account. Don't use 'Clean on detached' when moving charts around the dom for better performance and ensuring the chart will redraw automatically rather than having to force it" orientation="top"></px-tooltip>
+      <px-tooltip for="btnMove" delay="50" tooltip-message="Removes the last set of charts created and after 500ms append them to the dom again. The time measured does not take the 500ms into account." orientation="top"></px-tooltip>
       <button id="btnCreate" class="btn btn--primary">Create chart(s)</button>
       <button id="btnRemove" class="btn">Remove last creation</button>
       <button id="btnMove" class="btn">Move last creation in DOM</button>
