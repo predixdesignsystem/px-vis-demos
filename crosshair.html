@@ -86,11 +86,6 @@
                 "horizontalLine": "none"
               }'
               chart-data="[[chartData]]"
-              toolbar-config='{
-                "config": {
-                  "crosshair": "true"
-                  }
-              }'
               render-to-canvas
               crosshair-data="{{crosshairData}}">
             </px-vis-timeseries> -->
@@ -119,11 +114,6 @@
                 "showTooltipData": "true"
               }'
               chart-data="[[chartData]]"
-              toolbar-config='{
-                "config": {
-                  "crosshair": "true"
-                  }
-              }'
               render-to-canvas
               crosshair-data="{{crosshairData}}">
             </px-vis-timeseries>
@@ -196,11 +186,6 @@
               register-config='{
                 "forceDateTimeDisplay": true
               }'
-              toolbar-config='{
-                "config": {
-                  "crosshair": "true"
-                  }
-              }'
               time-data="timeStamp"
               crosshair-data="{{crosshairData}}">
             </px-vis-xy-chart> -->
@@ -240,11 +225,6 @@
               }'
               chart-data="[[chartData]]"
               complete-series-config="{{completeSeriesConfigXY}}"
-              toolbar-config='{
-                "config": {
-                  "crosshairWithOptions": "true"
-                  }
-              }'
               time-data="timeStamp"
               crosshair-data="{{crosshairData}}">
             </px-vis-xy-chart>
@@ -261,12 +241,7 @@
               highlighter-config='{
                 "differentDataset": "true"
               }'
-              crosshair-data="{{crosshairData}}"
-              toolbar-config='{
-                "config": {
-                  "crosshair": "true"
-                  }
-              }'>
+              crosshair-data="{{crosshairData}}">
             </px-vis-parallel-coordinates>
           </div>
           <div class="minHeight">
@@ -280,12 +255,7 @@
               highlighter-config='{
                 "differentDataset": "true"
               }'
-              crosshair-data="{{crosshairData}}"
-              toolbar-config='{
-                "config": {
-                  "crosshair": "true"
-                  }
-              }'>
+              crosshair-data="{{crosshairData}}">
             </px-vis-radar>
           </div>
           <div class="minHeight">
@@ -305,11 +275,6 @@
                 }
               }'
               crosshair-data="{{crosshairData}}"
-              toolbar-config='{
-                "config": {
-                  "crosshair": "true"
-                  }
-              }'
               render-to-canvas
               time-data="timeStamp">
             </px-vis-polar> -->
@@ -328,11 +293,6 @@
                 "differentDataset": "true"
               }'
               crosshair-data="{{crosshairData}}"
-              toolbar-config='{
-                "config": {
-                  "crosshairWithOptions": "true"
-                  }
-              }'
               render-to-canvas
               time-data="timeStamp">
             </px-vis-polar>
@@ -377,48 +337,171 @@
       </template>
 
       <script type="text/javascript">
+
+      var timeseries,
+          xy,
+          para,
+          radar,
+          polar,
+          configs = {
+            "timeseries": {
+              config: {
+                advancedZoom: true,
+                pan: true,
+                tooltip: {selected: true },
+                crosshair: {
+                  onDeselect: function() { this.set("actionConfig.click", null); },
+                  actionConfig: {
+                    click: function() {
+                      this.set("interactionSpaceConfig.actionConfig.click", null);
+                      this.fire("px-freeze-crosshair");
+                    }
+                  }
+                }
+              }
+            },
+            "timeseriesFreeze": {
+              config: {
+                advancedZoom: true,
+                pan: true,
+                tooltip: {selected: true },
+                frozen: {
+                  tooltipLabel: 'Crosshair Frozen',
+                  icon: 'fa-anchor',
+                  eventName: "px-unfreeze-crosshair",
+                  onClickContext: "toolbar",
+                  customButtonStyle: "color: salmon;"
+                }
+              }
+            },
+            "xy": {
+              config: {
+                advancedZoom: true,
+                pan: true,
+                tooltip: {selected: true },
+                crosshairWithOptions: {
+                  onDeselect: function() { this.set("actionConfig.click", null); },
+                  actionConfig: {
+                    click: function() {
+                      this.set("interactionSpaceConfig.actionConfig.click", null);
+                      this.fire("px-freeze-crosshair");
+                    }
+                  }
+                }
+              }
+            },
+            "xyFreeze": {
+              config: {
+                advancedZoom: true,
+                pan: true,
+                tooltip: {selected: true },
+                frozen: {
+                  tooltipLabel: 'Crosshair Frozen',
+                  icon: 'fa-anchor',
+                  eventName: "px-unfreeze-crosshair",
+                  onClickContext: "toolbar",
+                  customButtonStyle: "color: salmon;"
+                }
+              }
+            },
+            "paraRadar": {
+              config: {
+                tooltip: {selected: true },
+                axisBrush: true,
+                axisDrag: true,
+                crosshair: {
+                  onDeselect: function() { this.set("actionConfig.click", null); },
+                  actionConfig: {
+                    click: function() {
+                      this.set("interactionSpaceConfig.actionConfig.click", null);
+                      this.fire("px-freeze-crosshair");
+                    }
+                  }
+                }
+              }
+            },
+            "paraRadarFreeze": {
+              config: {
+                tooltip: {selected: true },
+                axisBrush: true,
+                axisDrag: true,
+                frozen: {
+                  tooltipLabel: 'Crosshair Frozen',
+                  icon: 'fa-anchor',
+                  eventName: "px-unfreeze-crosshair",
+                  onClickContext: "toolbar",
+                  customButtonStyle: "color: salmon;"
+                }
+              }
+            },
+            "polar": {
+                "config": {
+                  tooltip: {selected: true },
+                  crosshairWithOptions: {
+                  onDeselect: function() { this.set("actionConfig.click", null); },
+                  actionConfig: {
+                    click: function() {
+                      this.set("interactionSpaceConfig.actionConfig.click", null);
+                      this.fire("px-freeze-crosshair");
+                    }
+                  }
+                }
+              }
+            },
+            "polarFreeze": {
+              "config": {
+                tooltip: {selected: true },
+                frozen: {
+                  tooltipLabel: 'Crosshair Frozen',
+                  icon: 'fa-anchor',
+                  eventName: "px-unfreeze-crosshair",
+                  onClickContext: "toolbar",
+                  customButtonStyle: "color: salmon;"
+                }
+              }
+            }
+          };
+
+        document.addEventListener('px-freeze-crosshair', function() {
+          timeseries.set("toolbarConfig", configs.timeseriesFreeze);
+          xy.set("toolbarConfig", configs.xyFreeze);
+          para.set("toolbarConfig", configs.paraRadarFreeze);
+          radar.set("toolbarConfig", configs.paraRadarFreeze);
+          polar.set("toolbarConfig", configs.polarFreeze);
+        });
+
+        document.addEventListener('px-unfreeze-crosshair', function() {
+          var empty = {
+            rawData: [],
+            timeStamps: []
+          };
+
+          timeseries.set("toolbarConfig", configs.timeseries);
+          xy.set("toolbarConfig", configs.xy);
+          para.set("toolbarConfig", configs.paraRadar);
+          radar.set("toolbarConfig", configs.paraRadar);
+          polar.set("toolbarConfig", configs.polar);
+
+          timeseries.set("crosshairData", empty);
+          xy.set("crosshairData", empty);
+          para.set("crosshairData", empty);
+          radar.set("crosshairData", empty);
+          polar.set("crosshairData", empty);
+        });
+
         document.addEventListener('WebComponentsReady', function() {
           setTimeout(function() {
-            var fetch1 = document.getElementById('fetch1'),
-                fetch2 = document.getElementById('fetch2'),
-                converter = document.getElementById('converter'),
-                timeseries = document.getElementById('timeseries'),
-                tsCursor = document.getElementById('tsCursor'),
-                xy = document.getElementById('xy'),
-                xyCursor = document.getElementById('xyCursor'),
-                para = document.getElementById('para'),
-                paraCursor = document.getElementById('paraCursor'),
-                aggregatedData = [];
+            timeseries = document.getElementById('timeseries'),
+            xy = document.getElementById('xy'),
+            para = document.getElementById('para'),
+            radar = document.getElementById('radar'),
+            polar = document.getElementById('polar'),
 
-            // var processData = function(data) {
-            //   aggregatedData.push(data);
-            //   if(aggregatedData.length === 2) {
-            //     converter.set('originalData', aggregatedData);
-            //   }
-            // };
-            //
-            // //get both set of data for 1st chart
-            // var handleResponse = function(evt) {
-            //   processData(evt.detail.response);
-            // }
-            //
-            // fetch1.addEventListener('response', handleResponse);
-            // fetch2.addEventListener('response', handleResponse);
-            //
-            // // if the data has been fetched already manually kick the event handler
-            // if(fetch1.lastResponse) {
-            //   processData(fetch1.lastResponse);
-            // }
-            // if(fetch2.lastResponse) {
-            //   processData(fetch2.lastResponse);
-            // }
-            // tsCursor.set('margin', timeseries._internalMargin);
-            // xyCursor.set('margin', xy._internalMargin);
-            // tsCursor.set('svg', timeseries.layer[3]);
-            // xyCursor.set('svg', xy.layer[3]);
-
-            // paraCursor.set('svg', para.layer[1]);
-            // paraCursor.set('dimensions', para.dimensions);
+            timeseries.set("toolbarConfig", configs.timeseries);
+            xy.set("toolbarConfig", configs.xy);
+            para.set("toolbarConfig", configs.paraRadar);
+            radar.set("toolbarConfig", configs.paraRadar);
+            polar.set("toolbarConfig", configs.polar);
           });
         });
 
