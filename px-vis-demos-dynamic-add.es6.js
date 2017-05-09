@@ -207,11 +207,13 @@
 
           if(result.length === 0 || this._generateOptions.randomise) {
             newData[name] = Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin;
+            newData['x'] = isPolar ? Math.random() * 360 : Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin;;
           } else {
             //contain change within 10% of previous value
             newData[name] = result[i-1][name] + (Math.random() * 2 -1) * this._generateOptions.variance;
+            newData['x'] = isPolar ? i%360 : i;
           }
-          newData['x'] = isPolar ? i%360 : i;
+
 
           if(!extents[axisName]) {
             extents[axisName] = [Number.MAX_VALUE, Number.MIN_VALUE];
@@ -699,7 +701,7 @@
           //deduct time + x
           return Object.keys(data[0]).length -2;
         case 'px-vis-polar':
-          return 1;
+          return Object.keys(data[0]).length -2;
         case 'px-vis-parallel-coordinates':
           //1massive multiline
           return 1;
@@ -859,6 +861,9 @@
       }
 
       chart.hideRegister = this._chartOptions.hideRegister;
+      chart.registerConfig = {
+        'forceDateTimeDisplay': 'true'
+      };
       chart.toolbarConfig = {'config': {
         'advancedZoom': true,
         'pan': true
@@ -915,10 +920,19 @@
 
         seriesConfig[`y${i}`] = {
           'x': 'x',
-          'y': `y${i}`
+          'y': `y${i}`,
+          'yAxisUnit': 'someUnit'
         };
       }
       chart.hideRegister = this._chartOptions.hideRegister;
+      chart.registerConfig = {
+        'forceDateTimeDisplay': 'true'
+      };
+      chart.toolbarConfig = {
+        'config': {
+          'crosshairWithOptions': true
+        }
+      }
       chart.height = 800;
       chart.seriesConfig = seriesConfig;
       chart.useDegrees = true;

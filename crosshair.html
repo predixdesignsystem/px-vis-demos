@@ -323,6 +323,12 @@
                 "yAxisUnit": "m/s",
                 "y": "y1",
                 "x":"y0"
+                },
+                "secondSerie": {
+                  "name": "Data",
+                  "yAxisUnit": "m/s",
+                  "y": "y2",
+                  "x":"y0"
                 }
               }'
               highlighter-config='{
@@ -334,7 +340,10 @@
                   "crosshairWithOptions": "true"
                   }
               }'
-              render-to-canvas
+              register-config='{
+                "forceDateTimeDisplay": true
+              }'
+
               time-data="timeStamp">
             </px-vis-polar>
           </div>
