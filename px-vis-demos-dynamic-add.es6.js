@@ -104,7 +104,11 @@
               'preventResize': false,
               'customToolbar': false,
               'hideRegister': false,
-              'includeChartExtents': false
+              'includeChartExtents': false,
+              'addEvents': false,
+              'eventsNumber': 4,
+              'eventsType': 'unicode',
+              'eventsNoLine': false
             };
           }
         },
@@ -352,7 +356,7 @@
             newChart.width = this._chartOptions.width;
           }
           newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
-          this._processOptions(newChart, extents);
+          this._processOptions(newChart, extents, data);
           newChart.chartData = data;
 
           if(this._chartOptions.customToolbar) {
@@ -713,11 +717,11 @@
       }
     }
 
-    _processOptions(chart, extents) {
+    _processOptions(chart, extents, data) {
 
       switch(this.selectedChartType) {
         case 'px-vis-timeseries':
-          this._processOptionsTS(chart, extents);
+          this._processOptionsTS(chart, extents, data);
           break;
         case 'px-vis-xy-chart':
           this._processOptionsXY(chart, extents);
@@ -736,7 +740,7 @@
       }
     }
 
-    _processOptionsTS(chart, extents) {
+    _processOptionsTS(chart, extents, data) {
 
       var seriesConfig = {},
           seriesNumber = this._chartOptions.disableNav ? this._drawingsPerChart : this._drawingsPerChart/2;
@@ -777,30 +781,39 @@
       }
 
       if(this._chartOptions.addEvents) {
-        chart.eventData = [{"id":"123","time":1271474800000,"label":"Recalibrate"},{"id":"456","time":771474800000,"label":"Fan start"},{"id":"789","time":927525220000,"label":"Fan stop"},{"id":"333","time":1412163600000,"label":"Default"}];
+
+        var step = (data[data.length - 1].timeStamp - data[0].timeStamp) / this._chartOptions.eventsNumber,
+            eventData = [];
+
+        for(var i=0; i<this._chartOptions.eventsNumber; i++) {
+          eventData.push({
+            'id': i,
+            'time': data[0].timeStamp + step*(i+0.5),
+            'label': this._chartOptions.eventsType
+          });
+        }
+
+        chart.eventData = eventData;
         chart.eventConfig = {
-                "Recalibrate":{
-                  "color": "blue",
-                  "icon": "fa-camera",
-                  "type": "fa",
-                  "offset":[0,0],
-                  "lineColor": "red",
-                  "lineWeight": 5
-                },
-                "Fan start":{
-                  "color": "green",
-                  "icon": "\uf015",
-                  "type": "unicode",
-                  "offset":[1,0]
-                },
-                "Fan stop":{
-                  "color": "blue",
-                  "icon": "fa-coffee",
-                  "type": "fa",
-                  "offset":[0,-20],
-                  "size":"20"
-                }
-              };
+          "fa":{
+            "color": "blue",
+            "icon": "fa-camera",
+            "type": "fa",
+            "offset":[0,0],
+            "lineColor": "red",
+            "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1
+          },
+          "unicode":{
+            "color": "green",
+            "icon": "\uf015",
+            "type": "unicode",
+            "offset":[1,0],
+            "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1
+          },
+          "default":{
+            "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1
+          }
+        };
       } else {
         //make sure we clean it
         chart.eventData = [];

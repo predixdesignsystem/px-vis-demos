@@ -95,10 +95,25 @@ demonstrating dynamically adding/removing charts
               <input id="disableNav" type="checkbox" checked="{{_chartOptions.disableNav::change}}"></input>
               <label for="disableNav" class="label--inline">disable Navigator</label>
             </div>
+            <!--EVENTS-->
             <div>
               <input id="addEvents" type="checkbox" checked="{{_chartOptions.addEvents::change}}"></input>
               <label for="addEvents" class="label--inline">Add some events</label>
             </div>
+            <!--EVENTS OPTIONS-->
+            <template is="dom-if" if="[[_chartOptions.addEvents]]">
+              <div class="u-pl">
+                <label for="eventsNumber" id="eventsNumberLabel">Number of Events</label>
+                <input id="eventsNumber" type="number" class="text-input input--tiny" value="{{_chartOptions.eventsNumber::input}}"></input>
+                <label for="eventsType" id="eventsTypeLabel">Type (fa, unicode, default)</label>
+                <input id="eventsType" type="text" class="text-input input--tiny" value="{{_chartOptions.eventsType::input}}"></input>
+                <div>
+                  <input id="eventsNoLine" type="checkbox" checked="{{_chartOptions.eventsNoLine::change}}"></input>
+                  <label for="eventsNoLine" class="label--inline">No line</label>
+                </div>
+              </div>
+            </template>
+            <!--THRESHOLD-->
             <div>
               <input id="addThresholds" type="checkbox" checked="{{_chartOptions.addThresholds::change}}"></input>
               <label for="addThresholds" class="label--inline">Add some thresholds</label>
