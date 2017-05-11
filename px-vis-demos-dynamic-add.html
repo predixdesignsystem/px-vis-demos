@@ -132,6 +132,7 @@ demonstrating dynamically adding/removing charts
             </div>
           </template>
 
+          <!--Scatter-->
           <template is="dom-if" if="[[_canScatter(selectedChartType)]]">
             <div>
               <input id="scatterType" type="checkbox" checked="{{_chartOptions.scatter::change}}"></input>

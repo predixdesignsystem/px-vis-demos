@@ -801,17 +801,20 @@
             "type": "fa",
             "offset":[0,0],
             "lineColor": "red",
-            "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1
+            "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1,
+            'enableTooltip': true
           },
           "unicode":{
             "color": "green",
             "icon": "\uf015",
             "type": "unicode",
             "offset":[1,0],
-            "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1
+            "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1,
+            'enableTooltip': true
           },
           "default":{
-            "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1
+            "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1,
+            'enableTooltip': true
           }
         };
       } else {
