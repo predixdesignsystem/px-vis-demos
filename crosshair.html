@@ -346,14 +346,12 @@
           configs = {
             "timeseries": {
               config: {
-                advancedZoom: true,
-                pan: true,
-                tooltip: {selected: true },
+                advancedZoom: { actionConfig: { click: null } },
+                pan: { actionConfig: { click: null } },
+                tooltip: {selected: true, actionConfig: { click: null } },
                 crosshair: {
-                  onDeselect: function() { this.set("actionConfig.click", null); },
                   actionConfig: {
                     click: function() {
-                      this.set("interactionSpaceConfig.actionConfig.click", null);
                       this.fire("px-freeze-crosshair");
                     }
                   }
@@ -362,9 +360,9 @@
             },
             "timeseriesFreeze": {
               config: {
-                advancedZoom: true,
-                pan: true,
-                tooltip: {selected: true },
+                advancedZoom: { actionConfig: { click: null } },
+                pan: { actionConfig: { click: null } },
+                tooltip: {selected: true, actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
                   icon: 'fa-anchor',
@@ -376,14 +374,12 @@
             },
             "xy": {
               config: {
-                advancedZoom: true,
-                pan: true,
-                tooltip: {selected: true },
+                advancedZoom: { actionConfig: { click: null } },
+                pan: { actionConfig: { click: null } },
+                tooltip: {selected: true, actionConfig: { click: null } },
                 crosshairWithOptions: {
-                  onDeselect: function() { this.set("actionConfig.click", null); },
                   actionConfig: {
                     click: function() {
-                      this.set("interactionSpaceConfig.actionConfig.click", null);
                       this.fire("px-freeze-crosshair");
                     }
                   }
@@ -392,9 +388,9 @@
             },
             "xyFreeze": {
               config: {
-                advancedZoom: true,
-                pan: true,
-                tooltip: {selected: true },
+                advancedZoom: { actionConfig: { click: null } },
+                pan: { actionConfig: { click: null } },
+                tooltip: {selected: true, actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
                   icon: 'fa-anchor',
@@ -406,14 +402,12 @@
             },
             "paraRadar": {
               config: {
-                tooltip: {selected: true },
-                axisBrush: true,
-                axisDrag: true,
+                tooltip: {selected: true, actionConfig: { click: null } },
+                axisBrush: { actionConfig: { click: null } },
+                axisDrag: { actionConfig: { click: null } },
                 crosshair: {
-                  onDeselect: function() { this.set("actionConfig.click", null); },
                   actionConfig: {
                     click: function() {
-                      this.set("interactionSpaceConfig.actionConfig.click", null);
                       this.fire("px-freeze-crosshair");
                     }
                   }
@@ -422,9 +416,9 @@
             },
             "paraRadarFreeze": {
               config: {
-                tooltip: {selected: true },
-                axisBrush: true,
-                axisDrag: true,
+                tooltip: {selected: true, actionConfig: { click: null } },
+                axisBrush: { actionConfig: { click: null } },
+                axisDrag: { actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
                   icon: 'fa-anchor',
@@ -436,12 +430,10 @@
             },
             "polar": {
                 "config": {
-                  tooltip: {selected: true },
+                  tooltip: {selected: true, actionConfig: { click: null } },
                   crosshairWithOptions: {
-                  onDeselect: function() { this.set("actionConfig.click", null); },
                   actionConfig: {
                     click: function() {
-                      this.set("interactionSpaceConfig.actionConfig.click", null);
                       this.fire("px-freeze-crosshair");
                     }
                   }
@@ -450,7 +442,7 @@
             },
             "polarFreeze": {
               "config": {
-                tooltip: {selected: true },
+                tooltip: {selected: true, actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
                   icon: 'fa-anchor',
