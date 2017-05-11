@@ -287,13 +287,26 @@
                 "yAxisUnit": "m/s",
                 "y": "y1",
                 "x":"y0"
+                },
+                "secondSerie": {
+                  "name": "Data",
+                  "yAxisUnit": "m/s",
+                  "y": "y2",
+                  "x":"y0"
                 }
               }'
               highlighter-config='{
                 "differentDataset": "true"
               }'
               crosshair-data="{{crosshairData}}"
-              render-to-canvas
+              toolbar-config='{
+                "config": {
+                  "crosshairWithOptions": "true"
+                  }
+              }'
+              register-config='{
+                "forceDateTimeDisplay": true
+              }'
               time-data="timeStamp">
             </px-vis-polar>
           </div>

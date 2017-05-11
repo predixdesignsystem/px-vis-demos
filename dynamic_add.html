@@ -9,6 +9,10 @@
         <!--<script src="../webcomponentsjs/webcomponents-lite.min.js"></script>-->
         <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
         <script type="text/javascript">
+        window.addEventListener('px-vis-worker-url-request', function(e) {
+          Px.vis.workerUrl = '../../demo/px-vis-worker.js';
+          Px.vis.workerD3Url = '../lol/d3.min.js';
+        });
         (function() {
           'use strict';
 
