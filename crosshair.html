@@ -221,7 +221,8 @@
                 "x": "y0"
               }'
               highlighter-config='{
-                "differentDataset": "true"
+                "differentDataset": "true",
+                "showTooltipData": "true"
               }'
               chart-data="[[chartData]]"
               complete-series-config="{{completeSeriesConfigXY}}"
@@ -239,7 +240,8 @@
               match-ticks
               generate-axes-from-data
               highlighter-config='{
-                "differentDataset": "true"
+                "differentDataset": "true",
+                "showTooltipData": "true"
               }'
               crosshair-data="{{crosshairData}}">
             </px-vis-parallel-coordinates>
@@ -253,7 +255,8 @@
               series-key="timeStamp"
               generate-axes-from-data
               highlighter-config='{
-                "differentDataset": "true"
+                "differentDataset": "true",
+                "showTooltipData": "true"
               }'
               crosshair-data="{{crosshairData}}">
             </px-vis-radar>
@@ -296,8 +299,10 @@
                 }
               }'
               highlighter-config='{
-                "differentDataset": "true"
+                "differentDataset": "true",
+                "showTooltipData": "true"
               }'
+              render-to-canvas
               crosshair-data="{{crosshairData}}"
               toolbar-config='{
                 "config": {
@@ -360,7 +365,7 @@
             "timeseries": {
               config: {
                 advancedZoom: { actionConfig: { click: null } },
-                pan: { actionConfig: { click: null } },
+                pan: { actionConfig: { click: 'null' } },
                 tooltip: {selected: true, actionConfig: { click: null } },
                 crosshair: {
                   actionConfig: {
@@ -378,7 +383,7 @@
                 tooltip: {selected: true, actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
-                  icon: 'fa-anchor',
+                  icon: 'fa-lock',
                   eventName: "px-unfreeze-crosshair",
                   onClickContext: "toolbar",
                   customButtonStyle: "color: salmon;"
@@ -406,7 +411,7 @@
                 tooltip: {selected: true, actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
-                  icon: 'fa-anchor',
+                  icon: 'fa-lock',
                   eventName: "px-unfreeze-crosshair",
                   onClickContext: "toolbar",
                   customButtonStyle: "color: salmon;"
@@ -434,7 +439,7 @@
                 axisDrag: { actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
-                  icon: 'fa-anchor',
+                  icon: 'fa-lock',
                   eventName: "px-unfreeze-crosshair",
                   onClickContext: "toolbar",
                   customButtonStyle: "color: salmon;"
@@ -458,7 +463,7 @@
                 tooltip: {selected: true, actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
-                  icon: 'fa-anchor',
+                  icon: 'fa-lock',
                   eventName: "px-unfreeze-crosshair",
                   onClickContext: "toolbar",
                   customButtonStyle: "color: salmon;"
