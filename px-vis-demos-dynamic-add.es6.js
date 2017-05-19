@@ -108,7 +108,8 @@
               'addEvents': false,
               'eventsNumber': 4,
               'eventsType': 'unicode',
-              'eventsNoLine': false
+              'eventsNoLine': false,
+              'eventsNoTooltip': false
             };
           }
         },
@@ -333,7 +334,6 @@
             if(this.chartPool[this.selectedChartType].length) {
               newChart = this.chartPool[this.selectedChartType].pop();
 
-              //newChart.width = newChart.width -1;
             } else {
               console.log(`failed to reuse ${this.selectedChartType} from chartPool, none available`);
               newChart = document.createElement(this.selectedChartType);
@@ -345,10 +345,8 @@
           //adjust div height if needed
           newChart.preventResize = this._chartOptions.preventResize;
           if(!newChart.preventResize) {
-            newDiv.style['height'] = `${this._chartOptions.height}px`;
+            newChart.height = this._chartOptions.height;
           }
-
-
 
           //process all chart options
           if(newChart.preventResize) {
@@ -631,13 +629,15 @@
             'id': `axis${numberId}`,
             'number': numberId,
             'side': side
-          }
+          },
+          'yAxisUnit': 'units'
         };
       } else {
         result = {
           'x': isTS ? 'timeStamp' : 'x',
           'y': `y${numberId}`,
-          'type': type
+          'type': type,
+          'yAxisUnit': 'units'
         };
       }
 
@@ -650,9 +650,11 @@
 
       if(lastWrap) {
 
-        //store used charts for later
-        for(var i=0; i<lastWrap.children.length; i++) {
-          this.chartPool[lastWrap.children[i].nodeName.toLowerCase()].push(lastWrap.children[i]);
+        if(this.$.reuse.checked) {
+          //store used charts for later
+          for(var i=0; i<lastWrap.children.length; i++) {
+            this.chartPool[lastWrap.children[i].nodeName.toLowerCase()].push(lastWrap.children[i]);
+          }
         }
 
         Polymer.dom(this.$.chartHolder).removeChild(lastWrap);
@@ -802,7 +804,7 @@
             "offset":[0,0],
             "lineColor": "red",
             "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1,
-            'enableTooltip': true
+            'enableTooltip': this._chartOptions.eventsNoTooltip ? false : true
           },
           "unicode":{
             "color": "green",
@@ -810,11 +812,11 @@
             "type": "unicode",
             "offset":[1,0],
             "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1,
-            'enableTooltip': true
+            'enableTooltip': this._chartOptions.eventsNoTooltip ? false : true
           },
           "default":{
             "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1,
-            'enableTooltip': true
+            'enableTooltip': this._chartOptions.eventsNoTooltip ? false : true
           }
         };
       } else {

@@ -111,6 +111,11 @@ demonstrating dynamically adding/removing charts
                   <input id="eventsNoLine" type="checkbox" checked="{{_chartOptions.eventsNoLine::change}}"></input>
                   <label for="eventsNoLine" class="label--inline">No line</label>
                 </div>
+                <div>
+                  <input id="eventsDisableTooltip" type="checkbox" checked="{{_chartOptions.eventsNoTooltip::change}}"></input>
+                  <label id="eventsDisableTooltipLabel" for="eventsDisableTooltip" class="label--inline">Disable tooltip</label>
+                  <px-tooltip for="eventsDisableTooltipLabel" delay="50" tooltip-message="Disable event tooltip for faster events drawing and significantly reduce memory usage." orientation="top"></px-tooltip>
+                </div>
               </div>
             </template>
             <!--THRESHOLD-->

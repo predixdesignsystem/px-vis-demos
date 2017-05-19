@@ -36,7 +36,7 @@
     "px-dropdown": "^3.0.0",
     "px-tooltip": "^0.10.18",
     "px-box-design": "^0.4.4",
-    "px-demo-data": "^0.0.20"
+    "px-demo-data": "^0.0.21"
   },
   "devDependencies": {
     "px-meta-buttons-design": "^0.6.2",
