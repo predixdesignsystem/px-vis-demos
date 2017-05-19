@@ -1,298 +1,312 @@
 <!doctype html>
 
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Crosshair example</title>
-        <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
-        <!--<script src="../webcomponentsjs/webcomponents-lite.min.js"></script>-->
-        <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
-        <link rel="import" href="../px-theme/px-theme-styles.html" defer>
-        <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
-        <style include="px-theme-styles" is="custom-style"></style>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Crosshair example</title>
+      <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+      <!--<script src="../webcomponentsjs/webcomponents-lite.min.js"></script>-->
+      <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+      <link rel="import" href="../px-theme/px-theme-styles.html" defer>
+      <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
+      <style include="px-theme-styles" is="custom-style"></style>
 
-        <link rel="import" href="../px-vis/px-vis-data-converter.html" defer />
-        <link rel="import" href="../px-vis-timeseries/px-vis-timeseries.html" defer />
-        <link rel="import" href="../px-vis-xy-chart/px-vis-xy-chart.html" defer />
-        <link rel="import" href="../px-vis-parallel-coordinates/px-vis-parallel-coordinates.html" defer />
-        <link rel="import" href="../px-vis-radar/px-vis-radar.html" defer />
-        <link rel="import" href="../px-vis-polar/px-vis-polar.html" defer />
-        <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
+      <link rel="import" href="../px-vis/px-vis-data-converter.html" defer />
+      <link rel="import" href="../px-vis-timeseries/px-vis-timeseries.html" defer />
+      <link rel="import" href="../px-vis-xy-chart/px-vis-xy-chart.html" defer />
+      <link rel="import" href="../px-vis-parallel-coordinates/px-vis-parallel-coordinates.html" defer />
+      <link rel="import" href="../px-vis-radar/px-vis-radar.html" defer />
+      <link rel="import" href="../px-vis-polar/px-vis-polar.html" defer />
+      <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
 
-        <link rel="import" href="css/px-vis-demos-styles.html" defer>
-        <style include="px-vis-demos-styles" is="custom-style"></style>
+      <link rel="import" href="css/px-vis-demos-styles.html" defer>
+      <style include="px-vis-demos-styles" is="custom-style"></style>
 
-    </head>
+  </head>
 
-    <body style="padding:30px; ">
-      <template is="dom-bind">
-        <style>
-          .wapper {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-auto-rows: 300px;
-          }
-        </style>
-        <div class="wapper">
-          <div class="minHeight">
+  <body style="padding:30px; ">
+    <template is="dom-bind">
+      <style>
+        .wapper {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          grid-auto-rows: 300px;
+        }
+      </style>
+      <div class="wapper">
+        <div class="minHeight">
 
-            <!-- <px-vis-timeseries
-              id="timeseries"
-              disable-navigator
-              chart-extents='{
-                "x": ["dynamic","dynamic"],
-                "y": [-100,220]
-              }'
-              series-config='{
-                "DWATT":{"y":"DWATT"},
-                "TTXD1_1":{"y":"TTXD1_1"},
-                "TTXD1_2":{"y":"TTXD1_2"},
-                "TTXD1_3":{"y":"TTXD1_3"},
-                "TTXD1_4":{"y":"TTXD1_4"},
-                "TTXD1_5":{"y":"TTXD1_5"},
-                "TTXD1_6":{"y":"TTXD1_6"},
-                "TTXD1_7":{"y":"TTXD1_7"},
-                "TTXD1_8":{"y":"TTXD1_8"},
-                "TTXD1_9":{"y":"TTXD1_9"},
-                "TTXD1_10":{"y":"TTXD1_10"},
-                "TTXD1_11":{"y":"TTXD1_11"},
-                "TTXD1_12":{"y":"TTXD1_12"},
-                "TTXD1_13":{"y":"TTXD1_13"},
-                "TTXD1_14":{"y":"TTXD1_14"},
-                "TTXD1_15":{"y":"TTXD1_15"},
-                "TTXD1_16":{"y":"TTXD1_16"},
-                "TTXD1_17":{"y":"TTXD1_17"},
-                "TTXD1_18":{"y":"TTXD1_18"},
-                "TTXD1_19":{"y":"TTXD1_19"},
-                "TTXD1_20":{"y":"TTXD1_20"},
-                "TTXD1_21":{"y":"TTXD1_21"},
-                "TTXD1_22":{"y":"TTXD1_22"},
-                "TTXD1_23":{"y":"TTXD1_23"},
-                "TTXD1_24":{"y":"TTXD1_24"},
-                "TTXD1_25":{"y":"TTXD1_25"},
-                "TTXD1_26":{"y":"TTXD1_26"},
-                "TTXD1_27":{"y":"TTXD1_27"},
-                "TTXD1_28":{"y":"TTXD1_28"},
-                "TTXD1_29":{"y":"TTXD1_29"},
-                "TTXD1_30":{"y":"TTXD1_30"},
-                "TTXD1_31":{"y":"TTXD1_31"}
-              }'
-              default-series-config='{
-                "type": "line",
-                "x": "TimeStamp"
-              }'
-              cursor-config='{
-                "horizontalLine": "none"
-              }'
-              chart-data="[[chartData]]"
-              render-to-canvas
-              crosshair-data="{{crosshairData}}">
-            </px-vis-timeseries> -->
-            <px-vis-timeseries
-              id="timeseries"
-              disable-navigator
-              chart-extents='{
-                "x": ["dynamic","dynamic"],
-                "y": ["dynamic","dynamic"]
-              }'
-              series-config='{
-                "y0":{"y":"y0"},
-                "y1":{"y":"y1"},
-                "y2":{"y":"y2"},
-                "y3":{"y":"y3"}
-              }'
-              default-series-config='{
-                "type": "line",
-                "x": "timeStamp"
-              }'
-              cursor-config='{
-                "horizontalLine": "none"
-              }'
-              highlighter-config='{
-                "differentDataset": "true",
-                "showTooltipData": "true"
-              }'
-              chart-data="[[chartData]]"
-              render-to-canvas
-              crosshair-data="{{crosshairData}}">
-            </px-vis-timeseries>
-            <!-- highlighter-config='{
-              "fuzz": 10000000000,
-              "differentDataset": "true"
-            }' -->
-          </div>
-          <div class="minHeight">
-            <!-- <px-vis-xy-chart
-              id="xy"
-              x="{{xXY}}"
-              y="{{yXY}}"
-              margin='{
-                "top": 5,
-                "bottom":25,
-                "left":50,
-                "right": 10
-              }'
-              render-to-canvas
-              cursor-config='{
-                "horizontalLine": "none"
-              }'
-              series-config='{
-                "TTXD1_1":{"y":"TTXD1_1"},
-                "TTXD1_2":{"y":"TTXD1_2"},
-                "TTXD1_3":{"y":"TTXD1_3"},
-                "TTXD1_4":{"y":"TTXD1_4"},
-                "TTXD1_5":{"y":"TTXD1_5"},
-                "TTXD1_6":{"y":"TTXD1_6"},
-                "TTXD1_7":{"y":"TTXD1_7"},
-                "TTXD1_8":{"y":"TTXD1_8"},
-                "TTXD1_9":{"y":"TTXD1_9"},
-                "TTXD1_10":{"y":"TTXD1_10"},
-                "TTXD1_11":{"y":"TTXD1_11"},
-                "TTXD1_12":{"y":"TTXD1_12"},
-                "TTXD1_13":{"y":"TTXD1_13"},
-                "TTXD1_14":{"y":"TTXD1_14"},
-                "TTXD1_15":{"y":"TTXD1_15"},
-                "TTXD1_16":{"y":"TTXD1_16"},
-                "TTXD1_17":{"y":"TTXD1_17"},
-                "TTXD1_18":{"y":"TTXD1_18"},
-                "TTXD1_19":{"y":"TTXD1_19"},
-                "TTXD1_20":{"y":"TTXD1_20"},
-                "TTXD1_21":{"y":"TTXD1_21"},
-                "TTXD1_22":{"y":"TTXD1_22"},
-                "TTXD1_23":{"y":"TTXD1_23"},
-                "TTXD1_24":{"y":"TTXD1_24"},
-                "TTXD1_25":{"y":"TTXD1_25"},
-                "TTXD1_26":{"y":"TTXD1_26"},
-                "TTXD1_27":{"y":"TTXD1_27"},
-                "TTXD1_28":{"y":"TTXD1_28"},
-                "TTXD1_29":{"y":"TTXD1_29"},
-                "TTXD1_30":{"y":"TTXD1_30"},
-                "TTXD1_31":{"y":"TTXD1_31"}
-              }'
-              chart-extents='{
-                "x": ["dynamic","dynamic"],
-                "y": ["dynamic","dynamic"]
-              }'
-              register-config='{
-                "width": "200"
-              }'
-              default-series-config='{
-                "type": "line",
-                "x": "DWATT"
-              }'
-              chart-data="[[chartData]]"
-              complete-series-config="{{completeSeriesConfigXY}}"
-              register-config='{
-                "forceDateTimeDisplay": true
-              }'
-              time-data="timeStamp"
-              crosshair-data="{{crosshairData}}">
-            </px-vis-xy-chart> -->
-            <px-vis-xy-chart
-              id="xy"
-              x="{{xXY}}"
-              y="{{yXY}}"
-              margin='{
-                "top": 5,
-                "bottom":25,
-                "left":50,
-                "right": 10
-              }'
-              render-to-canvas
-              cursor-config='{
-                "horizontalLine": "none"
-              }'
-              series-config='{
-                "y1":{"y":"y1"},
-                "y2":{"y":"y2"},
-                "y3":{"y":"y3"}
-              }'
-              chart-extents='{
-                "x": [-22.24199292206744, -0.43866923095145993],
-                "y": [-33.52963395931802, 28.004654266239058]
-              }'
-              register-config='{
-                "width": "200",
-                "forceDateTimeDisplay": "true"
-              }'
-              default-series-config='{
-                "type": "scatter",
-                "x": "y0"
-              }'
-              highlighter-config='{
-                "differentDataset": "true"
-              }'
-              chart-data="[[chartData]]"
-              complete-series-config="{{completeSeriesConfigXY}}"
-              time-data="timeStamp"
-              crosshair-data="{{crosshairData}}">
-            </px-vis-xy-chart>
-          </div>
-          <div class="minHeight">
-            <!-- series-key="TimeStamp" -->
-            <px-vis-parallel-coordinates
-              id="para"
-              chart-data="[[chartData]]"
-              skip-keys='{"x":true, "DLN_MODE": true, "UnitNumber": true, "TimeStamp": true}'
-              series-key="timeStamp"
-              match-ticks
-              generate-axes-from-data
-              highlighter-config='{
-                "differentDataset": "true"
-              }'
-              crosshair-data="{{crosshairData}}">
-            </px-vis-parallel-coordinates>
-          </div>
-          <div class="minHeight">
-            <!-- series-key="TimeStamp" -->
-            <px-vis-radar
-              id="radar"
-              chart-data="[[chartData]]"
-              skip-keys='{"x":true, "DLN_MODE": true, "UnitNumber": true, "TimeStamp": true}'
-              series-key="timeStamp"
-              generate-axes-from-data
-              highlighter-config='{
-                "differentDataset": "true"
-              }'
-              crosshair-data="{{crosshairData}}">
-            </px-vis-radar>
-          </div>
-          <div class="minHeight">
-            <!-- highlighter-config='{
-              "fuzz": 10000000000,
-              "differentDataset": "true"
-            }' -->
-            <!-- <px-vis-polar
-              id="polar"
-              chart-data="[[chartData]]"
-              series-config='{
-                "firstSerie": {
+          <!-- <px-vis-timeseries
+            id="timeseries"
+            disable-navigator
+            chart-extents='{
+              "x": ["dynamic","dynamic"],
+              "y": [-100,220]
+            }'
+            series-config='{
+              "DWATT":{"y":"DWATT"},
+              "TTXD1_1":{"y":"TTXD1_1"},
+              "TTXD1_2":{"y":"TTXD1_2"},
+              "TTXD1_3":{"y":"TTXD1_3"},
+              "TTXD1_4":{"y":"TTXD1_4"},
+              "TTXD1_5":{"y":"TTXD1_5"},
+              "TTXD1_6":{"y":"TTXD1_6"},
+              "TTXD1_7":{"y":"TTXD1_7"},
+              "TTXD1_8":{"y":"TTXD1_8"},
+              "TTXD1_9":{"y":"TTXD1_9"},
+              "TTXD1_10":{"y":"TTXD1_10"},
+              "TTXD1_11":{"y":"TTXD1_11"},
+              "TTXD1_12":{"y":"TTXD1_12"},
+              "TTXD1_13":{"y":"TTXD1_13"},
+              "TTXD1_14":{"y":"TTXD1_14"},
+              "TTXD1_15":{"y":"TTXD1_15"},
+              "TTXD1_16":{"y":"TTXD1_16"},
+              "TTXD1_17":{"y":"TTXD1_17"},
+              "TTXD1_18":{"y":"TTXD1_18"},
+              "TTXD1_19":{"y":"TTXD1_19"},
+              "TTXD1_20":{"y":"TTXD1_20"},
+              "TTXD1_21":{"y":"TTXD1_21"},
+              "TTXD1_22":{"y":"TTXD1_22"},
+              "TTXD1_23":{"y":"TTXD1_23"},
+              "TTXD1_24":{"y":"TTXD1_24"},
+              "TTXD1_25":{"y":"TTXD1_25"},
+              "TTXD1_26":{"y":"TTXD1_26"},
+              "TTXD1_27":{"y":"TTXD1_27"},
+              "TTXD1_28":{"y":"TTXD1_28"},
+              "TTXD1_29":{"y":"TTXD1_29"},
+              "TTXD1_30":{"y":"TTXD1_30"},
+              "TTXD1_31":{"y":"TTXD1_31"}
+            }'
+            default-series-config='{
+              "type": "line",
+              "x": "TimeStamp"
+            }'
+            cursor-config='{
+              "horizontalLine": "none"
+            }'
+            chart-data="[[chartData]]"
+            render-to-canvas
+            crosshair-data="{{crosshairData}}">
+          </px-vis-timeseries> -->
+          <px-vis-timeseries
+            id="timeseries"
+            disable-navigator
+            chart-extents='{
+              "x": ["dynamic","dynamic"],
+              "y": ["dynamic","dynamic"]
+            }'
+            series-config='{
+              "y0":{"y":"y0"},
+              "y1":{"y":"y1"},
+              "y2":{"y":"y2"},
+              "y3":{"y":"y3"}
+            }'
+            default-series-config='{
+              "type": "line",
+              "x": "timeStamp"
+            }'
+            cursor-config='{
+              "horizontalLine": "none"
+            }'
+            highlighter-config='{
+              "differentDataset": "true",
+              "showTooltipData": "true"
+            }'
+            chart-data="[[chartData]]"
+            render-to-canvas
+            crosshair-data="{{crosshairData}}">
+          </px-vis-timeseries>
+          <!-- highlighter-config='{
+            "fuzz": 10000000000,
+            "differentDataset": "true"
+          }' -->
+        </div>
+        <div class="minHeight">
+          <!-- <px-vis-xy-chart
+            id="xy"
+            x="{{xXY}}"
+            y="{{yXY}}"
+            margin='{
+              "top": 5,
+              "bottom":25,
+              "left":50,
+              "right": 10
+            }'
+            render-to-canvas
+            cursor-config='{
+              "horizontalLine": "none"
+            }'
+            series-config='{
+              "TTXD1_1":{"y":"TTXD1_1"},
+              "TTXD1_2":{"y":"TTXD1_2"},
+              "TTXD1_3":{"y":"TTXD1_3"},
+              "TTXD1_4":{"y":"TTXD1_4"},
+              "TTXD1_5":{"y":"TTXD1_5"},
+              "TTXD1_6":{"y":"TTXD1_6"},
+              "TTXD1_7":{"y":"TTXD1_7"},
+              "TTXD1_8":{"y":"TTXD1_8"},
+              "TTXD1_9":{"y":"TTXD1_9"},
+              "TTXD1_10":{"y":"TTXD1_10"},
+              "TTXD1_11":{"y":"TTXD1_11"},
+              "TTXD1_12":{"y":"TTXD1_12"},
+              "TTXD1_13":{"y":"TTXD1_13"},
+              "TTXD1_14":{"y":"TTXD1_14"},
+              "TTXD1_15":{"y":"TTXD1_15"},
+              "TTXD1_16":{"y":"TTXD1_16"},
+              "TTXD1_17":{"y":"TTXD1_17"},
+              "TTXD1_18":{"y":"TTXD1_18"},
+              "TTXD1_19":{"y":"TTXD1_19"},
+              "TTXD1_20":{"y":"TTXD1_20"},
+              "TTXD1_21":{"y":"TTXD1_21"},
+              "TTXD1_22":{"y":"TTXD1_22"},
+              "TTXD1_23":{"y":"TTXD1_23"},
+              "TTXD1_24":{"y":"TTXD1_24"},
+              "TTXD1_25":{"y":"TTXD1_25"},
+              "TTXD1_26":{"y":"TTXD1_26"},
+              "TTXD1_27":{"y":"TTXD1_27"},
+              "TTXD1_28":{"y":"TTXD1_28"},
+              "TTXD1_29":{"y":"TTXD1_29"},
+              "TTXD1_30":{"y":"TTXD1_30"},
+              "TTXD1_31":{"y":"TTXD1_31"}
+            }'
+            chart-extents='{
+              "x": ["dynamic","dynamic"],
+              "y": ["dynamic","dynamic"]
+            }'
+            register-config='{
+              "width": "200"
+            }'
+            default-series-config='{
+              "type": "line",
+              "x": "DWATT"
+            }'
+            chart-data="[[chartData]]"
+            complete-series-config="{{completeSeriesConfigXY}}"
+            register-config='{
+              "forceDateTimeDisplay": true
+            }'
+            time-data="timeStamp"
+            crosshair-data="{{crosshairData}}">
+          </px-vis-xy-chart> -->
+          <px-vis-xy-chart
+            id="xy"
+            x="{{xXY}}"
+            y="{{yXY}}"
+            margin='{
+              "top": 5,
+              "bottom":25,
+              "left":50,
+              "right": 10
+            }'
+            render-to-canvas
+            cursor-config='{
+              "horizontalLine": "none"
+            }'
+            series-config='{
+              "y1":{"y":"y1"},
+              "y2":{"y":"y2"},
+              "y3":{"y":"y3"}
+            }'
+            chart-extents='{
+              "x": [-22.24199292206744, -0.43866923095145993],
+              "y": [-33.52963395931802, 28.004654266239058]
+            }'
+            register-config='{
+              "width": "200",
+              "forceDateTimeDisplay": "true"
+            }'
+            default-series-config='{
+              "type": "scatter",
+              "x": "y0"
+            }'
+            highlighter-config='{
+              "differentDataset": "true",
+              "showTooltipData": "true"
+            }'
+            chart-data="[[chartData]]"
+            complete-series-config="{{completeSeriesConfigXY}}"
+            time-data="timeStamp"
+            crosshair-data="{{crosshairData}}">
+          </px-vis-xy-chart>
+        </div>
+        <div class="minHeight">
+          <!-- series-key="TimeStamp" -->
+          <px-vis-parallel-coordinates
+            id="para"
+            chart-data="[[chartData]]"
+            skip-keys='{"x":true, "DLN_MODE": true, "UnitNumber": true, "TimeStamp": true}'
+            series-key="timeStamp"
+            match-ticks
+            generate-axes-from-data
+            highlighter-config='{
+              "differentDataset": "true",
+              "showTooltipData": "true"
+            }'
+            crosshair-data="{{crosshairData}}">
+          </px-vis-parallel-coordinates>
+        </div>
+        <div class="minHeight">
+          <!-- series-key="TimeStamp" -->
+          <px-vis-radar
+            id="radar"
+            chart-data="[[chartData]]"
+            skip-keys='{"x":true, "DLN_MODE": true, "UnitNumber": true, "TimeStamp": true}'
+            series-key="timeStamp"
+            generate-axes-from-data
+            highlighter-config='{
+              "differentDataset": "true",
+              "showTooltipData": "true"
+            }'
+            crosshair-data="{{crosshairData}}">
+          </px-vis-radar>
+        </div>
+        <div class="minHeight">
+          <!-- highlighter-config='{
+            "fuzz": 10000000000,
+            "differentDataset": "true"
+          }' -->
+          <!-- <px-vis-polar
+            id="polar"
+            chart-data="[[chartData]]"
+            series-config='{
+              "firstSerie": {
+              "name": "Data",
+              "yAxisUnit": "m/s",
+              "y": "TTXD1_22",
+              "x":"TTXD1_4"
+              }
+            }'
+            crosshair-data="{{crosshairData}}"
+            render-to-canvas
+            time-data="timeStamp">
+          </px-vis-polar> -->
+          <px-vis-polar
+            id="polar"
+            chart-data="[[chartData]]"
+            series-config='{
+              "firstSerie": {
+              "name": "Data",
+              "yAxisUnit": "m/s",
+              "y": "y1",
+              "x":"y0"
+              },
+              "secondSerie": {
                 "name": "Data",
                 "yAxisUnit": "m/s",
-                "y": "TTXD1_22",
-                "x":"TTXD1_4"
-                }
-              }'
-              crosshair-data="{{crosshairData}}"
-              render-to-canvas
-              time-data="timeStamp">
-            </px-vis-polar> -->
-            <px-vis-polar
-              id="polar"
-              chart-data="[[chartData]]"
-              series-config='{
-                "firstSerie": {
-                "name": "Data",
-                "yAxisUnit": "m/s",
-                "y": "y1",
+                "y": "y2",
                 "x":"y0"
-                },
-                "secondSerie": {
-                  "name": "Data",
-                  "yAxisUnit": "m/s",
-                  "y": "y2",
-                  "x":"y0"
+              }
+            }'
+            highlighter-config='{
+              "differentDataset": "true",
+              "showTooltipData": "true"
+            }'
+            render-to-canvas
+            crosshair-data="{{crosshairData}}"
+            toolbar-config='{
+              "config": {
+                "crosshairWithOptions": "true"
                 }
               }'
               render-to-canvas
@@ -311,46 +325,45 @@
               time-data="timeStamp">
             </px-vis-polar>
           </div>
-          <div class="minHeight">
-          </div>
         </div>
+      </div>
 
-        <iron-ajax
-          id="random1"
-          url="../px-demo-data/demo-data/random/d4x1000.json"
-          handle-as="json"
-          last-response="{{chartData}}"
-          auto>
-        </iron-ajax>
-        <!-- <iron-ajax
-          id="random1"
-          url="../px-demo-data/demo-data/apm/timeseries.json"
-          handle-as="json"
-          last-response="{{chartData}}"
-          auto>
-        </iron-ajax> -->
-        <!-- <iron-ajax
-          id="fetch1"
-          url="../px-demo-data/demo-data/aviation/delta-egt-cruise.json"
-          handle-as="json"
-          auto>
-        </iron-ajax>
-        <iron-ajax
-          id="fetch2"
-          url="../px-demo-data/demo-data/aviation/hpt-acc-position-cruise.json"
-          handle-as="json"
-          auto>
-        </iron-ajax> -->
-        <!-- <px-vis-data-converter
-          id="converter"
-          data-key = "series"
-          id-key = "name"
-          chart-data="{{chartData}}"
-          series-config="{{seriesConfig}}">
-        </px-vis-data-converter> -->
-      </template>
+      <iron-ajax
+        id="random1"
+        url="../px-demo-data/demo-data/random/d4x1000.json"
+        handle-as="json"
+        last-response="{{chartData}}"
+        auto>
+      </iron-ajax>
+      <!-- <iron-ajax
+        id="random1"
+        url="../px-demo-data/demo-data/apm/timeseries.json"
+        handle-as="json"
+        last-response="{{chartData}}"
+        auto>
+      </iron-ajax> -->
+      <!-- <iron-ajax
+        id="fetch1"
+        url="../px-demo-data/demo-data/aviation/delta-egt-cruise.json"
+        handle-as="json"
+        auto>
+      </iron-ajax>
+      <iron-ajax
+        id="fetch2"
+        url="../px-demo-data/demo-data/aviation/hpt-acc-position-cruise.json"
+        handle-as="json"
+        auto>
+      </iron-ajax> -->
+      <!-- <px-vis-data-converter
+        id="converter"
+        data-key = "series"
+        id-key = "name"
+        chart-data="{{chartData}}"
+        series-config="{{seriesConfig}}">
+      </px-vis-data-converter> -->
+    </template>
 
-      <script type="text/javascript">
+    <script type="text/javascript">
 
       var timeseries,
           xy,
@@ -361,7 +374,7 @@
             "timeseries": {
               config: {
                 advancedZoom: { actionConfig: { click: null } },
-                pan: { actionConfig: { click: null } },
+                pan: { actionConfig: { click: 'null' } },
                 tooltip: {selected: true, actionConfig: { click: null } },
                 crosshair: {
                   actionConfig: {
@@ -379,7 +392,7 @@
                 tooltip: {selected: true, actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
-                  icon: 'fa-anchor',
+                  icon: 'fa-lock',
                   eventName: "px-unfreeze-crosshair",
                   onClickContext: "toolbar",
                   customButtonStyle: "color: salmon;"
@@ -407,7 +420,7 @@
                 tooltip: {selected: true, actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
-                  icon: 'fa-anchor',
+                  icon: 'fa-lock',
                   eventName: "px-unfreeze-crosshair",
                   onClickContext: "toolbar",
                   customButtonStyle: "color: salmon;"
@@ -435,7 +448,7 @@
                 axisDrag: { actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
-                  icon: 'fa-anchor',
+                  icon: 'fa-lock',
                   eventName: "px-unfreeze-crosshair",
                   onClickContext: "toolbar",
                   customButtonStyle: "color: salmon;"
@@ -459,7 +472,7 @@
                 tooltip: {selected: true, actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
-                  icon: 'fa-anchor',
+                  icon: 'fa-lock',
                   eventName: "px-unfreeze-crosshair",
                   onClickContext: "toolbar",
                   customButtonStyle: "color: salmon;"
@@ -468,78 +481,96 @@
             }
           };
 
-        document.addEventListener('px-freeze-crosshair', function() {
-          timeseries.set("toolbarConfig", configs.timeseriesFreeze);
-          xy.set("toolbarConfig", configs.xyFreeze);
-          para.set("toolbarConfig", configs.paraRadarFreeze);
-          radar.set("toolbarConfig", configs.paraRadarFreeze);
-          polar.set("toolbarConfig", configs.polarFreeze);
-        });
+      document.addEventListener('px-freeze-crosshair', function() {
+        timeseries.generatingCrosshairData = false;
+        xy.generatingCrosshairData = false;
+        para.generatingCrosshairData = false;
+        radar.generatingCrosshairData = false;
+        polar.generatingCrosshairData = false;
 
-        document.addEventListener('px-unfreeze-crosshair', function() {
-          var empty = {
-            rawData: [],
-            timeStamps: []
-          };
+        timeseries.set("highlighterConfig.drawWithLocalCrosshairData", true);
+        xy.set("highlighterConfig.drawWithLocalCrosshairData", true);
+        para.set("highlighterConfig.drawWithLocalCrosshairData", true);
+        radar.set("highlighterConfig.drawWithLocalCrosshairData", true);
+        polar.set("highlighterConfig.drawWithLocalCrosshairData", true);
+
+        timeseries.set("toolbarConfig", configs.timeseriesFreeze);
+        xy.set("toolbarConfig", configs.xyFreeze);
+        para.set("toolbarConfig", configs.paraRadarFreeze);
+        radar.set("toolbarConfig", configs.paraRadarFreeze);
+        polar.set("toolbarConfig", configs.polarFreeze);
+      });
+
+      document.addEventListener('px-unfreeze-crosshair', function() {
+        var empty = {
+          rawData: [],
+          timeStamps: []
+        };
+
+        timeseries.set("highlighterConfig.drawWithLocalCrosshairData", false);
+        xy.set("highlighterConfig.drawWithLocalCrosshairData", false);
+        para.set("highlighterConfig.drawWithLocalCrosshairData", false);
+        radar.set("highlighterConfig.drawWithLocalCrosshairData", false);
+        polar.set("highlighterConfig.drawWithLocalCrosshairData", false);
+
+        timeseries.set("toolbarConfig", configs.timeseries);
+        xy.set("toolbarConfig", configs.xy);
+        para.set("toolbarConfig", configs.paraRadar);
+        radar.set("toolbarConfig", configs.paraRadar);
+        polar.set("toolbarConfig", configs.polar);
+
+        timeseries.set("crosshairData", empty);
+        xy.set("crosshairData", empty);
+        para.set("crosshairData", empty);
+        radar.set("crosshairData", empty);
+        polar.set("crosshairData", empty);
+      });
+
+      document.addEventListener('WebComponentsReady', function() {
+        setTimeout(function() {
+          timeseries = document.getElementById('timeseries'),
+          xy = document.getElementById('xy'),
+          para = document.getElementById('para'),
+          radar = document.getElementById('radar'),
+          polar = document.getElementById('polar'),
 
           timeseries.set("toolbarConfig", configs.timeseries);
           xy.set("toolbarConfig", configs.xy);
           para.set("toolbarConfig", configs.paraRadar);
           radar.set("toolbarConfig", configs.paraRadar);
           polar.set("toolbarConfig", configs.polar);
-
-          timeseries.set("crosshairData", empty);
-          xy.set("crosshairData", empty);
-          para.set("crosshairData", empty);
-          radar.set("crosshairData", empty);
-          polar.set("crosshairData", empty);
         });
-
-        document.addEventListener('WebComponentsReady', function() {
-          setTimeout(function() {
-            timeseries = document.getElementById('timeseries'),
-            xy = document.getElementById('xy'),
-            para = document.getElementById('para'),
-            radar = document.getElementById('radar'),
-            polar = document.getElementById('polar'),
-
-            timeseries.set("toolbarConfig", configs.timeseries);
-            xy.set("toolbarConfig", configs.xy);
-            para.set("toolbarConfig", configs.paraRadar);
-            radar.set("toolbarConfig", configs.paraRadar);
-            polar.set("toolbarConfig", configs.polar);
-          });
-        });
+      });
 
 
-        (function() {
-          'use strict';
+      (function() {
+        'use strict';
 
-          var onload = function() {
-            // For native Imports, manually fire WebComponentsReady so user code
-            // can use the same code path for native and polyfill'd imports.
-            if (!window.HTMLImports) {
-              document.dispatchEvent(
-                new CustomEvent('WebComponentsReady', {bubbles: true})
-              );
-            }
-          };
-
-          var webComponentsSupported = (
-            'registerElement' in document && 'import' in document.createElement('link') && 'content' in document.createElement('template')
-          );
-
-          if (!webComponentsSupported) {
-            var script = document.createElement('script');
-            script.async = true;
-            script.src = '../webcomponentsjs/webcomponents-lite.min.js';
-            script.onload = onload;
-            document.head.appendChild(script);
-          } else {
-            onload();
+        var onload = function() {
+          // For native Imports, manually fire WebComponentsReady so user code
+          // can use the same code path for native and polyfill'd imports.
+          if (!window.HTMLImports) {
+            document.dispatchEvent(
+              new CustomEvent('WebComponentsReady', {bubbles: true})
+            );
           }
-        })();
-      </script>
-    </body>
+        };
+
+        var webComponentsSupported = (
+          'registerElement' in document && 'import' in document.createElement('link') && 'content' in document.createElement('template')
+        );
+
+        if (!webComponentsSupported) {
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = '../webcomponentsjs/webcomponents-lite.min.js';
+          script.onload = onload;
+          document.head.appendChild(script);
+        } else {
+          onload();
+        }
+      })();
+    </script>
+  </body>
 
 </html>
