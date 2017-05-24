@@ -339,7 +339,7 @@
           //adjust div height if needed
           newChart.preventResize = this._chartOptions.preventResize;
           if(!newChart.preventResize) {
-            newDiv.style['height'] = `${this._chartOptions.height}px`;
+            newChart.height = this._chartOptions.height;
           }
 
 
@@ -631,7 +631,8 @@
         result = {
           'x': isTS ? 'timeStamp' : 'x',
           'y': `y${numberId}`,
-          'type': type
+          'type': type,
+          'yAxisUnit': 'test'
         };
       }
 
@@ -644,9 +645,11 @@
 
       if(lastWrap) {
 
-        //store used charts for later
-        for(var i=0; i<lastWrap.children.length; i++) {
-          this.chartPool[lastWrap.children[i].nodeName.toLowerCase()].push(lastWrap.children[i]);
+        if(this.$.reuse.checked) {
+          //store used charts for later
+          for(var i=0; i<lastWrap.children.length; i++) {
+            this.chartPool[lastWrap.children[i].nodeName.toLowerCase()].push(lastWrap.children[i]);
+          }
         }
 
         Polymer.dom(this.$.chartHolder).removeChild(lastWrap);
