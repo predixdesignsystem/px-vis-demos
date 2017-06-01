@@ -145,6 +145,27 @@ demonstrating dynamically adding/removing charts
             </div>
           </template>
 
+          <!-- Scatter options -->
+          <template is="dom-if" if="[[_chartOptions.scatter]]">
+            <div>
+              <label for="markerSize" id="markerSizeLabel">Marker size</label>
+              <input id="markerSize" type="number" class="text-input input--tiny" value="{{_chartOptions.markerSize::input}}"></input>
+
+              <label for="markerScale" id="markerScaleLabel">Marker Scale</label>
+              <input id="markerScale" type="number" class="text-input input--tiny" value="{{_chartOptions.markerScale::input}}"></input>
+
+              <label for="markerFillOpacity" id="markerFillOpacityLabel">Marker Fill Opacity</label>
+              <input id="markerFillOpacity" type="number" class="text-input input--tiny" value="{{_chartOptions.markerFillOpacity::input}}"></input>
+
+              <label for="markerStrokeOpacity" id="markerStrokeOpacityLabel">Marker Stroke Opacity</label>
+              <input id="markerStrokeOpacity" type="number" class="text-input input--tiny" value="{{_chartOptions.markerStrokeOpacity::input}}"></input>
+
+              <label for="markerSymbol" id="markerSymbolLabel">Marker Symbol</label>
+              <input id="markerSymbol" type="text" class="text-input input--tiny" value="{{_chartOptions.markerSymbol::input}}"></input>
+              <px-tooltip for="markerSymbol" delay="50" tooltip-message="circle/cross/diamond/square/triangle-up/star/wye" orientation="auto"></px-tooltip>
+            </div>
+          </template>
+
           <template is="dom-if" if="[[_canSvg(selectedChartType)]]">
             <div>
               <input id="rendToSvg" type="checkbox" checked="{{_chartOptions.rendToSvg::change}}"></input>

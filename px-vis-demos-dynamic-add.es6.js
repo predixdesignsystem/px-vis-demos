@@ -109,7 +109,12 @@
               'eventsNumber': 4,
               'eventsType': 'unicode',
               'eventsNoLine': false,
-              'eventsNoTooltip': false
+              'eventsNoTooltip': false,
+              'markerSize': 64,
+              'markerSymbol': 'circle',
+              'markerScale': 1,
+              'markerFillOpacity': 0.6,
+              'markerStrokeOpacity': 1
             };
           }
         },
@@ -612,6 +617,18 @@
         type = chart.seriesConfig[configKey[0]].type;
       }
 
+      result = {
+        'x': isTS ? 'timeStamp' : 'x',
+        'y': `y${numberId}`,
+        'type': type,
+        'yAxisUnit': 'units',
+        'markerSize': this._chartOptions.markerSize,
+        'markerSymbol': this._chartOptions.markerSymbol,
+        'markerScale': this._chartOptions.markerScale,
+        'markerFillOpacity': this._chartOptions.markerFillOpacity,
+        'markerStrokeOpacity': this._chartOptions.markerStrokeOpacity,
+      };
+
       if(isMultiAxis) {
 
         var side;
@@ -621,23 +638,10 @@
           side = chart.numLeftAxes === chart.numRightAxes ? 'left' : 'right';
         }
 
-        result = {
-          'x': isTS ? 'timeStamp' : 'x',
-          'y': `y${numberId}`,
-          'type': type,
-          'axis': {
-            'id': `axis${numberId}`,
-            'number': numberId,
-            'side': side
-          },
-          'yAxisUnit': 'units'
-        };
-      } else {
-        result = {
-          'x': isTS ? 'timeStamp' : 'x',
-          'y': `y${numberId}`,
-          'type': type,
-          'yAxisUnit': 'units'
+        result.axis = {
+          'id': `axis${numberId}`,
+          'number': numberId,
+          'side': side
         };
       }
 
