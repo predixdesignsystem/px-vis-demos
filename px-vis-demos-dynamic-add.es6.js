@@ -217,7 +217,7 @@
 
           if(result.length === 0 || this._generateOptions.randomise) {
             newData[name] = Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin;
-            newData['x'] = isPolar ? Math.random() * 360 : Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin;;
+            newData['x'] = isPolar ? Math.random() * 360 : Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin;
           } else {
             //contain change within 10% of previous value
             newData[name] = result[i-1][name] + (Math.random() * 2 -1) * this._generateOptions.variance;
@@ -522,7 +522,8 @@
 
     _deleteOneSerieFromConfig(chart, seriesName) {
       if(chart.nodeName.toLowerCase() === 'px-vis-timeseries' ||
-          chart.nodeName.toLowerCase() === 'px-vis-xy-chart' ) {
+          chart.nodeName.toLowerCase() === 'px-vis-xy-chart' ||
+          chart.nodeName.toLowerCase() === 'px-vis-polar') {
         var newConf = {},
             confKeys = Object.keys(chart.seriesConfig);
 
@@ -545,7 +546,8 @@
     _addOneSerieFromConfig(chart, numberOfSeries, seriesName) {
       //add serie
       if(chart.nodeName.toLowerCase() === 'px-vis-timeseries' ||
-          chart.nodeName.toLowerCase() === 'px-vis-xy-chart' ) {
+          chart.nodeName.toLowerCase() === 'px-vis-xy-chart'  ||
+          chart.nodeName.toLowerCase() === 'px-vis-polar') {
         var newConf = {},
             confKeys = Object.keys(chart.seriesConfig),
             isTS = chart.nodeName.toLowerCase() === 'px-vis-timeseries';
@@ -554,7 +556,16 @@
         for(var i=0; i<confKeys.length; i++) {
           newConf[confKeys[i]] = chart.seriesConfig[confKeys[i]];
         }
-        newConf[seriesName] = this._generateSeriesConfigXYTS(seriesName.slice(1), false, isTS, chart);
+
+        if(chart.nodeName.toLowerCase() === 'px-vis-polar') {
+          newConf[seriesName] = {
+            'x': 'x',
+            'y': seriesName,
+            'yAxisUnit': 'someUnit'
+          };
+        } else {
+          newConf[seriesName] = this._generateSeriesConfigXYTS(seriesName.slice(1), false, isTS, chart);
+        }
 
         chart.set('seriesConfig', newConf);
       } else if(chart.nodeName.toLowerCase() === 'px-vis-parallel-coordinates' || chart.nodeName.toLowerCase() === 'px-vis-radar') {
@@ -566,11 +577,6 @@
     }
 
     _addSerie(info) {
-
-      if(info.chart.nodeName.toLowerCase() == 'px-vis-polar') {
-        //TODO when polar supports multi serie
-        return;
-      }
 
       //add the data
       var numberOfSeries = Object.keys(info.chart.chartData[0]).length - 2,
@@ -622,6 +628,7 @@
         'y': `y${numberId}`,
         'type': type,
         'yAxisUnit': 'units',
+        'xAxisUnit': 'units',
         'markerSize': this._chartOptions.markerSize,
         'markerSymbol': this._chartOptions.markerSymbol,
         'markerScale': this._chartOptions.markerScale,
