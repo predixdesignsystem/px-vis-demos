@@ -133,6 +133,10 @@
         },
         _drawingTimerName: {
           type: String
+        },
+        _test: {
+          type: String,
+          value: "init"
         }
       };
     }
@@ -157,6 +161,11 @@
       this.addEventListener('px-vis-line-svg-rendering-ended', this._drawingListener);
       this.addEventListener('px-vis-line-canvas-rendering-ended', this._drawingListener);
       this.addEventListener('px-vis-scatter-canvas-rendering-ended', this._drawingListener);
+
+
+      this.$.variance.addEventListener('input', function() {
+        console.log('INPUT');
+      });
     }
 
     detached() {
