@@ -1,6 +1,11 @@
+v0.1.0
+==================
+* Update chart versions.
+* added crosshair demo
+
 v0.0.5
 ==================
-* Added ability to add/remove/changer series on a cahrt via the toolbar in dynamic_add.html
+* Added ability to add/remove/changer series on a chart via the toolbar in dynamic_add.html
 
 v0.0.4
 ==================
