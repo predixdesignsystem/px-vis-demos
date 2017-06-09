@@ -46,10 +46,10 @@ demonstrating dynamically adding/removing charts
             </px-dropdown>
           </div>
           <label>Number of charts</label>
-          <input id="chartNumber" type="number" class="text-input input--tiny" value$="1"></input>
+          <input id="chartNumber" type="text" class="text-input input--tiny" value="1"></input>
 
           <label>Resize debounce timing (ms)</label>
-          <input id="resizeDebounce" type="number" class="text-input input--tiny" value$="{{_chartOptions.resizeDebounce::change}}"></input>
+          <input id="resizeDebounce" type="text" class="text-input input--tiny" value="{{_chartOptions.resizeDebounce::change}}"></input>
 
           <div>
             <input id="reuse" type="checkbox"></input>
@@ -66,12 +66,12 @@ demonstrating dynamically adding/removing charts
           <div class="u-pl">
 
             <label for="height" id="heightLabel">height</label>
-            <input id="height" type="number" class="text-input input--tiny" value$="{{_chartOptions.height::input}}"></input>
+            <input id="height" type="text" class="text-input input--tiny" value="{{_chartOptions.height::input}}"></input>
 
             <template is="dom-if" if="[[_chartOptions.preventResize]]">
 
               <label for="width" id="widthLabel">width</label>
-              <input id="width" type="number" class="text-input input--tiny" value$="{{_chartOptions.width::input}}"></input>
+              <input id="width" type="text" class="text-input input--tiny" value="{{_chartOptions.width::input}}"></input>
 
             </template>
           </div>
@@ -114,7 +114,7 @@ demonstrating dynamically adding/removing charts
             <template is="dom-if" if="[[_chartOptions.addEvents]]">
               <div class="u-pl">
                 <label for="eventsNumber" id="eventsNumberLabel">Number of Events</label>
-                <input id="eventsNumber" type="number" class="text-input input--tiny" value$="{{_chartOptions.eventsNumber::input}}"></input>
+                <input id="eventsNumber" type="text" class="text-input input--tiny" value="{{_chartOptions.eventsNumber::input}}"></input>
                 <label for="eventsType" id="eventsTypeLabel">Type (fa, unicode, default)</label>
                 <input id="eventsType" type="text" class="text-input input--tiny" value="{{_chartOptions.eventsType::input}}"></input>
                 <div>
@@ -159,16 +159,16 @@ demonstrating dynamically adding/removing charts
           <template is="dom-if" if="[[_chartOptions.scatter]]">
             <div>
               <label for="markerSize" id="markerSizeLabel">Marker size</label>
-              <input id="markerSize" type="number" class="text-input input--tiny" value$="{{_chartOptions.markerSize::input}}"></input>
+              <input id="markerSize" type="text" class="text-input input--tiny" value="{{_chartOptions.markerSize::input}}"></input>
 
               <label for="markerScale" id="markerScaleLabel">Marker Scale</label>
-              <input id="markerScale" type="number" class="text-input input--tiny" value$="{{_chartOptions.markerScale::input}}"></input>
+              <input id="markerScale" type="text" class="text-input input--tiny" value="{{_chartOptions.markerScale::input}}"></input>
 
               <label for="markerFillOpacity" id="markerFillOpacityLabel">Marker Fill Opacity</label>
-              <input id="markerFillOpacity" type="number" class="text-input input--tiny" value$="{{_chartOptions.markerFillOpacity::input}}"></input>
+              <input id="markerFillOpacity" type="text" class="text-input input--tiny" value="{{_chartOptions.markerFillOpacity::input}}"></input>
 
               <label for="markerStrokeOpacity" id="markerStrokeOpacityLabel">Marker Stroke Opacity</label>
-              <input id="markerStrokeOpacity" type="number" class="text-input input--tiny" value$="{{_chartOptions.markerStrokeOpacity::input}}"></input>
+              <input id="markerStrokeOpacity" type="text" class="text-input input--tiny" value="{{_chartOptions.markerStrokeOpacity::input}}"></input>
 
               <label for="markerSymbol" id="markerSymbolLabel">Marker Symbol</label>
               <input id="markerSymbol" type="text" class="text-input input--tiny" value="{{_chartOptions.markerSymbol::input}}"></input>
@@ -212,11 +212,11 @@ demonstrating dynamically adding/removing charts
                 </div>
 
                 <label for="pointsPerFrame" id="pointsPerFrameLabel">Points per frame</label>
-                <input id="pointsPerFrame" type="number" class="text-input input--tiny" value$="{{_chartOptions.pointsPerFrame::input}}"></input>
+                <input id="pointsPerFrame" class="text-input input--tiny" value="{{_chartOptions.pointsPerFrame::input}}"></input>
                 <px-tooltip for="pointsPerFrame" delay="50" tooltip-message="The number of points that progressive rendering will process per chart per animation frame. When not specified the defaults for lines is 16000 and for scatter 2000 (in this example it will always use the value in the input)" orientation="auto"></px-tooltip>
 
                 <label for="minFrames">Minimum number of frames</label>
-                <input id="minFrames" type="number" class="text-input input--tiny" value$="{{_chartOptions.minFrames::input}}"></input>
+                <input id="minFrames" type="text" class="text-input input--tiny" value="{{_chartOptions.minFrames::input}}"></input>
                 <px-tooltip for="minFrames" delay="50" tooltip-message="The minimum number of frames to be used for progressive rendering. It can be used to force progressive rendering to be visible for small datasets" orientation="auto"></px-tooltip>
               </div>
             </template>
@@ -230,15 +230,15 @@ demonstrating dynamically adding/removing charts
         <p class="epsilon">Data Generation for selected chart type</p>
         <div class="flex flex--col flex__item u-p" style="border: 1px solid #b6c3cc;">
           <label for="pointsPerSeries" >Points Per Series</label>
-          <input id="pointsPerSeries" placeholder="number of points per series" class="text-input input--tiny" type="number" value="1000">
+          <input id="pointsPerSeries" placeholder="number of points per series" class="text-input input--tiny" type="text" value="1000">
           <label for="seriesNumber" class="u-mt-">Number of series</label>
-          <input class="text-input input--tiny" id="seriesNumber" type="number" value="4"></input>
+          <input class="text-input input--tiny" id="seriesNumber" type="text" value="4"></input>
           <div>
             <input id="randomise" type="checkbox" checked="{{_generateOptions.randomise::change}}"></input>
             <label for="randomise" class="label--inline">fully randomise data</label>
           </div>
           <label for="variance" class="u-mt-">"Variance" (impacts "how much" the data changes). > 0</label>
-          <input class="text-input input--tiny" disabled="[[_generateOptions.randomise]]" id="variance" type="number" value$="{{_generateOptions.variance::input}}"></input>
+          <input class="text-input input--tiny" disabled="[[_generateOptions.randomise]]" id="variance" value="{{_generateOptions.variance::input}}"></input>
           <button style="width:100px" class="flex__item btn u-mt- btn--primary" id="generate">Generate!</button>
         </div>
       </div>

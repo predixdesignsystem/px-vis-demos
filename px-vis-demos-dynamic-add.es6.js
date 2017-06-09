@@ -135,8 +135,8 @@
           type: String
         },
         _test: {
-          type: String,
-          value: "init"
+          type: Number,
+          value: 99999
         }
       };
     }
