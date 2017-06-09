@@ -114,7 +114,8 @@
               'markerSymbol': 'circle',
               'markerScale': 1,
               'markerFillOpacity': 0.6,
-              'markerStrokeOpacity': 1
+              'markerStrokeOpacity': 1,
+              'preventWwSync': false
             };
           }
         },
@@ -305,6 +306,10 @@
       return selectedChartType !== 'px-vis-parallel-coordinates' && selectedChartType !== 'px-vis-polar';
     }
 
+    _canWebWorker(selectedChartType) {
+      return selectedChartType !== 'px-vis-parallel-coordinates' && selectedChartType !== 'px-vis-radar';
+    }
+
     _createChart() {
 
       var data = this.$.dataSetDropdown.selectedKey.data,
@@ -492,14 +497,23 @@
       info.chart.set('chartData', data.key.data);
 
       if(info.chart.nodeName.toLowerCase() === 'px-vis-timeseries' ||
-          info.chart.nodeName.toLowerCase() === 'px-vis-xy-chart' ) {
+          info.chart.nodeName.toLowerCase() === 'px-vis-xy-chart' ||
+          info.chart.nodeName.toLowerCase() === 'px-vis-polar') {
 
         //find the series names: y +  a random number
         var newConf = {};
 
         for(var i=0; i<numberOfSeries ;i++) {
 
-          newConf[seriesNames[i]] = this._generateSeriesConfigXYTS(seriesNames[i].slice(1), false, info.chart.nodeName.toLowerCase() === 'px-vis-timeseries', info.chart);
+          if(info.chart.nodeName.toLowerCase() === 'px-vis-polar') {
+            newConf[seriesNames[i]] = {
+              'x': 'x',
+              'y': seriesNames[i],
+              'yAxisUnit': 'u'
+            };
+          } else {
+            newConf[seriesNames[i]] = this._generateSeriesConfigXYTS(seriesNames[i].slice(1), false, info.chart.nodeName.toLowerCase() === 'px-vis-timeseries', info.chart);
+          }
         }
 
         info.chart.set('seriesConfig', newConf);
@@ -561,7 +575,7 @@
           newConf[seriesName] = {
             'x': 'x',
             'y': seriesName,
-            'yAxisUnit': 'someUnit'
+            'yAxisUnit': 'u'
           };
         } else {
           newConf[seriesName] = this._generateSeriesConfigXYTS(seriesName.slice(1), false, isTS, chart);
@@ -627,8 +641,8 @@
         'x': isTS ? 'timeStamp' : 'x',
         'y': `y${numberId}`,
         'type': type,
-        'yAxisUnit': 'units',
-        'xAxisUnit': 'units',
+        'yAxisUnit': 'u',
+        'xAxisUnit': 'u',
         'markerSize': this._chartOptions.markerSize,
         'markerSymbol': this._chartOptions.markerSymbol,
         'markerScale': this._chartOptions.markerScale,
@@ -878,7 +892,7 @@
       }
 
       chart.disableNavigator = this._chartOptions.disableNav;
-
+      chart.preventWebWorkerSynchronization = this._chartOptions.preventWwSync;
 
     }
 
@@ -941,6 +955,7 @@
       } else {
         chart.dynamicMenuConfig = [];
       }
+      chart.preventWebWorkerSynchronization = this._chartOptions.preventWwSync;
     }
 
     _processOptionsPolar(chart) {
@@ -986,6 +1001,7 @@
       } else {
         chart.dynamicMenuConfig = [];
       }
+      chart.preventWebWorkerSynchronization = this._chartOptions.preventWwSync;
     }
 
     _processOptionsParallel(chart) {

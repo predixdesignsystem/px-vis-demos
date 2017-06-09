@@ -84,6 +84,16 @@ demonstrating dynamically adding/removing charts
         <p class="epsilon">Chart Options</p>
         <div class=" flex flex--col flex__item u-p" style="border: 1px solid #b6c3cc">
 
+          <!--web worker-->
+          <template is="dom-if" if="[[_canWebWorker(selectedChartType)]]">
+            <div id="preventWwSyncDiv">
+              <input id="preventWwSync" type="checkbox" checked="{{_chartOptions.preventWwSync::change}}"></input>
+              <label for="preventWwSync" class="label--inline">Prevent web worker synchronization</label>
+              <px-tooltip for="preventWwSyncDiv" delay="50" tooltip-message="Prevents the chart from synchronizing its data with a webworker. This can be turned on to minimize the memory footprint of the chart WARNING: turning the synchronization off will: - prevent the chart from being able to use crosshair feature - slow down data search for tooltip/register - slow down calculating extents for the chart if it needs to. We advise against turning it off but it might be beneficial in specific scenarios (high number of small charts with minimum interaction for example)" orientation="auto"></px-tooltip>
+            </div>
+          </template>
+
+          <!--toolbar-->
           <div id="modifyToolbarGroup">
             <input id="modifyingToolbar" type="checkbox" value="{{_chartOptions.customToolbar::change}}"></input>
             <label for="modifyingToolbar" class="label--inline" id="modifyingToolbarLabel">Toolbar to modify series</label>
