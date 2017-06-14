@@ -1,3 +1,7 @@
+v0.1.1
+==================
+* added preventWebWorkerSynchonization and fixesfor IE
+
 v0.1.0
 ==================
 * Update chart versions.
