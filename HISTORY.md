@@ -1,3 +1,7 @@
+
+==================
+* added striping demo
+
 v0.1.1
 ==================
 * added preventWebWorkerSynchonization and fixesfor IE
