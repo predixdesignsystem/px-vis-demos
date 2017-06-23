@@ -159,13 +159,7 @@
       this.$.btnMove.addEventListener('click', this._moveListener);
       this.addEventListener('px-vis-scatter-rendering-ended', this._drawingListener);
       this.addEventListener('px-vis-line-svg-rendering-ended', this._drawingListener);
-      this.addEventListener('px-vis-line-canvas-rendering-ended', this._drawingListener);
-      this.addEventListener('px-vis-scatter-canvas-rendering-ended', this._drawingListener);
-
-
-      this.$.variance.addEventListener('input', function() {
-        console.log('INPUT');
-      });
+      this.addEventListener('px-vis-chart-canvas-rendering-ended', this._drawingListener);
     }
 
     detached() {
@@ -175,8 +169,7 @@
       this.$.btnMove.removeEventListener('click', this._moveListener);
       this.removeEventListener('px-vis-scatter-rendering-ended', this._drawingListener);
       this.removeEventListener('px-vis-line-svg-rendering-ended', this._drawingListener);
-      this.removeEventListener('px-vis-line-canvas-rendering-ended', this._drawingListener);
-      this.removeEventListener('px-vis-scatter-canvas-rendering-ended', this._drawingListener);
+      this.removeEventListener('px-vis-chart-canvas-rendering-ended', this._drawingListener);
     }
 
     _generateDataSet() {
@@ -231,7 +224,7 @@
           } else {
             //contain change within 10% of previous value
             newData[name] = result[i-1][name] + (Math.random() * 2 -1) * this._generateOptions.variance;
-            newData['x'] = isPolar ? i%360 : i;
+            newData['x'] = i;
           }
 
 
@@ -361,6 +354,9 @@
             newChart = document.createElement(this.selectedChartType);
           }
 
+//append chart in div
+            Polymer.dom(newDiv).appendChild(newChart);
+
           //adjust div height if needed
           newChart.preventResize = this._chartOptions.preventResize;
           if(!newChart.preventResize) {
@@ -431,8 +427,7 @@
             };
             newChart.set('toolbarConfig', newConf);
           }
-            //append chart in div
-            Polymer.dom(newDiv).appendChild(newChart);
+
         }
         this._startPerfMeasure();
 
@@ -720,14 +715,14 @@
     _drawingListen() {
       this._drawingCounter++;
 
-      if(this._drawingCounter%(this._drawingsPerChart*Number(this._drawingNumberOfCharts)) === 0) {
+      // if(this._drawingCounter%(this._drawingsPerChart*Number(this._drawingNumberOfCharts)) === 0) {
         window.performance.mark('end');
         performance.clearMeasures();
         window.performance.measure('lastMeasure', 'start', 'end');
         var duration = window.performance.getEntriesByName('lastMeasure')[0].duration;
 
         console.log(`${this._drawingTimerName}: ${duration} (average per chart: ${duration/Number(this._drawingNumberOfCharts)})`);
-      }
+    //  }
     }
 
     _getNumberOfDrawingPerCharts(data) {
@@ -914,7 +909,8 @@
 
       chart.hideRegister = this._chartOptions.hideRegister;
       chart.registerConfig = {
-        'forceDateTimeDisplay': 'true'
+        'forceDateTimeDisplay': 'true',
+        'width': 250
       };
       chart.toolbarConfig = {'config': {
         'advancedZoom': true,
@@ -979,7 +975,8 @@
       }
       chart.hideRegister = this._chartOptions.hideRegister;
       chart.registerConfig = {
-        'forceDateTimeDisplay': 'true'
+        'forceDateTimeDisplay': 'true',
+        'width': 250
       };
       chart.toolbarConfig = {
         'config': {
