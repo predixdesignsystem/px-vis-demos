@@ -303,19 +303,16 @@
             }
           };
 
+      // add our listener for our freeze event.
       document.addEventListener('px-freeze-crosshair', function() {
-        timeseries.generatingCrosshairData = false;
-        xy.generatingCrosshairData = false;
-        para.generatingCrosshairData = false;
-        radar.generatingCrosshairData = false;
-        polar.generatingCrosshairData = false;
-
+        // make sure the origin chart draws the crosshairData
         timeseries.set("highlighterConfig.drawWithLocalCrosshairData", true);
         xy.set("highlighterConfig.drawWithLocalCrosshairData", true);
         para.set("highlighterConfig.drawWithLocalCrosshairData", true);
         radar.set("highlighterConfig.drawWithLocalCrosshairData", true);
         polar.set("highlighterConfig.drawWithLocalCrosshairData", true);
 
+        // Apply the freeze toolbar configs to freeze the charts
         timeseries.set("toolbarConfig", configs.timeseriesFreeze);
         xy.set("toolbarConfig", configs.xyFreeze);
         para.set("toolbarConfig", configs.paraRadarFreeze);
@@ -323,24 +320,29 @@
         polar.set("toolbarConfig", configs.polarFreeze);
       });
 
+      // add listener for our unfreeze event.
       document.addEventListener('px-unfreeze-crosshair', function() {
+        // define an empty dataset to clear our crosshairData
         var empty = {
           rawData: [],
           timeStamps: []
         };
 
+        // reset our drawWithLocalCrosshairData option
         timeseries.set("highlighterConfig.drawWithLocalCrosshairData", false);
         xy.set("highlighterConfig.drawWithLocalCrosshairData", false);
         para.set("highlighterConfig.drawWithLocalCrosshairData", false);
         radar.set("highlighterConfig.drawWithLocalCrosshairData", false);
         polar.set("highlighterConfig.drawWithLocalCrosshairData", false);
 
+        // apply our normal toolbar
         timeseries.set("toolbarConfig", configs.timeseries);
         xy.set("toolbarConfig", configs.xy);
         para.set("toolbarConfig", configs.paraRadar);
         radar.set("toolbarConfig", configs.paraRadar);
         polar.set("toolbarConfig", configs.polar);
 
+        // clear our the crosshairData on all charts
         timeseries.set("crosshairData", empty);
         xy.set("crosshairData", empty);
         para.set("crosshairData", empty);
@@ -348,6 +350,7 @@
         polar.set("crosshairData", empty);
       });
 
+      // Set up our toolbar config initially
       document.addEventListener('WebComponentsReady', function() {
         setTimeout(function() {
           timeseries = document.getElementById('timeseries'),
