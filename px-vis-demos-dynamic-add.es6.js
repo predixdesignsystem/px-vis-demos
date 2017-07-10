@@ -91,14 +91,11 @@
               'disableNav': false,
               'canvas': false,
               'progressiveRendering': false,
-              'pointsPerFrame': 16000,
-              'minFrames': 1,
               'addDynamicMenus': false,
               'addThresholds': false,
               'multiAxis': false,
               'rendToSvg': false,
               'resizeDebounce': 250,
-              'noProgressiveRendering': false,
               'width': 800,
               'height': 500,
               'preventResize': false,
@@ -115,7 +112,9 @@
               'markerScale': 1,
               'markerFillOpacity': 0.6,
               'markerStrokeOpacity': 1,
-              'preventWwSync': false
+              'preventWwSync': false,
+              'addCategories': false,
+              'hideCategoryRegister': false
             };
           }
         },
@@ -225,6 +224,11 @@
             //contain change within 10% of previous value
             newData[name] = result[i-1][name] + (Math.random() * 2 -1) * this._generateOptions.variance;
             newData['x'] = i;
+          }
+
+          if(chartType === 'px-vis-radar' || chartType === 'px-vis-parallel-coordinates') {
+            //add some categories
+            newData['category'] = (i%4).toString();
           }
 
 
@@ -782,11 +786,6 @@
 
       chart.set('seriesConfig', seriesConfig);
       chart.set('renderToCanvas', this._chartOptions.canvas);
-      if(chart.renderToCanvas) {
-        chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
-        chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
-        chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
-      }
       chart.toolbarConfig = {'config': {
         'advancedZoom': true,
         'pan': true
@@ -937,11 +936,6 @@
       }
 
       chart.renderToCanvas = this._chartOptions.canvas;
-      if(chart.renderToCanvas) {
-        chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
-        chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
-        chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
-      }
 
       if(this._chartOptions.addDynamicMenus) {
         chart.dynamicMenuConfig = [{
@@ -990,11 +984,6 @@
       chart.timeData = 'timeStamp';
 
       chart.renderToCanvas = this._chartOptions.canvas;
-      if(chart.renderToCanvas) {
-        chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
-        chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
-        chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
-      }
 
       if(this._chartOptions.addDynamicMenus) {
         chart.dynamicMenuConfig = [{
@@ -1015,12 +1004,12 @@
       chart.generateAxesFromData = true;
       chart.matchTicks = true;
       chart.seriesKey = 'timeStamp';
-      chart.skipKeys = {"x":true, "timeStamp": true};
+      chart.skipKeys = {"x":true, "timeStamp": true, "category": true};
       chart.renderToSvg = this._chartOptions.rendToSvg;
-      chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
-      chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
-      chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
       chart.hideAxisRegister = this._chartOptions.hideRegister;
+      chart.hideCategoryRegister = this._chartOptions.hideCategoryRegister;
+      chart.categoryKey = this._chartOptions.addCategories ? 'category' : '';
+      chart.categories = [0,1,2,3];
 
       if(this._chartOptions.addDynamicMenus) {
         chart.dynamicMenuConfig = [{
@@ -1043,10 +1032,10 @@
       chart.seriesKey = 'timeStamp';
       chart.skipKeys = {"x":true, "timeStamp": true};
       chart.renderToSvg = this._chartOptions.rendToSvg;
-      chart.noCanvasProgressiveRendering = this._chartOptions.noProgressiveRendering;
-      chart.progressiveRenderingPointsPerFrame = this._chartOptions.pointsPerFrame;
-      chart.progressiveRenderingMinimumFrames = this._chartOptions.minFrames;
       chart.hideAxisRegister = this._chartOptions.hideRegister;
+      chart.hideCategoryRegister = this._chartOptions.hideCategoryRegister;
+      chart.categoryKey = this._chartOptions.addCategories ? 'category' : '';
+      chart.categories = [0,1,2,3];
 
       if(this._chartOptions.includeChartExtents) {
         chart.chartExtents = extents;
