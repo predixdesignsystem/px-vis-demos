@@ -47,6 +47,10 @@
     "px-spacing-design": "^0.4.4",
     "px-input-group-design": "^1.1.1",
     "px-starter-kit-design": "^0.7.3",
-    "px-demo": "^1.5.2"
+    "px-demo": "^1.5.2",
+    "promise-polyfill": "polymerlabs/promise-polyfill#^2.0.1"
+  },
+  "resolutions": {
+    "promise-polyfill": "^2.0.0"
   }
 }

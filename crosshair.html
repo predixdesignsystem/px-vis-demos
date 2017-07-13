@@ -8,6 +8,8 @@
       <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
       <!--<script src="../webcomponentsjs/webcomponents-lite.min.js"></script>-->
       <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+      <link rel="import" href="../promise-polyfill/promise-polyfill-lite.html">
+      <!-- <link rel="import" href="../promise-polyfill/promise.js"/> -->
       <link rel="import" href="../px-theme/px-theme-styles.html" defer>
       <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
       <style include="px-theme-styles" is="custom-style"></style>
@@ -18,6 +20,7 @@
       <link rel="import" href="../px-vis-parallel-coordinates/px-vis-parallel-coordinates.html" defer />
       <link rel="import" href="../px-vis-radar/px-vis-radar.html" defer />
       <link rel="import" href="../px-vis-polar/px-vis-polar.html" defer />
+
       <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
 
       <link rel="import" href="css/px-vis-demos-styles.html" defer>
@@ -333,7 +336,7 @@
             </px-vis-polar>
           </div>
         </div>
-      </div>
+
 
       <iron-ajax
         id="random1"
