@@ -115,7 +115,14 @@
               'markerScale': 1,
               'markerFillOpacity': 0.6,
               'markerStrokeOpacity': 1,
-              'preventWwSync': false
+              'preventWwSync': false,
+              'markerTSNumber': 50,
+              'markerTSRowsNumber': 3,
+              'markerTSSize': 64,
+              'markerTSSymbol': 'bar',
+              'markerTSScale': 1,
+              'markerTSFillOpacity': 0.6,
+              'markerTSStrokeOpacity': 1
             };
           }
         },
@@ -857,6 +864,43 @@
         //make sure we clean it
         chart.eventData = [];
         chart.eventConfig = {};
+      }
+
+      if(this._chartOptions.addMarkers) {
+
+        var step = (data[data.length - 1].timeStamp - data[0].timeStamp) / this._chartOptions.markerTSNumber,
+            markersData = [],
+            config = {};
+
+
+        for(var j=0; j<this._chartOptions.markerTSRowsNumber; j++) {
+
+          //add data for this row
+          for(var i=0; i<this._chartOptions.markerTSNumber; i++) {
+            markersData.push({
+              'id': i,
+              'x': data[0].timeStamp + step*(i+0.5),
+              'label': `label${j}`
+            });
+          }
+
+          //add config for this row
+          config[`label${j}`] = {
+            "color": "green",
+            'markerSize': this._chartOptions.markerTSSize,
+            'markerSymbol': this._chartOptions.markerTSSymbol,
+            'markerScale': this._chartOptions.markerTSScale,
+            'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
+            'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity
+          };
+        }
+
+        chart.markersData = markersData;
+        chart.markerConfig = config;
+      } else {
+        //make sure we clean it
+        chart.markersData = [];
+        chart.markerConfig = {};
       }
 
       if(this._chartOptions.addThresholds) {
