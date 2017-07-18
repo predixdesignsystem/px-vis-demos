@@ -126,6 +126,10 @@
           type: Number,
           value:0
         },
+        _drawingMultiplier: {
+          type: Number,
+          value: 1
+        },
         _drawingNumberOfCharts: {
           type: Number,
           value:0
@@ -331,6 +335,20 @@
         this._drawingsPerChart = this._getNumberOfDrawingPerCharts(data);
         this._drawingNumberOfCharts = this.$.chartNumber.value;
         this._drawingTimerName = `draw ${this._drawingNumberOfCharts} ${this.selectedChartType}`;
+
+        if(this.selectedChartType === 'px-vis-timeseries' || this.selectedChartType === 'px-vis-xy-chart' || this.selectedChartType === 'px-vis-polar') {
+          if(this._chartOptions.canvas) {
+            this._drawingMultiplier = this.selectedChartType === 'px-vis-timeseries' && !this._chartOptions.disableNav ? 2 : 1;
+          } else {
+            this._drawingMultiplier = this._drawingsPerChart;
+          }
+        } else {
+          if(this._chartOptions.rendToSvg) {
+            this._drawingMultiplier = 1;
+          } else {
+            this._drawingMultiplier = this._drawingsPerChart;
+          }
+        }
 
         var newDiv = document.createElement('div'),
                 newChart;
@@ -719,14 +737,14 @@
     _drawingListen() {
       this._drawingCounter++;
 
-      // if(this._drawingCounter%(this._drawingsPerChart*Number(this._drawingNumberOfCharts)) === 0) {
+       if(this._drawingCounter%(this._drawingMultiplier*Number(this._drawingNumberOfCharts)) === 0) {
         window.performance.mark('end');
         performance.clearMeasures();
         window.performance.measure('lastMeasure', 'start', 'end');
         var duration = window.performance.getEntriesByName('lastMeasure')[0].duration;
 
         console.log(`${this._drawingTimerName}: ${duration} (average per chart: ${duration/Number(this._drawingNumberOfCharts)})`);
-    //  }
+      }
     }
 
     _getNumberOfDrawingPerCharts(data) {
