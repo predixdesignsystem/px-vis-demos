@@ -35,8 +35,9 @@ demonstrating dynamically adding/removing charts
           <label class="">Chart type</label>
           <!-- select chart type -->
           <div style="width:150px">
-            <px-dropdown display-value="px-vis-timeseries" value="{{selectedChartType}}">
-              <px-dropdown-content items="[[chartTypes]]"></px-dropdown-content>
+            <px-dropdown
+            selected="{{selectedChartType}}"
+            items="[[chartTypes]]">
             </px-dropdown>
           </div>
           <label class="">Dataset</label>

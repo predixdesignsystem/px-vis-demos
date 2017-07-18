@@ -8,14 +8,8 @@
  * under which the software has been supplied.
  */
 
-//
-// Sass for the for the px-vis-demos component
-//
-// @author
-//
 
 // Settings
-@import "px-colors-design/_settings.colors.scss";
 
 // Tools
 
@@ -26,7 +20,7 @@
 
 // Base
 @import "px-flexbox-design/_base.flexbox.scss";
-@import "px-viewport-design/_base.viewport.scss";
+
 $inuit-enable-input--tiny : true;
 $inuit-enable-input--small : true;
 $inuit-enable-input--regular : true;
@@ -40,7 +34,6 @@ $inuit-enable-btn--primary : true;
 
 // Objects
 @import 'px-layout-design/_objects.layout.scss';
-@import 'px-buttons-design/_objects.buttons.scss';
 @import 'px-box-design/_objects.box.scss';
 
 // Component
@@ -52,4 +45,4 @@ $inuit-enable-margins--small: true;
 $inuit-enable-margins--large: true;
 $inuit-enable-paddings : true;
 @import 'px-spacing-design/_trumps.spacing.scss';
-@import "px-widths-responsive-design/_trumps.widths-responsive.scss";
+
