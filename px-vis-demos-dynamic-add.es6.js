@@ -22,7 +22,8 @@
           readOnly: true
         },
         selectedChartType: {
-          type: String
+          type: String,
+          value: 'px-vis-timeseries'
         },
         dataSets: {
           type: Object,
