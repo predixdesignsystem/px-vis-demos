@@ -1,3 +1,7 @@
+v0.1.4
+==================
+* added markers to dynamic_add
+
 v0.1.3
 ==================
 * update to striping demo
