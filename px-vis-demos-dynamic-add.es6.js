@@ -869,37 +869,52 @@
       if(this._chartOptions.addMarkers) {
 
         var step = (data[data.length - 1].timeStamp - data[0].timeStamp) / this._chartOptions.markerTSNumber,
-            markersData = [],
-            config = {};
+            markerData = [],
+            config = {},
+            newMargin = {};
+
+        newMargin.top = chart.margin.top;
+        newMargin.bottom = chart.margin.bottom + 50;
+        newMargin.left = chart.margin.left;
+        newMargin.right = chart.margin.right;
 
 
         for(var j=0; j<this._chartOptions.markerTSRowsNumber; j++) {
 
           //add data for this row
           for(var i=0; i<this._chartOptions.markerTSNumber; i++) {
-            markersData.push({
-              'id': i,
-              'x': data[0].timeStamp + step*(i+0.5),
+            markerData.push({
+              'time': Math.floor(data[0].timeStamp + step*(i+0.5)),
               'label': `label${j}`
             });
           }
 
           //add config for this row
           config[`label${j}`] = {
-            "color": "green",
+            "color": "rgb(123,0,0)",
+            'location': j%2 === 0 ? 'top': 'bottom',
+            'row': j,
             'markerSize': this._chartOptions.markerTSSize,
             'markerSymbol': this._chartOptions.markerTSSymbol,
             'markerScale': this._chartOptions.markerTSScale,
             'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
             'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity
           };
+
+          if(j%2 === 0) {
+            newMargin.top += 15;
+          } else {
+            newMargin.bottom += 15;
+          }
         }
 
-        chart.markersData = markersData;
+        chart.set('margin', newMargin);
+
+        chart.markerData = markerData;
         chart.markerConfig = config;
       } else {
         //make sure we clean it
-        chart.markersData = [];
+        chart.markerData = [];
         chart.markerConfig = {};
       }
 
