@@ -145,7 +145,6 @@
                 selectable: true,
                 onClick: function() {
                   this.set('_internalShowTooltip', false);
-                  this.set('extentsAction', 'stripe');
                 },
                 subConfig: {
                   customA: {
@@ -179,8 +178,8 @@
                     selected: true,
                     selectable: true,
                     actionConfig: {
-                      mousedown: 'startZooming',
-                      mouseup: 'stopZooming',
+                      mousedown: 'startStriping',
+                      mouseup: 'stopStriping',
                       mouseout: 'resetTooltip',
                       mousemove: 'calcTooltipData'
                     },
@@ -225,10 +224,10 @@
         setTimeout(function() {
           timeseries = document.querySelectorAll('px-vis-timeseries');
 
-          timeseries.forEach(function(chart) {
-            chart.set('toolbarConfig', toolbarConfig);
-            chart.set('stripeConfig', stripeConfig);
-          });
+          for(var i=0; i<timeseries.length; i++) {
+            timeseries[i].set('toolbarConfig', toolbarConfig);
+            timeseries[i].set('stripeConfig', stripeConfig);
+          };
 
           document.getElementById('myDom').genRandomData = function() {
             var chart = document.getElementById('timeseries0'),

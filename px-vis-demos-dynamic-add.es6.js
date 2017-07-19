@@ -114,7 +114,14 @@
               'markerStrokeOpacity': 1,
               'preventWwSync': false,
               'addCategories': false,
-              'hideCategoryRegister': false
+              'hideCategoryRegister': false,
+              'markerTSNumber': 50,
+              'markerTSRowsNumber': 3,
+              'markerTSSize': 64,
+              'markerTSSymbol': 'bar',
+              'markerTSScale': 1,
+              'markerTSFillOpacity': 0.6,
+              'markerTSStrokeOpacity': 1
             };
           }
         },
@@ -869,6 +876,58 @@
         //make sure we clean it
         chart.eventData = [];
         chart.eventConfig = {};
+      }
+
+      if(this._chartOptions.addMarkers) {
+
+        var step = (data[data.length - 1].timeStamp - data[0].timeStamp) / this._chartOptions.markerTSNumber,
+            markerData = [],
+            config = {},
+            newMargin = {};
+
+        newMargin.top = chart.margin.top;
+        newMargin.bottom = chart.margin.bottom + 50;
+        newMargin.left = chart.margin.left;
+        newMargin.right = chart.margin.right;
+
+
+        for(var j=0; j<this._chartOptions.markerTSRowsNumber; j++) {
+
+          //add data for this row
+          for(var i=0; i<this._chartOptions.markerTSNumber; i++) {
+            markerData.push({
+              'time': Math.floor(data[0].timeStamp + step*(i+0.5)),
+              'label': `label${j}`
+            });
+          }
+
+          //add config for this row
+          config[`label${j}`] = {
+            "color": "rgb(123,0,0)",
+            'location': j%2 === 0 ? 'top': 'bottom',
+            'row': j,
+            'markerSize': this._chartOptions.markerTSSize,
+            'markerSymbol': this._chartOptions.markerTSSymbol,
+            'markerScale': this._chartOptions.markerTSScale,
+            'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
+            'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity
+          };
+
+          if(j%2 === 0) {
+            newMargin.top += 15;
+          } else {
+            newMargin.bottom += 15;
+          }
+        }
+
+        chart.set('margin', newMargin);
+
+        chart.markerData = markerData;
+        chart.markerConfig = config;
+      } else {
+        //make sure we clean it
+        chart.markerData = [];
+        chart.markerConfig = {};
       }
 
       if(this._chartOptions.addThresholds) {

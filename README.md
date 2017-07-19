@@ -2,72 +2,18 @@
 
 ## Overview
 
-px-vis-demos is a Predix UI component
+px-vis-demos is a set of demos trying to show more advanced examples of what can be done with the vis frameworks and vis charts.
 
-## Usage
+The demos are hosted on the predix-ui.com website. The currently available demos are:
 
-### Prerequisites
-1. node.js
-2. npm
-3. bower
-4. [webcomponents-lite.js polyfill](https://github.com/webcomponents/webcomponentsjs)
+## Dynamic chart generator
 
-Node, npm and bower are necessary to install the component and dependencies. webcomponents.js adds support for web components and custom elements to your application.
+https://www.predix-ui.com/px-vis-demos/px-vis-demos/dynamic_add.html
 
-## Getting Started
+This demo can dynamically create different types of chart with different options and different dynamically generated datasets. The rendering of the charts is measured and displayed in the console so that it is possible to benchmark the impact of various different options on the chart.
 
-First, install the component via bower on the command line.
+## Crosshair demo
 
-```
-bower install px-vis-demos --save
-```
+https://www.predix-ui.com/px-vis-demos/px-vis-demos/crosshair.html
 
-Second, import the component to your application with the following tag in your head.
-
-```
-<link rel="import" href="/bower_components/px-vis-demos/px-vis-demos.html"/>
-```
-
-Finally, use the component in your application:
-
-```
-Insert Your demo code here.
-```
-
-<br />
-<hr />
-
-## Documentation
-
-Read the full API and view the demo [here](https://predixdev.github.io/px-vis-demos).
-
-The documentation in this repository is supplemental to the official Predix documentation, which is continuously updated and maintained by the Predix documentation team. Go to [http://predix.io](http://predix.io)  to see the official Predix documentation.
-
-
-## Local Development
-
-From the component's directory...
-
-```
-$ npm install
-$ bower install
-$ gulp sass
-```
-
-From the component's directory, to start a local server run:
-
-```
-$ gulp serve
-```
-
-Navigate to the root of that server (e.g. http://localhost:8080/) in a browser to open the API documentation page, with link to the "Demo" / working examples.
-
-### GE Coding Style Guide
-[GE JS Developer's Guide](https://github.com/GeneralElectric/javascript)
-
-<br />
-<hr />
-
-## Known Issues
-
-Please use [Github Issues](https://github.com/PredixDev/px-vis-demos/issues) to submit any bugs you might find.
+This demo illustrates the "crosshair" feature which aims at highlighting corresponding points across several charts. When hovering over a first chart the related timestamps of the points detected are passed to the other charts which will highlight points having the same timestamp.

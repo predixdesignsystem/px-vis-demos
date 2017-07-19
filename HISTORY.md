@@ -1,6 +1,11 @@
+v0.1.3
+==================
+* update to striping demo
 
+v0.1.2
 ==================
 * added striping demo
+* edited crosshair demo and added comments
 
 v0.1.1
 ==================

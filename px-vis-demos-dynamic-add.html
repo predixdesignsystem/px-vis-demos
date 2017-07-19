@@ -34,8 +34,9 @@ demonstrating dynamically adding/removing charts
           <label class="">Chart type</label>
           <!-- select chart type -->
           <div style="width:150px">
-            <px-dropdown display-value="px-vis-timeseries" value="{{selectedChartType}}">
-              <px-dropdown-content items="[[chartTypes]]"></px-dropdown-content>
+            <px-dropdown
+            display-value="px-vis-timeseries" value="{{selectedChartType}}">
+            <px-dropdown-content items="[[chartTypes]]"></px-dropdown-content>
             </px-dropdown>
           </div>
           <label class="">Dataset</label>
@@ -127,6 +128,54 @@ demonstrating dynamically adding/removing charts
                 </div>
               </div>
             </template>
+            <!--MARKERS-->
+            <template is="dom-if" if="[[_isTimeseries(selectedChartType)]]">
+              <div>
+                <input id="addMarkers" type="checkbox" checked="{{_chartOptions.addMarkers::change}}"></input>
+                <label for="addMarkers" class="label--inline">Add some markers</label>
+              </div>
+            </template>
+
+            <!-- MARKERS options -->
+            <template is="dom-if" if="[[_chartOptions.addMarkers]]">
+              <div>
+                <div class="flex flex--wrap">
+                  <div class="flex flex--col">
+                    <label for="markerNumber" id="markerNumberLabel"># of markers</label>
+                    <input id="markerNumber" type="text" class="text-input input--tiny" value="{{_chartOptions.markerTSNumber::input}}"></input>
+                  </div>
+                  <div class="flex flex--col">
+                    <label for="markerRows" id="markerRowsLabel"># of rows</label>
+                    <input id="markerRows" type="text" class="text-input input--tiny" value="{{_chartOptions.markerTSRowsNumber::input}}"></input>
+                  </div>
+
+                  <div class="flex flex--col">
+                    <label for="markerSize" id="markerSizeLabel">Size</label>
+                    <input id="markerSize" type="text" class="text-input input--tiny" value="{{_chartOptions.markerTSSize::input}}"></input>
+                  </div>
+                  <div class="flex flex--col">
+                    <label for="markerScale" id="markerScaleLabel">Scale</label>
+                    <input id="markerScale" type="text" class="text-input input--tiny" value="{{_chartOptions.markerTSScale::input}}"></input>
+                  </div>
+
+                  <div class="flex flex--col">
+                    <label for="markerFillOpacity" id="markerFillOpacityLabel">Fill Opacity</label>
+                    <input id="markerFillOpacity" type="text" class="text-input input--tiny" value="{{_chartOptions.markerTSFillOpacity::input}}"></input>
+                  </div>
+
+                  <div class="flex flex--col">
+                    <label for="markerStrokeOpacity" id="markerStrokeOpacityLabel">Stroke Opacity</label>
+                    <input id="markerStrokeOpacity" type="text" class="text-input input--tiny" value="{{_chartOptions.markerTSStrokeOpacity::input}}"></input>
+                  </div>
+
+                  <div class="flex flex--col">
+                    <label for="markerSymbol" id="markerSymbolLabel">Symbol</label>
+                    <input id="markerSymbol" type="text" class="text-input input--tiny" value="{{_chartOptions.markerTSSymbol::input}}"></input>
+                    </div>
+                    <px-tooltip for="markerSymbol" delay="50" tooltip-message="circle/cross/diamond/square/triangle-up/star/wye/bar/thick-bar/thin-bar/x" orientation="auto"></px-tooltip>
+                  </div>
+              </div>
+            </template>
             <!--THRESHOLD-->
             <div>
               <input id="addThresholds" type="checkbox" checked="{{_chartOptions.addThresholds::change}}"></input>
@@ -157,21 +206,33 @@ demonstrating dynamically adding/removing charts
           <!-- Scatter options -->
           <template is="dom-if" if="[[_chartOptions.scatter]]">
             <div>
-              <label for="markerSize" id="markerSizeLabel">Marker size</label>
-              <input id="markerSize" type="text" class="text-input input--tiny" value="{{_chartOptions.markerSize::input}}"></input>
+              <div class="flex flex--wrap">
+                <div class="flex flex--col">
+                  <label for="markerTSSize" id="markerTSSizeLabel">Size</label>
+                  <input id="markerTSSize" type="text" class="text-input input--tiny" value="{{_chartOptions.markerSize::input}}"></input>
+                </div>
+                <div class="flex flex--col">
+                  <label for="markerTSScale" id="markerTSScaleLabel">Scale</label>
+                  <input id="markerTSScale" type="text" class="text-input input--tiny" value="{{_chartOptions.markerScale::input}}"></input>
+                </div>
 
-              <label for="markerScale" id="markerScaleLabel">Marker Scale</label>
-              <input id="markerScale" type="text" class="text-input input--tiny" value="{{_chartOptions.markerScale::input}}"></input>
+                <div class="flex flex--col">
+                  <label for="markerTSFillOpacity" id="markerTSFillOpacityLabel">Fill Opacity</label>
+                  <input id="markerTSFillOpacity" type="text" class="text-input input--tiny" value="{{_chartOptions.markerFillOpacity::input}}"></input>
+                </div>
 
-              <label for="markerFillOpacity" id="markerFillOpacityLabel">Marker Fill Opacity</label>
-              <input id="markerFillOpacity" type="text" class="text-input input--tiny" value="{{_chartOptions.markerFillOpacity::input}}"></input>
+                <div class="flex flex--col">
+                  <label for="markerTSStrokeOpacity" id="markerTSStrokeOpacityLabel">Stroke Opacity</label>
+                  <input id="markerTSStrokeOpacity" type="text" class="text-input input--tiny" value="{{_chartOptions.markerStrokeOpacity::input}}"></input>
+                </div>
 
-              <label for="markerStrokeOpacity" id="markerStrokeOpacityLabel">Marker Stroke Opacity</label>
-              <input id="markerStrokeOpacity" type="text" class="text-input input--tiny" value="{{_chartOptions.markerStrokeOpacity::input}}"></input>
 
-              <label for="markerSymbol" id="markerSymbolLabel">Marker Symbol</label>
-              <input id="markerSymbol" type="text" class="text-input input--tiny" value="{{_chartOptions.markerSymbol::input}}"></input>
-              <px-tooltip for="markerSymbol" delay="50" tooltip-message="circle/cross/diamond/square/triangle-up/star/wye" orientation="auto"></px-tooltip>
+                <div class="flex flex--col">
+                  <label for="markerSymbol" id="markerTSSymbolLabel">Symbol</label>
+                  <input id="markerTSSymbol" type="text" class="text-input input--tiny" value="{{_chartOptions.markerSymbol::input}}"></input>
+                  <px-tooltip for="markerSymbol" delay="50" tooltip-message="circle/cross/diamond/square/triangle-up/star/wye/bar/thick-bar/thin-bar/x" orientation="auto"></px-tooltip>
+                </div>
+              </div>
             </div>
           </template>
 
