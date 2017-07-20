@@ -944,7 +944,7 @@
       if(this._chartOptions.addDynamicMenus) {
         chart.dynamicMenuConfig = [{
               "name": "Delete",
-              'action': "function(data) {var conf = this.seriesConfig;delete conf[data.additionalDetail.name];this.set(\"seriesConfig\", {}); this.set(\"seriesConfig\", conf);}",
+              'action': 'function(data) {var newConf = {}, confKeys = Object.keys(this.seriesConfig); for(var i=0; i<confKeys.length; i++) { if(data.additionalDetail.name !== confKeys[i]) {newConf[confKeys[i]] = this.seriesConfig[confKeys[i]];}}this.set("seriesConfig", newConf);}',
               "eventName": "delete",
               "icon": "fa-trash"
             },
