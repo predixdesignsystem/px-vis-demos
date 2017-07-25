@@ -1,3 +1,7 @@
+v1.0.0
+==================
+* Design refresh
+
 v0.1.3
 ==================
 * update to striping demo

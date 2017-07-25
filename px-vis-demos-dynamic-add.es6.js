@@ -853,8 +853,8 @@
         chart.eventConfig = {
           "fa":{
             "color": "blue",
-            "icon": "fa-camera",
-            "type": "fa",
+            "icon": "px-fea:deployments",
+            "type": "px",
             "offset":[0,0],
             "lineColor": "red",
             "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1,
@@ -862,8 +862,8 @@
           },
           "unicode":{
             "color": "green",
-            "icon": "\uf015",
-            "type": "unicode",
+            "icon": "px-obj:truck",
+            "type": "px",
             "offset":[1,0],
             "lineWeight": this._chartOptions.eventsNoLine ? 0 : 1,
             'enableTooltip': this._chartOptions.eventsNoTooltip ? false : true
@@ -959,13 +959,13 @@
               "name": "Delete",
               'action': "function(data) {var conf = this.seriesConfig;delete conf[data.additionalDetail.name];this.set(\"seriesConfig\", {}); this.set(\"seriesConfig\", conf);}",
               "eventName": "delete",
-              "icon": "fa-trash"
+              "icon": "px-vis:trash-series"
             },
             {
               "name": "Bring To Front",
               "action": "function(data) { this.set(\"serieToRedrawOnTop\", data.additionalDetail.name);}",
               "eventName": "bring-to-front",
-              "icon": "fa-arrow-up"
+              "icon": "px-vis:bring-to-front"
             }
           ];
       } else {
@@ -1020,13 +1020,13 @@
               "name": "Delete",
               "action": "function(data) { var conf = this.seriesConfig;  delete conf[data.additionalDetail.name]; this.set(\"seriesConfig\", {}); this.set(\"seriesConfig\", conf);}",
               "eventName": "delete",
-              "icon": "fa-trash"
+              "icon": "px-vis:trash-series"
             },
             {
               "name": "Bring To Front",
               "action": "function(data) { this.set(\"serieToRedrawOnTop\", data.additionalDetail.name);}",
               "eventName": "bring-to-front",
-              "icon": "fa-arrow-up"
+              "icon": "px-vis:bring-to-front"
             }
           ];
       } else {
@@ -1068,7 +1068,7 @@
               "name": "Dummy",
               "action": "function(data) { console.log(\"dummy\")}",
               "eventName": "delete",
-              "icon": "fa-trash"
+              "icon": "px-vis:trash-series"
             }
           ];
       } else {
@@ -1094,7 +1094,7 @@
               "name": "Dummy",
               "action": "function(data) { console.log(\"dummy\")}",
               "eventName": "delete",
-              "icon": "fa-trash"
+              "icon": "px-vis:trash-series"
             }
           ];
       } else {
@@ -1124,7 +1124,7 @@
               "name": "Dummy",
               "action": "function(data) { console.log(\"dummy\")}",
               "eventName": "delete",
-              "icon": "fa-trash"
+              "icon": "px-vis:trash-series"
             }
           ];
       } else {
