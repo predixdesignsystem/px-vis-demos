@@ -79,7 +79,7 @@ echo ${meta_temp/'COMPONENT_NAME'/$REPO_NAME} > index.html
 npm install bower -g
 bower cache clean
 # Install the repo and the dark-theme.
-bower install ${REPO_NAME} px-dark-theme px-dark-demo-theme
+bower install ${REPO_NAME} px-dark-theme px-dark-demo-theme --force-latest
 
 #copy the bower file into our root
 yes | cp ${REPO_NAME}/bower.json bower.json
@@ -113,8 +113,10 @@ bower install
 # checkout a new orphan
 git checkout --orphan $TARGET_BRANCH
 
-git add -A .
+git add -A . > /dev/null
+echo "git add done"
 git commit -m "${GIT_COMMIT_MESSAGE}" --quiet
+echo "git commit done"
 
 # Set git credentials (defined in settings above)
 git config user.name ${GIT_USER_NAME}
