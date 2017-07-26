@@ -1,18 +1,18 @@
-#px-vis-demos
+# px-vis-demos
 
 ## Overview
 
-px-vis-demos is a set of demos trying to show more advanced examples of what can be done with the vis frameworks and vis charts.
+`Px-vis-demos` is a set of demos that show more advanced examples of what can be done with the vis framework and vis charts.
 
 The demos are hosted on the predix-ui.com website. The currently available demos are:
 
-## Dynamic chart generator
+### Dynamic chart generator
 
 https://www.predix-ui.com/px-vis-demos/px-vis-demos/dynamic_add.html
 
 This demo can dynamically create different types of chart with different options and different dynamically generated datasets. The rendering of the charts is measured and displayed in the console so that it is possible to benchmark the impact of various different options on the chart.
 
-## Crosshair demo
+### Crosshair demo
 
 https://www.predix-ui.com/px-vis-demos/px-vis-demos/crosshair.html
 
