@@ -2,6 +2,15 @@ v1.0.0
 ==================
 * Design refresh
 
+v0.1.5
+==================
+* make git quiet on demo build
+* fix dynamic menu delete
+
+v0.1.4
+==================
+* added markers to dynamic_add
+
 v0.1.3
 ==================
 * update to striping demo
