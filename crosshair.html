@@ -164,7 +164,8 @@
             crosshair-data="{{crosshairData}}"
             toolbar-config='{
               "config": {
-                "crosshairWithOptions": "true"
+                "crosshairWithOptions": "true",
+                "advancedZoom": "true"
                 }
               }'
             register-config='{
@@ -289,7 +290,8 @@
                       this.fire("px-freeze-crosshair");
                     }
                   }
-                }
+                },
+                advancedZoom: true
               }
             },
             "polarFreeze": {
@@ -301,7 +303,8 @@
                   eventName: "px-unfreeze-crosshair",
                   onClickContext: "toolbar",
                   customButtonStyle: "color: salmon;"
-                }
+                },
+                advancedZoom: true
               }
             }
           };
