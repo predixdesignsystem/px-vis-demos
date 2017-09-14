@@ -1,3 +1,7 @@
+v1.0.1
+==================
+* Added perf tips
+
 v1.0.0
 ==================
 * Design refresh

@@ -64,6 +64,7 @@
         <li>Scrolling while creating the charts can have a negative impact on performance.</li>
         <li>First chart creation is always a bit slower due to Polymer lazy loading the element definitions.</li>
         <li><strong>Include chart extents</strong> when you have them and the chart supports it (all but parallel coordinates and polar). This will avoid the chart parsing all the data to find the min and max in order to create the scales.</li>
+        <li><strong>Disable web worker synchronization</strong> if you don't need it. Having it enabled means the chart will synchronize its data with the webworker, which will force the main thread to copy the data over which can be very slow for large dataset. More info: https://www.predix-ui.com/#/develop/vis/web-workers</li>
       </ul>
       <px-vis-demos-dynamic-add></px-vis-demos-dynamic-add>
       <script>
