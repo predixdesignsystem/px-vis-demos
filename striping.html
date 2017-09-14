@@ -216,7 +216,8 @@
             },
             algorithmic: {
               fillColor: 'rgb(255,187,102)',
-              fillOpacity: '0.5'
+              fillOpacity: '0.5',
+              dash: [0] //to overwrite default dash and make solid
             }
           };
 
@@ -246,6 +247,13 @@
 
               chart.splice('stripeData.algorithmic', len, 0, [ts1, ts2]);
             }
+
+            // add a single vector
+            var dataIndex = Math.floor(Math.random() * length),
+                  len = chart.stripeData.algorithmic.length,
+                  ts1 = data[dataIndex]['timeStamp'];
+
+              chart.splice('stripeData.algorithmic', len, 0, [ts1]);
           }
 
         }, 10);
