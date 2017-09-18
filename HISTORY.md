@@ -1,3 +1,7 @@
+v1.1.0
+==================
+* Added x split zoom demo
+
 v1.0.1
 ==================
 * Added perf tips
