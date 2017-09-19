@@ -281,18 +281,17 @@
 
       console.timeEnd(`generating ${pointsNumber*seriesNumber} total (${seriesNumber} series each ${pointsNumber} points) for ${chartType}`);
 
-      return {'val': `[Gen][${this._generateOptions.counter}] ${pointsNumber*seriesNumber} total (${seriesNumber} series each ${pointsNumber} points)`  , 'key': { 'data': result, 'extents': extents}};
+      return {'val': `[Gen][${this._generateOptions.counter}] ${pointsNumber*seriesNumber} total (${seriesNumber} series each ${pointsNumber} points)` , 'key': { 'data': result, 'extents': extents}};
     }
 
     _computeCurrentDataSets() {
 
-      this.set('_currentDataSets',[{'key': '1', 'val': 'dummy'}]);
-      this.set('_currentDataSets',this.dataSets[this.selectedChartType]);
+      this.set('_currentDataSets', this.dataSets[this.selectedChartType].slice());
 
-      //select 1st item
-      if(this.dataSets[this.selectedChartType] && this.dataSets[this.selectedChartType][0]) {
-        this.$.dataSetDropdown.set('displayValue', this.dataSets[this.selectedChartType][0].val);
-        this.$.dataSetDropdown.set('selectedKey', this.dataSets[this.selectedChartType][0].key);
+      //select last item
+      if(this.dataSets[this.selectedChartType] && this.dataSets[this.selectedChartType].length) {
+        this.$.dataSetDropdown.set('displayValue', this.dataSets[this.selectedChartType][this.dataSets[this.selectedChartType].length-1].val);
+        this.$.dataSetDropdown.set('selectedKey', this.dataSets[this.selectedChartType][this.dataSets[this.selectedChartType].length-1].key);
       }
     }
 

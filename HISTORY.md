@@ -1,3 +1,7 @@
+v1.1.2
+==================
+* Fix dropdown in dynamic_add
+
 v1.1.1
 ==================
 * Add missing files
