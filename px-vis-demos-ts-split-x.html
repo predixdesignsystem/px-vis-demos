@@ -1,0 +1,61 @@
+<!--
+    Relative paths assume component is being run from inside an app or another component, where dependencies are flat
+    siblings. When this component is run from its own repo (e.g. tests, examples), we assume the server is started with
+    'gulp serve' (or similar server setup) to enable correct finding of bower dependencies for local runs.
+-->
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-vis-timeseries/px-vis-timeseries.html"/>
+<link rel="import" href="css/px-vis-demos-ts-split-x-styles.html">
+
+<!--
+REPLACE THIS TEXT WITH A COMPONENT DESCRIPTION
+
+### Usage
+
+    <px-vis-demos-ts-split-x counter-value="1"></px-vis-demos-ts-split-x>
+
+@element px-vis-demos-ts-split-x
+@blurb REPLACE THIS TEXT WITH A COMPONENT DESCRIPTION
+@homepage index.html
+@demo index.html
+-->
+
+<dom-module id="px-vis-demos-ts-split-x">
+  <template>
+    <style include="px-vis-demos-ts-split-x-styles"></style>
+    <div class="minHeight flex">
+        <div class$="[[_getMainClass(splitEnabled)]]">
+          <px-vis-timeseries
+            id="main"
+            disable-navigator
+            series-config='[[seriesConfig]]'
+            default-series-config='[[defaultSeriesConfig]]'
+            chart-data="[[chartData]]"
+            render-to-canvas
+            margin='{"left": 0, "right":1 , "top": 0, "bottom":40}'
+            tooltip-data='{{tooltipData}}'
+            action-config='[[actionConfig]]'>
+          </px-vis-timeseries>
+        </div>
+        <template is="dom-if" id="subIf" if="[[splitEnabled]]">
+          <div class="flex__item half">
+            <px-vis-timeseries
+              id="sub"
+              disable-navigator
+              series-config='[[seriesConfig]]'
+              default-series-config='[[defaultSeriesConfig]]'
+              chart-data="[[chartData]]"
+              render-to-canvas
+              toolbar-config="[[dismissConfig]]"
+              margin='{"left": 1, "right":0 , "top": 0, "bottom":40}'
+              tooltip-data='[[fakeTooltipData]]'
+              action-config='{{actionConfig}}'>
+            </px-vis-timeseries>
+          </div>
+        </template>
+      </div>
+
+
+  </template>
+</dom-module>
+<script src="dist/px-vis-demos-ts-split-x.js"></script>
