@@ -1,3 +1,7 @@
+v1.1.1
+==================
+* Add missing files
+
 v1.1.0
 ==================
 * Added x split zoom demo
