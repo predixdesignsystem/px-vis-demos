@@ -230,11 +230,11 @@
               axisName = `axis${j}`;
 
           if(result.length === 0 || this._generateOptions.randomise) {
-            newData[name] = Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin;
+            newData[name] = (Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin).toFixed(3);
             newData['x'] = isPolar ? Math.random() * 360 : Math.random() * (this._generateOptions.dataMax - this._generateOptions.dataMin) + this._generateOptions.dataMin;
           } else {
             //contain change within 10% of previous value
-            newData[name] = result[i-1][name] + (Math.random() * 2 -1) * this._generateOptions.variance;
+            newData[name] = (Number(result[i-1][name]) + (Math.random() * 2 -1) * this._generateOptions.variance).toFixed(3)
             newData['x'] = i;
           }
 
