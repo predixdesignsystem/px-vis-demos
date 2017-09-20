@@ -222,7 +222,7 @@
       for(var i=0; i<pointsNumber; i++) {
         var newData = {};
 
-        newData.t = this._generateOptions.startTime + i*step;
+        newData.timeStamp = this._generateOptions.startTime + i*step;
 
         for(var j=0; j<seriesNumber; j++) {
 
