@@ -1,0 +1,108 @@
+<!doctype html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Using iron-list for lot of charts</title>
+        <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+        <!--<script src="../webcomponentsjs/webcomponents-lite.min.js"></script>-->
+        <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+        <script type="text/javascript">
+
+        (function() {
+          'use strict';
+          window.WebComponents = window.WebComponents || {};
+          var onload = function() {
+            // Ensure `WebComponentsReady` is fired also when there are no polyfills loaded.
+            // however, we have to wait for the document to be in 'interactive' state,
+            // otherwise a rAF may fire before scripts in <body>
+
+            var fire = function() {
+              requestAnimationFrame(function() {
+                window.WebComponents.ready = true;
+                document.dispatchEvent(new CustomEvent('WebComponentsReady', {bubbles: true}));
+              });
+            };
+
+            if (document.readyState !== 'loading') {
+              fire();
+            } else {
+              document.addEventListener('readystatechange', function wait() {
+                fire();
+                document.removeEventListener('readystatechange', wait);
+              });
+            }
+          };
+
+          var webComponentsSupported = (
+            'registerElement' in document && 'import' in document.createElement('link') && 'content' in document.createElement('template')
+          );
+
+          if (!webComponentsSupported) {
+            var script = document.createElement('script');
+            script.async = true;
+            script.src = '../webcomponentsjs/webcomponents-lite.min.js';
+            script.onload = onload;
+            document.head.appendChild(script);
+          } else {
+            onload();
+          }
+        })();
+        </script>
+        <link rel="import" href="../px-theme/px-theme-styles.html" >
+        <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
+        <style include="px-theme-styles" is="custom-style"></style>
+
+        <link rel="import" href="px-vis-iron-list.html" />
+        <link rel="import" href="../iron-ajax/iron-ajax.html" />
+
+    </head>
+
+    <body style="padding:30px; ">
+      <h1>Create 70 random charts with all different datasets</h1>
+      <p id="text">Wainting for data to load...</p>
+      <button hidden id="btnStart">Generate list</button>
+
+      <iron-ajax
+        id="randomData"
+        url="70_4k.json"
+        handle-as="json">
+      </iron-ajax>
+      <px-vis-iron-list id="list"></px-vis-iron-list>
+    <script>
+
+      var run = function() {
+       // document.getElementById('template').render();
+
+        var ironAjax = document.getElementById('randomData'),
+            list = document.getElementById('list'),
+            text = document.getElementById('text'),
+            btn = document.getElementById('btnStart');
+
+        ironAjax.addEventListener('last-response-changed', function(evt) {
+          text.hidden = true;
+          btn.hidden = false;
+        });
+
+        btn.addEventListener('click', function() {
+          if(!list.data) {
+            list.set('data', ironAjax.lastResponse);
+            btn.hidden = true;
+          }
+        });
+
+        ironAjax.generateRequest();
+      };
+
+      if(window.WebComponents && window.WebComponents.ready) {
+        run();
+      } else {
+        window.addEventListener('WebComponentsReady', run);
+      }
+
+
+    </script>
+  </body>
+
+</html>
