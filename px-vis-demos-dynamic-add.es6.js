@@ -222,7 +222,7 @@
       for(var i=0; i<pointsNumber; i++) {
         var newData = {};
 
-        newData.timeStamp = this._generateOptions.startTime + i*step;
+        newData.t = this._generateOptions.startTime + i*step;
 
         for(var j=0; j<seriesNumber; j++) {
 
@@ -245,14 +245,14 @@
 
 
           if(!extents[axisName]) {
-            extents[axisName] = [Number.MAX_VALUE, Number.MIN_VALUE];
+            extents[axisName] = [Number.MAX_VALUE, -Number.MAX_VALUE];
           }
           //search for extents
-          if(newData[name] < extents[axisName][0]) {
+          if( Number(newData[name]) < Number(extents[axisName][0])) {
             extents[axisName][0] = newData[name];
           }
 
-          if(newData[name] > extents[axisName][1]) {
+          if( Number(newData[name]) >  Number(extents[axisName][1])) {
             extents[axisName][1] = newData[name];
           }
         }
@@ -261,14 +261,14 @@
         //find y extents in case we're not multi Y
         var extKeys = Object.keys(extents),
             min = Number.MAX_VALUE,
-            max = Number.MIN_VALUE;
+            max = -Number.MAX_VALUE;
 
         for(var k =0; k<extKeys.length; k++) {
           if(extKeys[k] !== 'x') {
-            if(extents[extKeys[k]][1] > max ) {
+            if(Number(extents[extKeys[k]][1]) > max ) {
               max = extents[extKeys[k]][1];
             }
-            if(extents[extKeys[k]][0] < min) {
+            if(Number(extents[extKeys[k]][0]) < min) {
               min = extents[extKeys[k]][0];
             }
           }
