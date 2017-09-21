@@ -1,3 +1,7 @@
+v1.1.3
+==================
+* Adding split zoom y demo
+
 v1.1.2
 ==================
 * Fix dropdown in dynamic_add
