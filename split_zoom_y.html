@@ -1,0 +1,159 @@
+<!doctype html>
+
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Split zoom example</title>
+      <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+      <!--<script src="../webcomponentsjs/webcomponents-lite.min.js"></script>-->
+      <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+      <link rel="import" href="../px-theme/px-theme-styles.html" defer>
+      <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
+      <style include="px-theme-styles" is="custom-style"></style>
+
+      <link rel="import" href="../px-vis/px-vis-data-converter.html" defer />
+      <link rel="import" href="../px-vis-timeseries/px-vis-timeseries.html" defer />
+      <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
+
+      <link rel="import" href="css/px-vis-demos-styles.html" defer>
+      <style include="px-vis-demos-styles" is="custom-style"></style>
+
+  </head>
+
+  <body style="padding:30px; ">
+    <template id="myDom" is="dom-bind">
+      <px-vis-timeseries
+        id="timeseries0"
+        disable-navigator
+        height="600"
+        width="1000"
+        series-config='{
+          "y2":{"y":"y2"},
+          "y3":{"y":"y3"}
+        }'
+        default-series-config='{
+          "type": "line",
+          "x": "timeStamp",
+          "axis": {
+            "id": "axis1",
+            "side": "left",
+            "number": "1"
+          }
+        }'
+        cursor-config='{
+          "horizontalLine": "none"
+        }'
+        chart-data="[[chartData]]"
+        render-to-canvas>
+      </px-vis-timeseries>
+
+      <iron-ajax
+        id="randomData"
+        url="../px-demo-data/demo-data/random/d4x1000.json"
+        handle-as="json"
+        last-response="{{chartData}}"
+        auto>
+      </iron-ajax>
+    </template>
+
+    <script type="text/javascript">
+
+      function _deleteSeries(data) {
+        var conf = this.seriesConfig;
+        this.set("seriesConfig", undefined);
+        delete conf[data.additionalDetail.name];
+        this.set("seriesConfig", conf);
+      }
+
+      function _splitY(data) {
+        var conf = this.seriesConfig;
+            this.set("seriesConfig", undefined),
+            name = data.additionalDetail.name,
+            series = Object.keys(conf),
+            extents = {};
+
+        axisCount += 1;
+
+        // define an additional axis for the selected series
+        conf[name]['axis'] = {
+          "id": "axis" + name,
+          "side": "left",
+          "number": axisCount
+        };
+
+        // if you have min and max extents for series, use them for efficiency,
+        // we dont in this example, so we need to calculate
+        series.forEach(function(s) {
+          extents[s] = Px.d3.extent(this.chartData, function(d) {
+            return d[conf[s]['y']];
+          });
+        }.bind(this));
+
+        // now, we need to adjust the min and max so the series dont overlap
+        series.forEach(function(s) {
+          var delta = (extents[s][1] - extents[s][0]) * 1.1; //add 10% buffer
+
+          // if this series is the one being put on a new axis, add to the min
+          // if not, add to the max
+          conf[s]['yMin'] = name === s ? extents[s][0] - delta : extents[s][0];
+          conf[s]['yMax'] = name === s ? extents[s][1] : extents[s][1] + delta;
+        });
+
+        this.set("seriesConfig", conf);
+      }
+
+      var axisCount = 1,
+          timeseries,
+          menuConfig = [{
+            "name": "Delete",
+            "action": _deleteSeries,
+            "actionContext": timeseries,
+            "eventName": "delete",
+            "icon": "px-vis:trash-series"
+          },{
+            "name": "Split Y",
+            "action": _splitY,
+            "actionContext": timeseries,
+            "eventName": "split-y",
+            "icon": "px-vis:expand-radius"
+          }];
+
+      document.addEventListener('WebComponentsReady', function() {
+        setTimeout(function() {
+          timeseries = document.querySelector('px-vis-timeseries');
+          timeseries.set('dynamicMenuConfig', menuConfig);
+        }, 10);
+      });
+
+      (function() {
+        'use strict';
+
+        var onload = function() {
+          // For native Imports, manually fire WebComponentsReady so user code
+          // can use the same code path for native and polyfill'd imports.
+          if (!window.HTMLImports) {
+            document.dispatchEvent(
+              new CustomEvent('WebComponentsReady', {bubbles: true})
+            );
+          }
+        };
+
+        var webComponentsSupported = (
+          'registerElement' in document && 'import' in document.createElement('link') && 'content' in document.createElement('template')
+        );
+
+        if (!webComponentsSupported) {
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = '../webcomponentsjs/webcomponents-lite.min.js';
+          script.onload = onload;
+          document.head.appendChild(script);
+        } else {
+          onload();
+        }
+      })();
+    </script>
+  </body>
+
+</html>
