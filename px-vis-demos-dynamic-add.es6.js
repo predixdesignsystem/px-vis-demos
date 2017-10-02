@@ -122,7 +122,10 @@
               'markerTSSymbol': 'bar',
               'markerTSScale': 1,
               'markerTSFillOpacity': 0.6,
-              'markerTSStrokeOpacity': 1
+              'markerTSStrokeOpacity': 1,
+              'hardMute': false,
+              'showTooltip': false,
+              'allowNegativeValues': false
             };
           }
         },
@@ -315,6 +318,10 @@
       return selectedChartType === 'px-vis-timeseries';
     }
 
+    _isPolar(selectedChartType) {
+      return selectedChartType === 'px-vis-polar';
+    }
+
     _canMultiY(selectedChartType) {
       return selectedChartType === 'px-vis-timeseries' || selectedChartType === 'px-vis-xy-chart';
     }
@@ -383,23 +390,20 @@
             newChart = document.createElement(this.selectedChartType);
           }
 
-//append chart in div
-            Polymer.dom(newDiv).appendChild(newChart);
-
-          //adjust div height if needed
-          newChart.preventResize = this._chartOptions.preventResize;
-          if(!newChart.preventResize) {
-            newChart.height = this._chartOptions.height;
-          }
+          //append chart in div
+          Polymer.dom(newDiv).appendChild(newChart);
 
           //process all chart options
+          newChart.preventResize = this._chartOptions.preventResize;
+          newChart.height = this._chartOptions.height;
           if(newChart.preventResize) {
-            newChart.height = this._chartOptions.height;
             newChart.width = this._chartOptions.width;
           }
           newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
           this._processOptions(newChart, extents, data);
           newChart.chartData = data;
+          newChart.hardMute = this._chartOptions.hardMute;
+          newChart.showTooltip = this._chartOptions.showTooltip;
 
           if(this._chartOptions.customToolbar) {
             var newConf = {};
@@ -1045,6 +1049,7 @@
         };
       }
       chart.hideRegister = this._chartOptions.hideRegister;
+      chart.allowNegativeValues = this._chartOptions.allowNegativeValues;
       chart.registerConfig = {
         'forceDateTimeDisplay': 'true',
         'width': 250
@@ -1053,7 +1058,7 @@
         'config': {
           'crosshairWithOptions': true
         }
-      }
+      };
       chart.height = 800;
       chart.seriesConfig = seriesConfig;
       chart.useDegrees = true;

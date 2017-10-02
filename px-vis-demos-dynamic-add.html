@@ -98,6 +98,24 @@ demonstrating dynamically adding/removing charts
           </div>
           <px-tooltip for="modifyToolbarGroup" delay="50" tooltip-message="includes custom buttons in the toolbar to dynamically add/delete/modify series on the chart" orientation="auto"></px-tooltip>
 
+          <div id="hardMuteGroup">
+            <input id="hardMute" type="checkbox" value="{{_chartOptions.hardMute::change}}"></input>
+            <label for="hardMute" class="label--inline" id="hardMuteLabel">Hard Mute</label>
+          </div>
+          <px-tooltip for="hardMuteGroup" delay="50" tooltip-message="when hard mute is on muting a series will ignore it for extents calculation and tooltip/register search" orientation="auto"></px-tooltip>
+
+          <div id="showTooltipGroup">
+            <input id="showTooltip" type="checkbox" value="{{_chartOptions.showTooltip::change}}"></input>
+            <label for="showTooltip" class="label--inline" id="showTooltipLabel">Show Tooltip</label>
+          </div>
+
+          <template is="dom-if" if="[[_isPolar(selectedChartType)]]">
+            <div>
+              <input id="allowNegativeValues" type="checkbox" checked="{{_chartOptions.allowNegativeValues::change}}"></input>
+              <label for="allowNegativeValues" class="label--inline">allow negative values</label>
+            </div>
+          </template>
+
          <template is="dom-if" if="[[_isTimeseries(selectedChartType)]]">
             <div>
               <input id="disableNav" type="checkbox" checked="{{_chartOptions.disableNav::change}}"></input>
