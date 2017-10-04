@@ -1,3 +1,7 @@
+v1.1.4
+==================
+* dynamic_add: Adding hard mute and show tooltip on all charts, negative values for polar
+
 v1.1.3
 ==================
 * Adding split zoom y demo
