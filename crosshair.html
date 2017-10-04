@@ -312,14 +312,16 @@
             }
           };
 
+
+      // make sure the origin chart draws the crosshairData
+      timeseries.set("highlighterConfig.drawWithLocalCrosshairData", true);
+      xy.set("highlighterConfig.drawWithLocalCrosshairData", true);
+      para.set("highlighterConfig.drawWithLocalCrosshairData", true);
+      radar.set("highlighterConfig.drawWithLocalCrosshairData", true);
+      polar.set("highlighterConfig.drawWithLocalCrosshairData", true);
+
       // add our listener for our freeze event.
       document.addEventListener('px-freeze-crosshair', function() {
-        // make sure the origin chart draws the crosshairData
-        timeseries.set("highlighterConfig.drawWithLocalCrosshairData", true);
-        xy.set("highlighterConfig.drawWithLocalCrosshairData", true);
-        para.set("highlighterConfig.drawWithLocalCrosshairData", true);
-        radar.set("highlighterConfig.drawWithLocalCrosshairData", true);
-        polar.set("highlighterConfig.drawWithLocalCrosshairData", true);
 
         // Apply the freeze toolbar configs to freeze the charts
         timeseries.set("toolbarConfig", configs.timeseriesFreeze);
@@ -336,13 +338,6 @@
           rawData: [],
           timeStamps: []
         };
-
-        // reset our drawWithLocalCrosshairData option
-        timeseries.set("highlighterConfig.drawWithLocalCrosshairData", false);
-        xy.set("highlighterConfig.drawWithLocalCrosshairData", false);
-        para.set("highlighterConfig.drawWithLocalCrosshairData", false);
-        radar.set("highlighterConfig.drawWithLocalCrosshairData", false);
-        polar.set("highlighterConfig.drawWithLocalCrosshairData", false);
 
         // apply our normal toolbar
         timeseries.set("toolbarConfig", configs.timeseries);
