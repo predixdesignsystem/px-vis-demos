@@ -36,7 +36,7 @@
     "px-tooltip": "^1.0.0",
     "iron-ajax": "^2.0.0",
     "iron-list": "^2.0.0",
-    "px-demo-data": "^0.0.21"
+    "px-demo-data": "~0.0.22"
   },
   "devDependencies": {
     "px-theme": "^3.0.0",

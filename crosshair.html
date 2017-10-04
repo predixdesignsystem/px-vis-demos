@@ -37,6 +37,7 @@
         }
 
         .minHeight {
+          margin-top:25px;
           width: 45vw;
           height: 300px;
         }
@@ -110,14 +111,15 @@
           <px-vis-parallel-coordinates
             id="para"
             chart-data="[[chartData]]"
+            category-key="category"
+            categories='["a","b","c","d"]'
             skip-keys='{"x":true}'
             series-key="timeStamp"
             match-ticks
             generate-axes-from-data
             highlighter-config='{
-              "differentDataset": "true",
-              "showTooltipData": "true",
-              "fuzz": "1000000000"
+
+              "showTooltipData": "true"
             }'
             axis-register-config='{
               "forceDateTimeDisplay": true
@@ -129,6 +131,8 @@
           <px-vis-radar
             id="radar"
             chart-data="[[chartData]]"
+            category-key="category"
+            categories='["a","b","c","d"]'
             skip-keys='{"x":true}'
             series-key="timeStamp"
             generate-axes-from-data
@@ -145,6 +149,7 @@
         <div class="minHeight">
           <px-vis-polar
             id="polar"
+            height="400"
             chart-data="[[chartData]]"
             series-config='{
               "firstSerie": {
@@ -260,6 +265,7 @@
                 tooltip: {selected: true, actionConfig: { click: null } },
                 axisBrush: { actionConfig: { click: null } },
                 axisDrag: { actionConfig: { click: null } },
+                axisMuteSeries: { actionConfig: { click: null } },
                 crosshair: {
                   actionConfig: {
                     click: function() {
@@ -312,14 +318,6 @@
             }
           };
 
-
-      // make sure the origin chart draws the crosshairData
-      timeseries.set("highlighterConfig.drawWithLocalCrosshairData", true);
-      xy.set("highlighterConfig.drawWithLocalCrosshairData", true);
-      para.set("highlighterConfig.drawWithLocalCrosshairData", true);
-      radar.set("highlighterConfig.drawWithLocalCrosshairData", true);
-      polar.set("highlighterConfig.drawWithLocalCrosshairData", true);
-
       // add our listener for our freeze event.
       document.addEventListener('px-freeze-crosshair', function() {
 
@@ -368,6 +366,20 @@
           para.set("toolbarConfig", configs.paraRadar);
           radar.set("toolbarConfig", configs.paraRadar);
           polar.set("toolbarConfig", configs.polar);
+
+          // make sure the origin chart draws the crosshairData
+          timeseries.set("highlighterConfig.drawWithLocalCrosshairData", true);
+          xy.set("highlighterConfig.drawWithLocalCrosshairData", true);
+          para.set("highlighterConfig.drawWithLocalCrosshairData", true);
+          radar.set("highlighterConfig.drawWithLocalCrosshairData", true);
+          polar.set("highlighterConfig.drawWithLocalCrosshairData", true);
+
+          timeseries.set("hardMute", true);
+          xy.set("hardMute", true);
+          para.set("hardMute", true);
+          radar.set("hardMute", true);
+          polar.set("hardMute", true);
+
         });
       });
 
