@@ -123,6 +123,7 @@
               'markerTSScale': 1,
               'markerTSFillOpacity': 0.6,
               'markerTSStrokeOpacity': 1,
+              'markerShowTooltip': true,
               'hardMute': false,
               'showTooltip': false,
               'allowNegativeValues': false
@@ -914,7 +915,8 @@
             'markerSymbol': this._chartOptions.markerTSSymbol,
             'markerScale': this._chartOptions.markerTSScale,
             'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
-            'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity
+            'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity,
+            'showTooltip': this._chartOptions.markerShowTooltip
           };
 
           if(j%2 === 0) {

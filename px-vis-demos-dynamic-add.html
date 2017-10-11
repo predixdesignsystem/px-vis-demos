@@ -189,6 +189,12 @@ demonstrating dynamically adding/removing charts
                     <input id="markerSymbol" type="text" class="text-input input--tiny" value="{{_chartOptions.markerTSSymbol::input}}"></input>
                     </div>
                     <px-tooltip for="markerSymbol" delay="50" tooltip-message="circle/cross/diamond/square/triangle-up/star/wye/bar/thick-bar/thin-bar/x" orientation="auto"></px-tooltip>
+
+
+                    <div class="flex flex--col">
+                      <input id="markerShowTooltip" type="checkbox" checked="{{_chartOptions.markerShowTooltip::change}}"></input>
+                      <label for="markerShowTooltip" class="label--inline">Show Tooltip</label>
+                    </div>
                   </div>
               </div>
             </template>
