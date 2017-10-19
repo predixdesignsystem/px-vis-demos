@@ -104,6 +104,12 @@ demonstrating dynamically adding/removing charts
           </div>
           <px-tooltip for="hardMuteGroup" delay="50" tooltip-message="when hard mute is on muting a series will ignore it for extents calculation and tooltip/register search" orientation="auto"></px-tooltip>
 
+          <div id="crossHairGroup">
+            <input id="crosshair" type="checkbox" checked="{{_chartOptions.addCrosshairData::change}}"></input>
+            <label for="crosshair" class="label--inline" id="crosshairLabel">Add Crosshair Data</label>
+          </div>
+          <px-tooltip for="crossHairGroup" delay="50" tooltip-message="Add some crosshair data tot he chart before appending it to the dom" orientation="auto"></px-tooltip>
+
           <div id="showTooltipGroup">
             <input id="showTooltip" type="checkbox" checked="{{_chartOptions.showTooltip::change}}"></input>
             <label for="showTooltip" class="label--inline" id="showTooltipLabel">Show Tooltip</label>
