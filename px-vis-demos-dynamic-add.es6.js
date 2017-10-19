@@ -126,7 +126,8 @@
               'markerShowTooltip': true,
               'hardMute': false,
               'showTooltip': false,
-              'allowNegativeValues': false
+              'allowNegativeValues': false,
+              'addCrosshairData': false
             };
           }
         },
@@ -366,7 +367,8 @@
         }
 
         var newDiv = document.createElement('div'),
-                newChart;
+                newChart,
+                currWidth = this.$.chartHolder.getBoundingClientRect().width;
 
         newDiv.classList.add('divwrapper');
 
@@ -391,20 +393,30 @@
             newChart = document.createElement(this.selectedChartType);
           }
 
+          newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
+
           //append chart in div
           Polymer.dom(newDiv).appendChild(newChart);
 
           //process all chart options
           newChart.preventResize = this._chartOptions.preventResize;
-          newChart.height = this._chartOptions.height;
+          newChart.set('height', this._chartOptions.height);
           if(newChart.preventResize) {
             newChart.width = this._chartOptions.width;
+          } else {
+            newChart.width = currWidth;
           }
-          newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
           this._processOptions(newChart, extents, data);
           newChart.chartData = data;
           newChart.hardMute = this._chartOptions.hardMute;
           newChart.showTooltip = this._chartOptions.showTooltip;
+
+          if(this._chartOptions.addCrosshairData) {
+            newChart.set('highlighterConfig',{'drawWithLocalCrosshairData': false, 'differentDataset': true, 'fuzz': 100000000000, 'showTooltipData': true});
+
+            var timestamp = data[Math.floor(data.length/2)].timeStamp;
+            newChart.set('crosshairData', {"rawData":[{"timeStamp":timestamp}],"timeStamps":[timestamp]});
+          }
 
           if(this._chartOptions.customToolbar) {
             var newConf = {};
@@ -1061,7 +1073,7 @@
           'crosshairWithOptions': true
         }
       };
-      chart.height = 800;
+
       chart.seriesConfig = seriesConfig;
       chart.useDegrees = true;
       chart.margin={ "top": "0", "bottom": "0", "left": "10", "right": "10" };

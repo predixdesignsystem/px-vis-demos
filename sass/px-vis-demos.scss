@@ -37,6 +37,10 @@ $inuit-enable-btn--primary : true;
 @import 'px-box-design/_objects.box.scss';
 
 // Component
+.divwrapper {
+  height:100%;
+}
+
 
 // Trumps
 $inuit-enable-margins : true;

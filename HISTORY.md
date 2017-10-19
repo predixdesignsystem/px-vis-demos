@@ -1,3 +1,12 @@
+v1.1.6
+==================
+* Add crosshair data to chart generator
+
+v1.1.5
+==================
+* fix issues with booleans that would incorrectly be set
+* added lasso to crosshair
+
 v1.1.4
 ==================
 * dynamic_add: Adding hard mute and show tooltip on all charts, negative values for polar
