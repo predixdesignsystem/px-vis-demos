@@ -123,9 +123,11 @@
               'markerTSScale': 1,
               'markerTSFillOpacity': 0.6,
               'markerTSStrokeOpacity': 1,
+              'markerShowTooltip': true,
               'hardMute': false,
               'showTooltip': false,
-              'allowNegativeValues': false
+              'allowNegativeValues': false,
+              'addCrosshairData': false
             };
           }
         },
@@ -365,7 +367,8 @@
         }
 
         var newDiv = document.createElement('div'),
-                newChart;
+                newChart,
+                currWidth = this.$.chartHolder.getBoundingClientRect().width;
 
         newDiv.classList.add('divwrapper');
 
@@ -390,20 +393,30 @@
             newChart = document.createElement(this.selectedChartType);
           }
 
+          newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
+
           //append chart in div
           Polymer.dom(newDiv).appendChild(newChart);
 
           //process all chart options
           newChart.preventResize = this._chartOptions.preventResize;
-          newChart.height = this._chartOptions.height;
+          newChart.set('height', this._chartOptions.height);
           if(newChart.preventResize) {
             newChart.width = this._chartOptions.width;
+          } else {
+            newChart.width = currWidth;
           }
-          newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
           this._processOptions(newChart, extents, data);
           newChart.chartData = data;
           newChart.hardMute = this._chartOptions.hardMute;
           newChart.showTooltip = this._chartOptions.showTooltip;
+
+          if(this._chartOptions.addCrosshairData) {
+            newChart.set('highlighterConfig',{'drawWithLocalCrosshairData': false, 'differentDataset': true, 'fuzz': 100000000000, 'showTooltipData': true});
+
+            var timestamp = data[Math.floor(data.length/2)].timeStamp;
+            newChart.set('crosshairData', {"rawData":[{"timeStamp":timestamp}],"timeStamps":[timestamp]});
+          }
 
           if(this._chartOptions.customToolbar) {
             var newConf = {};
@@ -901,9 +914,29 @@
           for(var i=0; i<this._chartOptions.markerTSNumber; i++) {
             markerData.push({
               'time': Math.floor(data[0].timeStamp + step*(i+0.5)),
-              'label': `label${j}`
+              'label': `label${j}`,
+              'customKey': 'someVal',
+              'customKey2': 1223124
             });
+
+            //add "triple timestamp" marker on first row
+            if(j===0) {
+              markerData.push({
+                'time': Math.floor(data[0].timeStamp + step*(i+0.5)),
+                'label': `labelCustom`,
+                'customKey': 'someOtherVal',
+                'customKey2': 1
+              });
+
+              markerData.push({
+                'time': Math.floor(data[0].timeStamp + step*(i+0.5)),
+                'label': `labelCustom2`,
+                'customKey': 'pwet',
+                'customKey2': 323
+              });
+            }
           }
+
 
           //add config for this row
           config[`label${j}`] = {
@@ -914,7 +947,9 @@
             'markerSymbol': this._chartOptions.markerTSSymbol,
             'markerScale': this._chartOptions.markerTSScale,
             'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
-            'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity
+            'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity,
+            'showTooltip': this._chartOptions.markerShowTooltip,
+            'priority':10
           };
 
           if(j%2 === 0) {
@@ -923,6 +958,32 @@
             newMargin.bottom += 15;
           }
         }
+
+        config[`labelCustom`] = {
+          "color": "rgb(123,123,123)",
+          'location':'top',
+          'row': 0,
+          'markerSize': this._chartOptions.markerTSSize,
+          'markerSymbol': 'star',
+          'markerScale': this._chartOptions.markerTSScale,
+          'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
+          'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity,
+          'showTooltip': this._chartOptions.markerShowTooltip,
+          'priority': 1
+        };
+
+        config[`labelCustom2`] = {
+          "color": "rgb(0,255,0)",
+          'location':'top',
+          'row': 0,
+          'markerSize': this._chartOptions.markerTSSize,
+          'markerSymbol': 'wye',
+          'markerScale': this._chartOptions.markerTSScale,
+          'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
+          'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity,
+          'showTooltip': this._chartOptions.markerShowTooltip,
+          'priority': 2
+        };
 
         chart.set('margin', newMargin);
 
@@ -1059,7 +1120,7 @@
           'crosshairWithOptions': true
         }
       };
-      chart.height = 800;
+
       chart.seriesConfig = seriesConfig;
       chart.useDegrees = true;
       chart.margin={ "top": "0", "bottom": "0", "left": "10", "right": "10" };

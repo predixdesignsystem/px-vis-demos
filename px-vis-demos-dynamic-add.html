@@ -104,6 +104,12 @@ demonstrating dynamically adding/removing charts
           </div>
           <px-tooltip for="hardMuteGroup" delay="50" tooltip-message="when hard mute is on muting a series will ignore it for extents calculation and tooltip/register search" orientation="auto"></px-tooltip>
 
+          <div id="crossHairGroup">
+            <input id="crosshair" type="checkbox" checked="{{_chartOptions.addCrosshairData::change}}"></input>
+            <label for="crosshair" class="label--inline" id="crosshairLabel">Add Crosshair Data</label>
+          </div>
+          <px-tooltip for="crossHairGroup" delay="50" tooltip-message="Add some crosshair data tot he chart before appending it to the dom" orientation="auto"></px-tooltip>
+
           <div id="showTooltipGroup">
             <input id="showTooltip" type="checkbox" checked="{{_chartOptions.showTooltip::change}}"></input>
             <label for="showTooltip" class="label--inline" id="showTooltipLabel">Show Tooltip</label>
@@ -189,6 +195,12 @@ demonstrating dynamically adding/removing charts
                     <input id="markerSymbol" type="text" class="text-input input--tiny" value="{{_chartOptions.markerTSSymbol::input}}"></input>
                     </div>
                     <px-tooltip for="markerSymbol" delay="50" tooltip-message="circle/cross/diamond/square/triangle-up/star/wye/bar/thick-bar/thin-bar/x" orientation="auto"></px-tooltip>
+
+
+                    <div class="flex flex--col">
+                      <input id="markerShowTooltip" type="checkbox" checked="{{_chartOptions.markerShowTooltip::change}}"></input>
+                      <label for="markerShowTooltip" class="label--inline">Show Tooltip</label>
+                    </div>
                   </div>
               </div>
             </template>

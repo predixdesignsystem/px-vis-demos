@@ -1,3 +1,11 @@
+v1.1.7
+==================
+* Add marker tooltip
+
+v1.1.6
+==================
+* Add crosshair data to chart generator
+
 v1.1.5
 ==================
 * fix issues with booleans that would incorrectly be set
