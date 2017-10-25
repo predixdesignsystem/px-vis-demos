@@ -914,9 +914,29 @@
           for(var i=0; i<this._chartOptions.markerTSNumber; i++) {
             markerData.push({
               'time': Math.floor(data[0].timeStamp + step*(i+0.5)),
-              'label': `label${j}`
+              'label': `label${j}`,
+              'customKey': 'someVal',
+              'customKey2': 1223124
             });
+
+            //add "triple timestamp" marker on first row
+            if(j===0) {
+              markerData.push({
+                'time': Math.floor(data[0].timeStamp + step*(i+0.5)),
+                'label': `labelCustom`,
+                'customKey': 'someOtherVal',
+                'customKey2': 1
+              });
+
+              markerData.push({
+                'time': Math.floor(data[0].timeStamp + step*(i+0.5)),
+                'label': `labelCustom2`,
+                'customKey': 'pwet',
+                'customKey2': 323
+              });
+            }
           }
+
 
           //add config for this row
           config[`label${j}`] = {
@@ -928,7 +948,8 @@
             'markerScale': this._chartOptions.markerTSScale,
             'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
             'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity,
-            'showTooltip': this._chartOptions.markerShowTooltip
+            'showTooltip': this._chartOptions.markerShowTooltip,
+            'priority':10
           };
 
           if(j%2 === 0) {
@@ -937,6 +958,32 @@
             newMargin.bottom += 15;
           }
         }
+
+        config[`labelCustom`] = {
+          "color": "rgb(123,123,123)",
+          'location':'top',
+          'row': 0,
+          'markerSize': this._chartOptions.markerTSSize,
+          'markerSymbol': 'star',
+          'markerScale': this._chartOptions.markerTSScale,
+          'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
+          'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity,
+          'showTooltip': this._chartOptions.markerShowTooltip,
+          'priority': 1
+        };
+
+        config[`labelCustom2`] = {
+          "color": "rgb(0,255,0)",
+          'location':'top',
+          'row': 0,
+          'markerSize': this._chartOptions.markerTSSize,
+          'markerSymbol': 'wye',
+          'markerScale': this._chartOptions.markerTSScale,
+          'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
+          'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity,
+          'showTooltip': this._chartOptions.markerShowTooltip,
+          'priority': 2
+        };
 
         chart.set('margin', newMargin);
 
