@@ -202,8 +202,8 @@
             "timeseries": {
               config: {
                 // because we are splicing in an on-click listener (which is not standard for toolbar), for each other config item, we need to clear it.
-                advancedZoom: { actionConfig: { click: null } },
-                pan: { actionConfig: { click: 'null' } },
+                advancedZoom: { actionConfig: { click: null, mousemove: 'null' } },
+                pan: { actionConfig: { click: 'null', mousemove: 'null' } },
                 tooltip: {selected: true, actionConfig: { click: null } },
                 crosshairLasso: { actionConfig: {click: null}},
                 crosshair: {
@@ -218,8 +218,8 @@
             },
             "timeseriesFreeze": {
               config: {
-                advancedZoom: { actionConfig: { click: null } },
-                pan: { actionConfig: { click: null } },
+                advancedZoom: { actionConfig: { click: null, mousemove: 'null' } },
+                pan: { actionConfig: { click: null, mousemove: 'null' } },
                 tooltip: {selected: true, actionConfig: { click: null } },
                 // When in a frozen state, change the crosshair button into a frozen button
                 frozen: {
@@ -233,8 +233,8 @@
             },
             "xy": {
               config: {
-                advancedZoom: { actionConfig: { click: null } },
-                pan: { actionConfig: { click: null } },
+                advancedZoom: { actionConfig: { click: null, mousemove: 'null' } },
+                pan: { actionConfig: { click: null, mousemove: 'null' } },
                 tooltip: {selected: true, actionConfig: { click: null } },
                 crosshairLasso: { actionConfig: {click: null}},
                 crosshairWithOptions: {
@@ -248,8 +248,8 @@
             },
             "xyFreeze": {
               config: {
-                advancedZoom: { actionConfig: { click: null } },
-                pan: { actionConfig: { click: null } },
+                advancedZoom: { actionConfig: { click: null, mousemove: 'null' } },
+                pan: { actionConfig: { click: null, mousemove: 'null' } },
                 tooltip: {selected: true, actionConfig: { click: null } },
                 frozen: {
                   tooltipLabel: 'Crosshair Frozen',
@@ -300,7 +300,7 @@
                     }
                   }
                 },
-                advancedZoom: true
+                advancedZoom: { actionConfig: { click: null, mousemove: 'null' } }
               }
             },
             "polarFreeze": {
@@ -313,7 +313,7 @@
                   onClickContext: "toolbar",
                   customButtonStyle: "color: salmon;"
                 },
-                advancedZoom: true
+                advancedZoom: { actionConfig: { click: null, mousemove: 'null' } }
               }
             }
           };
