@@ -372,10 +372,8 @@
 
         newDiv.classList.add('divwrapper');
 
-
         //finally append all charts in our element
         Polymer.dom(this.$.chartHolder).appendChild(newDiv);
-
 
         //create the requested number of charts
         for(var i=0;i <this._drawingNumberOfCharts; i++) {
@@ -394,9 +392,9 @@
           }
 
           newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
+          newChart.set('preventResize', this._chartOptions.preventResize);
 
           //process all chart options
-          newChart.preventResize = this._chartOptions.preventResize;
           newChart.set('height', this._chartOptions.height);
           if(newChart.preventResize) {
             newChart.set('width', this._chartOptions.width);
@@ -949,7 +947,9 @@
             'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
             'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity,
             'showTooltip': this._chartOptions.markerShowTooltip,
-            'priority':10
+            'priority':10,
+            'firstDateTimeFormat': 'HH:mm A z',
+            'timezone': 'Etc/GMT'
           };
 
           if(j%2 === 0) {
@@ -969,7 +969,9 @@
           'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
           'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity,
           'showTooltip': this._chartOptions.markerShowTooltip,
-          'priority': 1
+          'priority': 1,
+          'firstDateTimeFormat': 'HH:mm A z',
+          'timezone': 'Etc/GMT+10'
         };
 
         config[`labelCustom2`] = {
@@ -982,7 +984,9 @@
           'markerFillOpacity': this._chartOptions.markerTSFillOpacity,
           'markerStrokeOpacity': this._chartOptions.markerTSStrokeOpacity,
           'showTooltip': this._chartOptions.markerShowTooltip,
-          'priority': 2
+          'priority': 2,
+          'firstDateTimeFormat': 'HH:mm A z',
+          'timezone': 'Etc/GMT+10'
         };
 
         chart.set('margin', newMargin);

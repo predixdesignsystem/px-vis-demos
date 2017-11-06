@@ -203,7 +203,7 @@
               config: {
                 // because we are splicing in an on-click listener (which is not standard for toolbar), for each other config item, we need to clear it.
                 advancedZoom: { actionConfig: { click: null, mousemove: null } },
-                pan: { actionConfig: { click: 'null', mousemove: null } },
+                pan: { actionConfig: { click: null, mousemove: null } },
                 tooltip: {selected: true, actionConfig: { click: null } },
                 crosshairLasso: { actionConfig: {click: null}},
                 crosshair: {
@@ -300,7 +300,7 @@
                     }
                   }
                 },
-                advancedZoom: true
+                advancedZoom: { actionConfig: { click: null, mousemove: 'null' } }
               }
             },
             "polarFreeze": {
@@ -313,7 +313,7 @@
                   onClickContext: "toolbar",
                   customButtonStyle: "color: salmon;"
                 },
-                advancedZoom: true
+                advancedZoom: { actionConfig: { click: null, mousemove: 'null' } }
               }
             }
           };
