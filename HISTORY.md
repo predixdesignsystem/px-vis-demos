@@ -1,3 +1,7 @@
+v1.1.8
+==================
+* Ensure zoom/pan play nicely with lasso on crosshair demo
+
 v1.1.7
 ==================
 * Add marker tooltip
