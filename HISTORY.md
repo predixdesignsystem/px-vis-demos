@@ -1,3 +1,7 @@
+v1.1.9
+==================
+* force demo rebuild
+
 v1.1.8
 ==================
 * Ensure zoom/pan play nicely with lasso on crosshair demo
