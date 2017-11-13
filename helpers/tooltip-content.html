@@ -1,0 +1,85 @@
+<link rel="import" href="../../polymer/polymer.html"/>
+<link rel="import" href="../css/tooltip-content-styles.html">
+
+<!--
+
+### Usage
+
+
+
+
+@element px-vis-markers
+@blurb Element which draws markers on top or bottom of a chart
+@homepage index.html
+@demo demo/index.html
+
+-->
+
+<dom-module id="tooltip-content">
+  <template>
+    <style include="tooltip-content-styles"></style>
+
+    <div style="pointer-events:all">
+      <template id="templateView" is="dom-if" if="[[!editMode]]">
+        <div>[[annotationMessage]]</div>
+      </template>
+      <template id="templateEdit" is="dom-if" if="[[editMode]]">
+        <!-- don't put closing tag on next line or textarea gets empty spaces -->
+        <textarea
+          id="ttEditText"
+          value="{{annotationMessage::input}}"
+          style="width: 380px; height:100px"></textarea>
+        <div style="display: flex; flex-direction:row-reverse">
+          <button id="ttOk" class="btn btn--call-to-action u-ml-" on-click="_saveEdit">Save</button>
+          <button id="ttDelete" class="btn" on-click="_deleteEdit">Delete</button>
+          <button id="ttCancel" class="btn" on-click="_cancelEdit">Cancel</button>
+        </div>
+      </template>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+
+    is: 'tooltip-content',
+
+
+    /**
+     * Properties block, expose attribute values to the DOM via 'reflect'
+     *
+     * @property properties
+     * @type Object
+     */
+    properties: {
+      annotationMessage: {
+        type: String,
+        value: ''
+      },
+
+      editMode: {
+        type: Boolean,
+        value: false
+      }
+
+    }, //properties
+
+    _saveEdit: function(evt) {
+      this.fire('tooltip-content-save');
+    },
+
+    _cancelEdit: function(evt) {
+      this.fire('tooltip-content-cancel');
+    },
+
+    _deleteEdit: function(evt) {
+      this.fire('tooltip-content-delete');
+    },
+
+    forceTemplateRender: function() {
+      this.$.templateEdit.render();
+      this.$.templateView.render();
+    }
+
+  });
+</script>
