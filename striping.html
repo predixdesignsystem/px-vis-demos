@@ -170,6 +170,17 @@
                       this.set('stripeType', 'customB');
                     }
                   },
+                  algorithmic: {
+                    title: 'algorithmic',
+                    cursorIcon: 'px-vis:draw-stripe',
+                    buttonGroup: 1,
+                    tooltipLabel: 'Draw/edit algorithmic type stripes',
+                    selectable: true,
+                    onClick: function() {
+                      this.set('interactionSpaceConfig.selectionType', 'xAxis');
+                      this.set('stripeType', 'algorithmic');
+                    }
+                  },
                   add: {
                     icon: 'px-vis:draw-stripe',
                     cursorIcon: 'px-vis:draw-stripe',
@@ -217,7 +228,7 @@
             algorithmic: {
               fillColor: 'rgb(255,187,102)',
               fillOpacity: '0.5',
-              dash: [0] //to overwrite default dash and make solid
+              // dash: [0] //to overwrite default dash and make solid
             }
           };
 
