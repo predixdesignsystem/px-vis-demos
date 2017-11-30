@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Dynamic chart generator</title>
         <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
-        <!--<script src="../webcomponentsjs/webcomponents-lite.min.js"></script>-->
+        <!--<script src="../webcomponentsjs/webcomponents-lite.js"></script>-->
         <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
         <script type="text/javascript">
         window.addEventListener('px-vis-worker-url-request', function(e) {
@@ -33,7 +33,7 @@
           if (!webComponentsSupported) {
             var script = document.createElement('script');
             script.async = true;
-            script.src = '../webcomponentsjs/webcomponents-lite.min.js';
+            script.src = '../webcomponentsjs/webcomponents-lite.js';
             script.onload = onload;
             document.head.appendChild(script);
           } else {
