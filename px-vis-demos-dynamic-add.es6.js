@@ -1117,7 +1117,7 @@
       };
       chart.toolbarConfig = {
         'config': {
-          'crosshairWithOptions': true
+          'tooltipWithOptions': true
         }
       };
 
