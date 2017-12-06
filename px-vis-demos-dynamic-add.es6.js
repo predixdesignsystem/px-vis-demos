@@ -395,14 +395,11 @@
 
           newChart.debounceResizeTiming = this._chartOptions.resizeDebounce;
 
-          //append chart in div
-          Polymer.dom(newDiv).appendChild(newChart);
-
           //process all chart options
           newChart.preventResize = this._chartOptions.preventResize;
           newChart.set('height', this._chartOptions.height);
           if(newChart.preventResize) {
-            newChart.width = this._chartOptions.width;
+            newChart.set('width', this._chartOptions.width);
           } else {
             newChart.width = currWidth;
           }
@@ -475,6 +472,9 @@
           }
 
         }
+
+        //append chart in div
+        Polymer.dom(newDiv).appendChild(newChart);
         this._startPerfMeasure();
 
       } else {

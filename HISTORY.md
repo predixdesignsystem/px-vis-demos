@@ -1,3 +1,6 @@
+==================
+* fixed preventResize issue
+
 v1.1.9
 ==================
 * force demo rebuild
