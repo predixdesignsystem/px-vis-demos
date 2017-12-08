@@ -2,130 +2,131 @@
 
 <html>
   <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>Striping example</title>
-      <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
-      <!--<script src="../webcomponentsjs/webcomponents-lite.js"></script>-->
-      <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
-      <link rel="import" href="../px-theme/px-theme-styles.html" defer>
-      <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
-      <custom-style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Striping example</title>
+    <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+    <!--<script src="../webcomponentsjs/webcomponents-lite.js"></script>-->
+    <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+    <link rel="import" href="../px-theme/px-theme-styles.html" defer>
+    <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
+    <custom-style>
       <style include="px-theme-styles" is="custom-style"></style>
     </custom-style>
 
-      <link rel="import" href="../px-vis/px-vis-data-converter.html" defer />
-      <link rel="import" href="../px-vis-timeseries/px-vis-timeseries.html" defer />
-      <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
+    <link rel="import" href="../px-vis/px-vis-data-converter.html" defer />
+    <link rel="import" href="../px-vis-timeseries/px-vis-timeseries.html" defer />
+    <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
 
-      <link rel="import" href="css/px-vis-demos-styles.html" defer>
-      <style include="px-vis-demos-styles" is="custom-style"></style>
-
+    <link rel="import" href="css/px-vis-demos-styles.html" defer>
+    <style include="px-vis-demos-styles" is="custom-style"></style>
   </head>
 
   <body style="padding:30px; ">
-    <template id="myDom" is="dom-bind">
-      <style>
-        .wrapper {
-          display: flex;
-          flex-wrap: wrap;
-        }
+    <dom-bind>
+      <template id="myDom" is="dom-bind">
+        <style>
+          .wrapper {
+            display: flex;
+            flex-wrap: wrap;
+          }
 
-        .minHeight {
-          width: 45vw;
-          height: 300px;
-        }
-      </style>
-      <div>
-        <button on-click="genRandomData" class="btn btn--primary u-mt-">Generate Random Stripe Data</button>
-      </div>
-      <div class="wrapper">
-        <div class="minHeight">
-          <px-vis-timeseries
-            id="timeseries0"
-            disable-navigator
-            series-config='{
-              "y0":{"y":"y0"}
-            }'
-            default-series-config='{
-              "type": "line",
-              "x": "timeStamp"
-            }'
-            cursor-config='{
-              "horizontalLine": "none"
-            }'
-            chart-data="[[chartData]]"
-            render-to-canvas
-            stripe-data="{{stripeData}}">
-          </px-vis-timeseries>
+          .minHeight {
+            width: 45vw;
+            height: 300px;
+          }
+        </style>
+        <div>
+          <button on-click="genRandomData" class="btn btn--primary u-mt-">Generate Random Stripe Data</button>
         </div>
-        <div class="minHeight">
-          <px-vis-timeseries
-            id="timeseries1"
-            disable-navigator
-            series-config='{
-              "y1":{"y":"y1"}
-            }'
-            default-series-config='{
-              "type": "line",
-              "x": "timeStamp"
-            }'
-            cursor-config='{
-              "horizontalLine": "none"
-            }'
-            chart-data="[[chartData]]"
-            render-to-canvas
-            stripe-data="{{stripeData}}">
-          </px-vis-timeseries>
+        <div class="wrapper">
+          <div class="minHeight">
+            <px-vis-timeseries
+              id="timeseries0"
+              disable-navigator
+              series-config='{
+                "y0":{"y":"y0"}
+              }'
+              default-series-config='{
+                "type": "line",
+                "x": "timeStamp"
+              }'
+              cursor-config='{
+                "horizontalLine": "none"
+              }'
+              chart-data="[[chartData]]"
+              render-to-canvas
+              stripe-data="{{stripeData}}">
+            </px-vis-timeseries>
+          </div>
+          <div class="minHeight">
+            <px-vis-timeseries
+              id="timeseries1"
+              disable-navigator
+              series-config='{
+                "y1":{"y":"y1"}
+              }'
+              default-series-config='{
+                "type": "line",
+                "x": "timeStamp"
+              }'
+              cursor-config='{
+                "horizontalLine": "none"
+              }'
+              chart-data="[[chartData]]"
+              render-to-canvas
+              stripe-data="{{stripeData}}">
+            </px-vis-timeseries>
+          </div>
+          <div class="minHeight">
+            <px-vis-timeseries
+              id="timeseries2"
+              disable-navigator
+              series-config='{
+                "y2":{"y":"y2"}
+              }'
+              default-series-config='{
+                "type": "line",
+                "x": "timeStamp"
+              }'
+              cursor-config='{
+                "horizontalLine": "none"
+              }'
+              chart-data="[[chartData]]"
+              render-to-canvas
+              stripe-data="{{stripeData}}">
+            </px-vis-timeseries>
+          </div>
+          <div class="minHeight">
+            <px-vis-timeseries
+              id="timeseries3"
+              disable-navigator
+              series-config='{
+                "y3":{"y":"y3"}
+              }'
+              default-series-config='{
+                "type": "line",
+                "x": "timeStamp"
+              }'
+              cursor-config='{
+                "horizontalLine": "none"
+              }'
+              chart-data="[[chartData]]"
+              render-to-canvas
+              stripe-data="{{stripeData}}">
+            </px-vis-timeseries>
+          </div>
         </div>
-        <div class="minHeight">
-          <px-vis-timeseries
-            id="timeseries2"
-            disable-navigator
-            series-config='{
-              "y2":{"y":"y2"}
-            }'
-            default-series-config='{
-              "type": "line",
-              "x": "timeStamp"
-            }'
-            cursor-config='{
-              "horizontalLine": "none"
-            }'
-            chart-data="[[chartData]]"
-            render-to-canvas
-            stripe-data="{{stripeData}}">
-          </px-vis-timeseries>
-        </div>
-         <div class="minHeight">
-          <px-vis-timeseries
-            id="timeseries3"
-            disable-navigator
-            series-config='{
-              "y3":{"y":"y3"}
-            }'
-            default-series-config='{
-              "type": "line",
-              "x": "timeStamp"
-            }'
-            cursor-config='{
-              "horizontalLine": "none"
-            }'
-            chart-data="[[chartData]]"
-            render-to-canvas
-            stripe-data="{{stripeData}}">
-          </px-vis-timeseries>
-        </div>
-      </div>
 
-      <iron-ajax
-        id="randomData"
-        url="../px-demo-data/demo-data/random/d4x1000.json"
-        handle-as="json"
-        last-response="{{chartData}}"
-        auto>
-      </iron-ajax>
-    </template>
+        <iron-ajax
+          id="randomData"
+          url="../px-demo-data/demo-data/random/d4x1000.json"
+          handle-as="json"
+          last-response="{{chartData}}"
+          auto>
+        </iron-ajax>
+      </template>
+    </dom-bind>
 
     <script type="text/javascript">
       var timeseries,
