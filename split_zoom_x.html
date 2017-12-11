@@ -2,53 +2,55 @@
 
 <html>
   <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>Crosshair example</title>
-      <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
-      <!--<script src="../webcomponentsjs/webcomponents-lite.min.js"></script>-->
-      <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
-      <link rel="import" href="../promise-polyfill/promise-polyfill-lite.html">
-      <!-- <link rel="import" href="../promise-polyfill/promise.js"/> -->
-      <link rel="import" href="../px-theme/px-theme-styles.html" defer>
-      <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crosshair example</title>
+    <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+    <!--<script src="../webcomponentsjs/webcomponents-lite.js"></script>-->
+    <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+    <link rel="import" href="../promise-polyfill/promise-polyfill-lite.html">
+    <!-- <link rel="import" href="../promise-polyfill/promise.js"/> -->
+    <link rel="import" href="../px-theme/px-theme-styles.html" defer>
+    <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
+    <custom-style>
       <style include="px-theme-styles" is="custom-style"></style>
+    </custom-style>
 
-      <link rel="import" href="px-vis-demos-ts-split-x.html" defer />
-      <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
+    <link rel="import" href="px-vis-demos-ts-split-x.html" defer />
+    <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
 
-      <link rel="import" href="css/px-vis-demos-styles.html" defer>
-      <custom-style>
-        <style include="px-vis-demos-styles" is="custom-style"></style>
-      </custom-style>
-
+    <link rel="import" href="css/px-vis-demos-styles.html" defer>
+    <custom-style>
+      <style include="px-vis-demos-styles" is="custom-style"></style>
+    </custom-style>
   </head>
 
   <body style="padding:30px; ">
-    <template is="dom-bind">
+    <dom-bind>
+      <template is="dom-bind">
 
-      <iron-ajax
-        id="random1"
-        url="../px-demo-data/demo-data/random/d4x1000.json"
-        handle-as="json"
-        last-response="{{chartData}}"
-        auto>
-      </iron-ajax>
-      <px-vis-demos-ts-split-x
-        chart-data="[[chartData]]"
-        series-config='{
-          "y0":{"y":"y0"},
-          "y1":{"y":"y1"},
-          "y2":{"y":"y2"},
-          "y3":{"y":"y3"}
-        }'
-        default-series-config='{
-          "type": "line",
-          "x": "timeStamp"
-        }'>
-      </px-vis-demos-ts-split-x>
-
-    </template>
+        <iron-ajax
+          id="random1"
+          url="../px-demo-data/demo-data/random/d4x1000.json"
+          handle-as="json"
+          last-response="{{chartData}}"
+          auto>
+        </iron-ajax>
+        <px-vis-demos-ts-split-x
+          chart-data="[[chartData]]"
+          series-config='{
+            "y0":{"y":"y0"},
+            "y1":{"y":"y1"},
+            "y2":{"y":"y2"},
+            "y3":{"y":"y3"}
+          }'
+          default-series-config='{
+            "type": "line",
+            "x": "timeStamp"
+          }'>
+        </px-vis-demos-ts-split-x>
+      </template>
+    </dom-bind>
 
     <script type="text/javascript">
 
@@ -72,7 +74,7 @@
         if (!webComponentsSupported) {
           var script = document.createElement('script');
           script.async = true;
-          script.src = '../webcomponentsjs/webcomponents-lite.min.js';
+          script.src = '../webcomponentsjs/webcomponents-lite.js';
           script.onload = onload;
           document.head.appendChild(script);
         } else {

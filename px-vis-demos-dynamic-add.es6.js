@@ -1,16 +1,15 @@
 (function() {
   'use strict';
 
-  class pxVisDemosDynamicAdd {
+  Polymer({
     /* Name for the component */
-    get is() { return 'px-vis-demos-dynamic-add'; }
+    is: 'px-vis-demos-dynamic-add',
 
     /* Behaviors to import for this component */
 
 
     /* Properties for this component */
-    get properties() {
-      return {
+    properties: {
         /**
         *
         */
@@ -154,16 +153,13 @@
           type: Number,
           value: 99999
         }
-      };
-    }
+    },
 
-    get observers(){
-      return [
+    observers:[
         '_computeCurrentDataSets(selectedChartType, dataSets.*)'
-      ];
-    }
+      ],
 
-    attached() {
+    attached: function() {
       this._generateListener = this._generateDataSet.bind(this);
       this._createListener = this._createChart.bind(this);
       this._removeListener = this._removeChart.bind(this);
@@ -176,9 +172,9 @@
       this.addEventListener('px-vis-scatter-rendering-ended', this._drawingListener);
       this.addEventListener('px-vis-line-svg-rendering-ended', this._drawingListener);
       this.addEventListener('px-vis-chart-canvas-rendering-ended', this._drawingListener);
-    }
+    },
 
-    detached() {
+    detached: function() {
       this.$.generate.removeEventListener('click', this._generateListener);
       this.$.btnCreate.removeEventListener('click', this._createListener);
       this.$.btnRemove.removeEventListener('click', this._removeListener);
@@ -186,9 +182,9 @@
       this.removeEventListener('px-vis-scatter-rendering-ended', this._drawingListener);
       this.removeEventListener('px-vis-line-svg-rendering-ended', this._drawingListener);
       this.removeEventListener('px-vis-chart-canvas-rendering-ended', this._drawingListener);
-    }
+    },
 
-    _generateDataSet() {
+    _generateDataSet: function() {
 
       var dataSet = this._generateData(this.$.pointsPerSeries.value, this.$.seriesNumber.value, this.selectedChartType);
 
@@ -202,9 +198,9 @@
       this._computeCurrentDataSets();
 
       //TODO: sort by size
-    }
+    },
 
-    _generateData(pointsNumber, seriesNumber, chartType, seriesNames) {
+    _generateData: function(pointsNumber, seriesNumber, chartType, seriesNames) {
 
 
       console.time(`generating ${pointsNumber*seriesNumber} total (${seriesNumber} series each ${pointsNumber} points) for ${chartType}`);
@@ -287,9 +283,9 @@
       console.timeEnd(`generating ${pointsNumber*seriesNumber} total (${seriesNumber} series each ${pointsNumber} points) for ${chartType}`);
 
       return {'val': `[Gen][${this._generateOptions.counter}] ${pointsNumber*seriesNumber} total (${seriesNumber} series each ${pointsNumber} points)` , 'key': { 'data': result, 'extents': extents}};
-    }
+    },
 
-    _computeCurrentDataSets() {
+    _computeCurrentDataSets: function() {
 
       this.set('_currentDataSets', this.dataSets[this.selectedChartType].slice());
 
@@ -298,45 +294,45 @@
         this.$.dataSetDropdown.set('displayValue', this.dataSets[this.selectedChartType][this.dataSets[this.selectedChartType].length-1].val);
         this.$.dataSetDropdown.set('selectedKey', this.dataSets[this.selectedChartType][this.dataSets[this.selectedChartType].length-1].key);
       }
-    }
+    },
 
-    _canScatter(selectedChartType) {
+    _canScatter: function(selectedChartType) {
       return selectedChartType !== 'px-vis-parallel-coordinates' && selectedChartType !== 'px-vis-radar' && selectedChartType !== 'px-vis-pie-chart' && selectedChartType !== 'px-vis-polar';
-    }
+    },
 
-    _canCanvas(selectedChartType) {
+    _canCanvas: function(selectedChartType) {
       return selectedChartType === 'px-vis-timeseries' || selectedChartType === 'px-vis-xy-chart' || selectedChartType === 'px-vis-polar';
-    }
+    },
 
-    _canSvg(selectedChartType) {
+    _canSvg: function(selectedChartType) {
       return selectedChartType === 'px-vis-parallel-coordinates' || selectedChartType === 'px-vis-radar';
-    }
+    },
 
-    _canProgRender(selectedChartType, canvas, svg) {
+    _canProgRender: function(selectedChartType, canvas, svg) {
       return (this._canCanvas(selectedChartType) && canvas) || (this._canSvg(selectedChartType) && !svg);
-    }
+    },
 
-    _isTimeseries(selectedChartType) {
+    _isTimeseries: function(selectedChartType) {
       return selectedChartType === 'px-vis-timeseries';
-    }
+    },
 
-    _isPolar(selectedChartType) {
+    _isPolar: function(selectedChartType) {
       return selectedChartType === 'px-vis-polar';
-    }
+    },
 
-    _canMultiY(selectedChartType) {
+    _canMultiY: function(selectedChartType) {
       return selectedChartType === 'px-vis-timeseries' || selectedChartType === 'px-vis-xy-chart';
-    }
+    },
 
-    _canChartExtents(selectedChartType) {
+    _canChartExtents: function(selectedChartType) {
       return selectedChartType !== 'px-vis-parallel-coordinates' && selectedChartType !== 'px-vis-polar';
-    }
+    },
 
-    _canWebWorker(selectedChartType) {
+    _canWebWorker: function(selectedChartType) {
       return selectedChartType !== 'px-vis-parallel-coordinates' && selectedChartType !== 'px-vis-radar';
-    }
+    },
 
-    _createChart() {
+    _createChart: function() {
 
       var data = this.$.dataSetDropdown.selectedKey.data,
           extents = this.$.dataSetDropdown.selectedKey.extents;
@@ -480,13 +476,13 @@
       } else {
         console.log('please select data');
       }
-    }
+    },
 
-    _generateSeriesName() {
+    _generateSeriesName: function() {
       return `y${Math.floor(Math.random()*1000)}`;
-    }
+    },
 
-    _addSerieAndModifyData(info) {
+    _addSerieAndModifyData: function(info) {
       var numberOfSeries = Object.keys(info.chart.chartData[0]).length - 2,
           seriesNames = Object.keys(info.chart.chartData[0]).filter(function(d, i) { return d[0] === 'y';}),
           data,
@@ -499,9 +495,9 @@
       info.chart.set('chartData', data.key.data);
 
       this._addOneSerieFromConfig(info.chart, numberOfSeries, seriesName);
-    }
+    },
 
-    _removeSerieAndModifyData(info) {
+    _removeSerieAndModifyData: function(info) {
       var data,
           seriesNames = Object.keys(info.chart.chartData[0]).filter(function(d, i) { return d[0] === 'y';});
 
@@ -519,9 +515,9 @@
 
       info.chart.set('chartData', data.key.data);
       this._deleteOneSerieFromConfig(info.chart, missing);
-    }
+    },
 
-    _changeData(info) {
+    _changeData: function(info) {
 
       var data,
           seriesNames = Object.keys(info.chart.chartData[0]).filter(function(d, i) { return d[0] === 'y';});
@@ -529,9 +525,9 @@
       data = this._generateData(info.chart.chartData.length, Object.keys(info.chart.chartData[0]).length - 2, info.chart.nodeName.toLowerCase(), seriesNames);
 
       info.chart.set('chartData', data.key.data);
-    }
+    },
 
-    _changeDataAndSeries(info) {
+    _changeDataAndSeries: function(info) {
       var numberOfSeries = Object.keys(info.chart.chartData[0]).length - 2,
           seriesNames = [],
           currentNames = Object.keys(info.chart.chartData[0]).filter(function(d, i) { return d[0] === 'y'}),
@@ -573,18 +569,18 @@
         //todo:expose a metho on the info.chart to redraw
         info.chart._computeAxes();
       }
-    }
+    },
 
-    _removeSerie(info) {
+    _removeSerie: function(info) {
 
       var currentNames = Object.keys(info.chart.chartData[0]).filter(function(d, i) { return d[0] === 'y'}),
           seriesName = currentNames[currentNames.length-1];
 
       this._deleteOneSeriesData(info.chart.chartData, seriesName);
       this._deleteOneSerieFromConfig(info.chart, seriesName);
-    }
+    },
 
-    _deleteOneSerieFromConfig(chart, seriesName) {
+    _deleteOneSerieFromConfig: function(chart, seriesName) {
       if(chart.nodeName.toLowerCase() === 'px-vis-timeseries' ||
           chart.nodeName.toLowerCase() === 'px-vis-xy-chart' ||
           chart.nodeName.toLowerCase() === 'px-vis-polar') {
@@ -605,9 +601,9 @@
         //todo:expose a metho on the chart to redraw
         chart._computeAxes();
       }
-    }
+    },
 
-    _addOneSerieFromConfig(chart, numberOfSeries, seriesName) {
+    _addOneSerieFromConfig: function(chart, numberOfSeries, seriesName) {
       //add serie
       if(chart.nodeName.toLowerCase() === 'px-vis-timeseries' ||
           chart.nodeName.toLowerCase() === 'px-vis-xy-chart'  ||
@@ -638,18 +634,18 @@
         //todo:expose a metho on the chart to redraw
         chart._computeAxes();
       }
-    }
+    },
 
-    _addSerie(info) {
+    _addSerie: function(info) {
 
       //add the data
       var numberOfSeries = Object.keys(info.chart.chartData[0]).length - 2,
           seriesName  = this._generateSeriesName();
       this._addOneSeriesData(info.chart.chartData, seriesName);
       this._addOneSerieFromConfig(info.chart, numberOfSeries, seriesName);
-    }
+    },
 
-    _addOneSeriesData(data, seriesName) {
+    _addOneSeriesData: function(data, seriesName) {
       var number = Object.keys(data[0]).length - 2;
       for(var i=0; i<data.length; i++) {
 
@@ -662,17 +658,17 @@
           data[i][seriesName] = data[i-1][seriesName] + (Math.random() * 2 -1) * this._generateOptions.variance;
         }
       }
-    }
+    },
 
-    _deleteOneSeriesData(data, seriesName) {
+    _deleteOneSeriesData: function(data, seriesName) {
       var number = Object.keys(data[0]).length - 3;
       for(var i=0; i<data.length; i++) {
 
         delete data[i][seriesName];
       }
-    }
+    },
 
-    _generateSeriesConfigXYTS(numberId, useGenerationConfig, isTS, chart) {
+    _generateSeriesConfigXYTS: function(numberId, useGenerationConfig, isTS, chart) {
       var result = {},
           seriesNumber,
           isMultiAxis = useGenerationConfig ? this._chartOptions.multiAxis : (Object.keys(chart.y).length > 1),
@@ -717,9 +713,9 @@
       }
 
       return result;
-    }
+    },
 
-    _removeChart() {
+    _removeChart: function() {
       var wrappers = Polymer.dom(this.root).querySelectorAll('.divwrapper'),
           lastWrap = wrappers[wrappers.length - 1];
 
@@ -734,9 +730,9 @@
 
         Polymer.dom(this.$.chartHolder).removeChild(lastWrap);
       }
-    }
+    },
 
-    _moveChart() {
+    _moveChart: function() {
       var wrappers = Polymer.dom(this.root).querySelectorAll('.divwrapper'),
           lastWrap = wrappers[wrappers.length - 1];
 
@@ -751,14 +747,14 @@
         }.bind(this),500);
 
       }
-    }
+    },
 
-    _startPerfMeasure() {
+    _startPerfMeasure: function() {
       window.performance.clearMarks();
       window.performance.mark('start');
-    }
+    },
 
-    _drawingListen() {
+    _drawingListen: function() {
       this._drawingCounter++;
 
        if(this._drawingCounter%(this._drawingMultiplier*Number(this._drawingNumberOfCharts)) === 0) {
@@ -769,9 +765,9 @@
 
         console.log(`${this._drawingTimerName}: ${duration} (average per chart: ${duration/Number(this._drawingNumberOfCharts)})`);
       }
-    }
+    },
 
-    _getNumberOfDrawingPerCharts(data) {
+    _getNumberOfDrawingPerCharts: function(data) {
 
       switch(this.selectedChartType) {
         case 'px-vis-timeseries':
@@ -792,9 +788,9 @@
         case 'px-vis-pie-chart':
           //TODO
       }
-    }
+    },
 
-    _processOptions(chart, extents, data) {
+    _processOptions: function(chart, extents, data) {
 
       switch(this.selectedChartType) {
         case 'px-vis-timeseries':
@@ -815,9 +811,9 @@
         case 'px-vis-pie-chart':
           //TODO
       }
-    }
+    },
 
-    _processOptionsTS(chart, extents, data) {
+    _processOptionsTS: function(chart, extents, data) {
 
       var seriesConfig = {},
           seriesNumber = this._chartOptions.disableNav ? this._drawingsPerChart : this._drawingsPerChart/2;
@@ -1039,9 +1035,9 @@
       chart.disableNavigator = this._chartOptions.disableNav;
       chart.preventWebWorkerSynchronization = this._chartOptions.preventWwSync;
 
-    }
+    },
 
-    _processOptionsXY(chart, extents) {
+    _processOptionsXY: function(chart, extents) {
 
       var seriesConfig = {};
       for(var i=0; i<this._drawingsPerChart; i++) {
@@ -1097,9 +1093,9 @@
         chart.dynamicMenuConfig = [];
       }
       chart.preventWebWorkerSynchronization = this._chartOptions.preventWwSync;
-    }
+    },
 
-    _processOptionsPolar(chart) {
+    _processOptionsPolar: function(chart) {
        var seriesConfig = {};
       for(var i=0; i<this._drawingsPerChart; i++) {
 
@@ -1140,9 +1136,9 @@
         chart.dynamicMenuConfig = [];
       }
       chart.preventWebWorkerSynchronization = this._chartOptions.preventWwSync;
-    }
+    },
 
-    _processOptionsParallel(chart) {
+    _processOptionsParallel: function(chart) {
 
       chart.generateAxesFromData = true;
       chart.matchTicks = true;
@@ -1166,9 +1162,9 @@
         chart.dynamicMenuConfig = [];
       }
 
-    }
+    },
 
-    _processOptionsRadar(chart, extents) {
+    _processOptionsRadar: function(chart, extents) {
 
       chart.generateAxesFromData = true;
       chart.matchTicks = true;
@@ -1195,15 +1191,12 @@
       } else {
         chart.dynamicMenuConfig = [];
       }
-    }
+    },
 
     //mmmmm pie....
-    _processOptionsPie(chart) {
+    _processOptionsPie: function(chart) {
 
     }
 
-  }
-
-  /* Register this element with the Polymer constructor */
-  Polymer(pxVisDemosDynamicAdd);
+  });
 })();
