@@ -2,64 +2,64 @@
 
 <html>
   <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>Split zoom example</title>
-      <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
-      <!--<script src="../webcomponentsjs/webcomponents-lite.js"></script>-->
-      <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
-      <link rel="import" href="../px-theme/px-theme-styles.html" defer>
-      <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
-      <custom-style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Split zoom example</title>
+    <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
+    <!--<script src="../webcomponentsjs/webcomponents-lite.js"></script>-->
+    <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
+    <link rel="import" href="../px-theme/px-theme-styles.html" defer>
+    <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
+    <custom-style>
       <style include="px-theme-styles" is="custom-style"></style>
     </custom-style>
 
-      <link rel="import" href="../px-vis/px-vis-data-converter.html" defer />
-      <link rel="import" href="../px-vis-timeseries/px-vis-timeseries.html" defer />
-      <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
+    <link rel="import" href="../px-vis/px-vis-data-converter.html" defer />
+    <link rel="import" href="../px-vis-timeseries/px-vis-timeseries.html" defer />
+    <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
 
-      <link rel="import" href="css/px-vis-demos-styles.html" defer>
-      <style include="px-vis-demos-styles" is="custom-style"></style>
+    <link rel="import" href="css/px-vis-demos-styles.html" defer>
+    <style include="px-vis-demos-styles" is="custom-style"></style>
 
   </head>
 
   <body style="padding:30px; ">
     <dom-bind>
-    <template id="myDom" is="dom-bind">
-      <px-vis-timeseries
-        id="timeseries0"
-        disable-navigator
-        height="600"
-        width="1000"
-        series-config='{
-          "y2":{"y":"y2"},
-          "y3":{"y":"y3"}
-        }'
-        default-series-config='{
-          "type": "line",
-          "x": "timeStamp",
-          "axis": {
-            "id": "axis1",
-            "side": "left",
-            "number": "1"
-          }
-        }'
-        cursor-config='{
-          "horizontalLine": "none"
-        }'
-        chart-data="[[chartData]]"
-        render-to-canvas>
-      </px-vis-timeseries>
+      <template id="myDom" is="dom-bind">
+        <px-vis-timeseries
+          id="timeseries0"
+          disable-navigator
+          height="600"
+          width="1000"
+          series-config='{
+            "y2":{"y":"y2"},
+            "y3":{"y":"y3"}
+          }'
+          default-series-config='{
+            "type": "line",
+            "x": "timeStamp",
+            "axis": {
+              "id": "axis1",
+              "side": "left",
+              "number": "1"
+            }
+          }'
+          cursor-config='{
+            "horizontalLine": "none"
+          }'
+          chart-data="[[chartData]]"
+          render-to-canvas>
+        </px-vis-timeseries>
 
-      <iron-ajax
-        id="randomData"
-        url="../px-demo-data/demo-data/random/d4x1000.json"
-        handle-as="json"
-        last-response="{{chartData}}"
-        auto>
-      </iron-ajax>
-    </template>
-  </dom-bind>
+        <iron-ajax
+          id="randomData"
+          url="../px-demo-data/demo-data/random/d4x1000.json"
+          handle-as="json"
+          last-response="{{chartData}}"
+          auto>
+        </iron-ajax>
+      </template>
+    </dom-bind>
 
     <script type="text/javascript">
 
