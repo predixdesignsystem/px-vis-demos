@@ -6,7 +6,7 @@
     <title>Web Component Test : Fixture for px-vis-demos</title>
 
     <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
-    <script src="../bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <!-- web-component-tester automatically provides local copy of brower.js below
          for any URL ending with "/web-component-tester/browser.js"
          when wct is run from the command line -->
@@ -22,7 +22,9 @@
   </head>
 
   <body>
-    <style include="px-theme-styles" is="custom-style"></style>
+    <custom-style>
+      <style include="px-theme-styles" is="custom-style"></style>
+    </custom-style>
     <h3>Web Component Test : Fixture for px-vis-demos</h3>
     <px-vis-demos id="px_vis_demos_1"></px-vis-demos>
   </body>
