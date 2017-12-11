@@ -1,5 +1,7 @@
+v1.2.0
 ==================
 * fixed preventResize issue
+* pick up hybrid vis charts
 
 v1.1.9
 ==================
