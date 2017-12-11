@@ -31,6 +31,7 @@
   </head>
 
   <body style="padding:30px; ">
+    <dom-bind>
     <template is="dom-bind">
       <style>
         .wapper {
@@ -87,10 +88,6 @@
               "y1":{"y":"y1"},
               "y2":{"y":"y2"},
               "y3":{"y":"y3"}
-            }'
-            chart-extents='{
-              "x": [-45, -4],
-              "y": [-10, 20]
             }'
             register-config='{
               "width": "200",
@@ -181,6 +178,7 @@
             time-data="timeStamp">
           </px-vis-polar>
         </div>
+        </div>
 
 
       <iron-ajax
@@ -191,6 +189,7 @@
         auto>
       </iron-ajax>
     </template>
+    </dom-bind>
 
     <script type="text/javascript">
 
