@@ -824,7 +824,9 @@
 
       chart.set('seriesConfig', seriesConfig);
       chart.set('renderToCanvas', this._chartOptions.canvas);
+
       chart.toolbarConfig = {'config': {
+        'tooltipWithSearchTypesAndRadius': true,
         'advancedZoom': true,
         'pan': true
       }};
@@ -1049,7 +1051,9 @@
         'forceDateTimeDisplay': 'true',
         'width': 250
       };
+
       chart.toolbarConfig = {'config': {
+        'tooltipWithFullOptions': true,
         'advancedZoom': true,
         'pan': true
       }};
@@ -1112,9 +1116,12 @@
         'forceDateTimeDisplay': 'true',
         'width': 250
       };
+
       chart.toolbarConfig = {
         'config': {
-          'crosshairWithOptions': true
+          'tooltipWithSearchTypes': true,
+          'zoom': true,
+          'pan': true
         }
       };
 
@@ -1136,6 +1143,7 @@
       } else {
         chart.dynamicMenuConfig = [];
       }
+
       chart.preventWebWorkerSynchronization = this._chartOptions.preventWwSync;
     },
 
