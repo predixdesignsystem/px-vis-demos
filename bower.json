@@ -35,7 +35,7 @@
     "px-tooltip": "^1.0.0",
     "iron-ajax": "^2.0.0",
     "iron-list": "^2.0.0",
-    "px-demo-data": "~0.0.22",
+    "px-demo-data": "^1.0.0",
     "px-modal": "^2.0.6"
   },
   "devDependencies": {

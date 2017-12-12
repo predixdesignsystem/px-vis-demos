@@ -1096,7 +1096,7 @@
     },
 
     _processOptionsPolar: function(chart) {
-       var seriesConfig = {};
+      var seriesConfig = {};
       for(var i=0; i<this._drawingsPerChart; i++) {
 
         seriesConfig[`y${i}`] = {
@@ -1105,6 +1105,7 @@
           'yAxisUnit': 'someUnit'
         };
       }
+      chart.showArrows = this._chartOptions.showArrows;
       chart.hideRegister = this._chartOptions.hideRegister;
       chart.allowNegativeValues = this._chartOptions.allowNegativeValues;
       chart.registerConfig = {
