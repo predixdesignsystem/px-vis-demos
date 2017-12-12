@@ -32,11 +32,11 @@
     "px-vis-xy-chart": "^3.3.0",
     "px-vis-parallel-coordinates": "^3.4.0",
     "px-dropdown": "^4.0.0",
-    "px-tooltip": "^1.0.0",
+    "px-tooltip": "^1.2.0",
     "iron-ajax": "^2.0.0",
     "iron-list": "^2.0.0",
     "px-demo-data": "^1.0.0",
-    "px-modal": "^2.0.6"
+    "px-modal": "^3.0.0"
   },
   "devDependencies": {
     "px-theme": "^3.0.0",
