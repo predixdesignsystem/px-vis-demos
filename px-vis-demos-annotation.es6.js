@@ -81,7 +81,7 @@
         element.addEventListener('px-vis-annotation-click', this.editAnnotation.bind(this));
       }, this);
 
-      this.$.modal.addEventListener('btnModalPositiveClicked', this.modalClose.bind(this));
+      this.$.modal.addEventListener('px-modal-accepted', this.modalClose.bind(this));
 
       this.$.tooltip.addEventListener('px-tooltip-hide', this._tooltipHide.bind(this));
       this.$.ttContent.addEventListener('tooltip-content-save', this._saveEdit.bind(this));
@@ -113,7 +113,7 @@
       this.mousePos = evt.detail.data.mouseCoords;
 
       //open the modal
-      this.$.modal.modalButtonClicked();
+      this.$.modal.set('opened', true);
     },
 
     showAnnotation: function(evt) {

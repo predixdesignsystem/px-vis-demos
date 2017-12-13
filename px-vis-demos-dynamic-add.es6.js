@@ -822,7 +822,9 @@
 
       chart.set('seriesConfig', seriesConfig);
       chart.set('renderToCanvas', this._chartOptions.canvas);
+
       chart.toolbarConfig = {'config': {
+        'tooltipWithSearchTypesAndRadius': true,
         'advancedZoom': true,
         'pan': true
       }};
@@ -1053,7 +1055,9 @@
         'forceDateTimeDisplay': 'true',
         'width': 250
       };
+
       chart.toolbarConfig = {'config': {
+        'tooltipWithFullOptions': true,
         'advancedZoom': true,
         'pan': true
       }};
@@ -1100,7 +1104,7 @@
     },
 
     _processOptionsPolar: function(chart) {
-       var seriesConfig = {};
+      var seriesConfig = {};
       for(var i=0; i<this._drawingsPerChart; i++) {
 
         seriesConfig[`y${i}`] = {
@@ -1109,15 +1113,19 @@
           'yAxisUnit': 'someUnit'
         };
       }
+      chart.showArrows = this._chartOptions.showArrows;
       chart.hideRegister = this._chartOptions.hideRegister;
       chart.allowNegativeValues = this._chartOptions.allowNegativeValues;
       chart.registerConfig = {
         'forceDateTimeDisplay': 'true',
         'width': 250
       };
+
       chart.toolbarConfig = {
         'config': {
-          'tooltipWithOptions': true
+          'tooltipWithSearchTypes': true,
+          'zoom': true,
+          'pan': true
         }
       };
 
@@ -1139,6 +1147,7 @@
       } else {
         chart.dynamicMenuConfig = [];
       }
+
       chart.preventWebWorkerSynchronization = this._chartOptions.preventWwSync;
     },
 

@@ -120,6 +120,10 @@ demonstrating dynamically adding/removing charts
               <input id="allowNegativeValues" type="checkbox" checked="{{_chartOptions.allowNegativeValues::change}}"></input>
               <label for="allowNegativeValues" class="label--inline">allow negative values</label>
             </div>
+            <div>
+              <input id="showArrows" type="checkbox" checked="{{_chartOptions.showArrows::change}}"></input>
+              <label for="showArrows" class="label--inline">show arrows</label>
+            </div>
           </template>
 
          <template is="dom-if" if="[[_isTimeseries(selectedChartType)]]">
