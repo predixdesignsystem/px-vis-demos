@@ -61,7 +61,7 @@ REPLACE THIS TEXT WITH A COMPONENT DESCRIPTION
             "config": {
               "advancedZoom": true,
               "tooltip": true,
-              "annotations": true,
+
               "pan": true
             }
           }'>
@@ -104,7 +104,7 @@ REPLACE THIS TEXT WITH A COMPONENT DESCRIPTION
             "config": {
               "advancedZoom": true,
               "tooltip": true,
-              "annotations": true,
+
               "pan": true
             }
           }'>
@@ -128,7 +128,7 @@ REPLACE THIS TEXT WITH A COMPONENT DESCRIPTION
               "bareZoom": true,
               "tooltip": true,
               "pan": true,
-              "annotations": true,
+
               "axisDrag": true,
               "axisMuteSeries": true
             }
@@ -152,7 +152,7 @@ REPLACE THIS TEXT WITH A COMPONENT DESCRIPTION
               "bareZoom": true,
               "tooltip": true,
               "pan": true,
-              "annotations": true,
+
               "axisDrag": true,
               "axisMuteSeries": true
             }
@@ -173,8 +173,7 @@ REPLACE THIS TEXT WITH A COMPONENT DESCRIPTION
             "config": {
               "advancedZoom": true,
               "tooltip": true,
-              "pan": true,
-              "annotations": true
+              "pan": true
             }
           }'
           height="400"
@@ -202,24 +201,10 @@ REPLACE THIS TEXT WITH A COMPONENT DESCRIPTION
       accept-text="Create"
       reject-text="Cancel">
       <div slot="body">
-        <template is="dom-if" if="[[!isRadarParallel]]">
-          <div id="associateGroup" class="flex flex--middle">
-            <p>Enter a note for series: </p>
-            <px-dropdown
-              id="modalDropdown"
-              select-by="val"
-              disable-clear
-              items="[[dropdownSeries]]"
-              display-value="[[dropdownDisplayValue]]"
-              selected="{{dropdownSelected}}">
-            </px-dropdown>
-          </div>
-        </template>
-        <template is="dom-if" if="[[isRadarParallel]]">
-          <div class="flex flex--middle">
-            <p>Note for axis [[currentDimension]]:</p>
-          </div>
-        </template>
+
+        <div class="flex flex--middle">
+          <p>Note for series [[_seriesFound]]:</p>
+        </div>
         <!-- don't put closing tag on next line or textarea gets empty spaces -->
         <textarea
           id="modalText"

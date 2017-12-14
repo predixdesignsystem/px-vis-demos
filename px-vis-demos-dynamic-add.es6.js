@@ -684,6 +684,8 @@
       result = {
         'x': isTS ? 'timeStamp' : 'x',
         'y': `y${numberId}`,
+        'name': 'safiuhasugfhsdghdgsdhgusgdhsdghsdighsdhgiosdgisjgijsdgijsdjgsfijdsifjsgsdgiohdg',
+        'title': 'sdfuiosdfuioshghuioghoisdghiogihigjidsjgjdsgjiodjafjfjsifiafijdfajfoifijfas',
         'type': type,
         'yAxisUnit': 'u',
         'xAxisUnit': 'u',

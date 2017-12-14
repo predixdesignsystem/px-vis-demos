@@ -13,11 +13,11 @@
         value: false
       },
 
-      currentDimension: {
+      _seriesFound: {
         type: String
       },
 
-      mousePos: {
+      annotationValue: {
         type: Array
       },
 
@@ -79,6 +79,43 @@
         element.addEventListener('px-vis-annotation-enter', this.showAnnotation.bind(this));
         element.addEventListener('px-vis-annotation-leave', this.hideAnnotation.bind(this));
         element.addEventListener('px-vis-annotation-click', this.editAnnotation.bind(this));
+
+        //lazy copying...
+        var old = JSON.parse(JSON.stringify(element.toolbarConfig));
+        old.config.customAnnotations =
+          {
+            'tooltipLabel': 'Annotations',
+            'icon': 'px-vis:comment',
+            'cursorIcon': 'px-vis:comment',
+            'buttonGroup': 1,
+            'onClick': function () {
+              this.set('_internalShowTooltip', false);
+              this.set('showStrongIcon', true);
+              this.set('interactionSpaceConfig.searchType', 'closestPoint')
+            },
+            'onDeselect': function () {
+              this.set('showStrongIcon', false);
+            },
+            'actionConfig': {
+              'mouseout': 'resetTooltip',
+              'mousemove': 'calcTooltipData',
+              'mousedown': 'null',
+              'click': function (evt) {
+                this.fire('px-vis-event-request', { 'eventName': 'px-vis-annotation-creation', 'data': { 'mouseCoords': evt.mouseCoords, 'clickTarget': evt.target, 'chart': this } })
+              },
+              'mouseup': 'null'
+            },
+            'subConfig': {
+              'hideAnnotations': {
+                'tooltipLabel': 'Hide Annotations',
+                'icon': 'px-vis:hide',
+                'buttonGroup': 1,
+                'toggle': true,
+                'onClick': 'function(button) {this.$$("px-vis-annotations").set("hide", button.selected);}'
+              }
+            }
+          };
+          element.set('toolbarConfig', old);
       }, this);
 
       this.$.modal.addEventListener('px-modal-accepted', this.modalClose.bind(this));
@@ -97,20 +134,42 @@
       //get chart type
       this.isRadarParallel = this.currentChart.nodeName === 'PX-VIS-PARALLEL-COORDINATES' || this.currentChart.nodeName === 'PX-VIS-RADAR';
 
+      var mousePos = evt.detail.data.mouseCoords;
+
       //find the series available
       if(this.isRadarParallel) {
         //find what axis we clicked on. The click target is the interaction
         //space on top of the axis
         var axis = evt.detail.data.clickTarget.parentElement;
-        this.set('currentDimension', axis.getAttribute('dimension'));
+        this.set('_seriesFound', axis.getAttribute('dimension'));
+        this.annotationValue = this.getDataFromPixel(mousePos, _seriesFound);
       } else {
-        var keys = Object.keys(this.currentChart.completeSeriesConfig);
-        this.set('dropdownSeries', keys);
-        this.set('dropdownDisplayValue', keys[0]);
-      }
 
-      //store mouse pos for further use
-      this.mousePos = evt.detail.data.mouseCoords;
+        var closest = this.currentChart.tooltipData.series[0].name,
+            min = Number.MAX_VALUE,
+            distance;
+
+        //we search for the closest point
+        this.currentChart.tooltipData.series.forEach(function(val) {
+
+          //do square distance because we only care about comparing
+          distance = Math.pow(val.coord[0] - mousePos[0], 2) + Math.pow(val.coord[1] - mousePos[1], 2);
+
+          if(distance < min) {
+            closest = {
+              id: val.name,
+              value: [val.value[this.currentChart.completeSeriesConfig[val.name].x], val.value[this.currentChart.completeSeriesConfig[val.name].y]]
+            };
+            min = distance;
+          }
+        }.bind(this));
+
+        this.set('_seriesFound', closest.id);
+        //here we use the value of the closest point we found. we could
+        //also use the mouse position converted to value and keep track
+        //of the closest point
+        this.annotationValue = closest.value;
+      }
 
       //open the modal
       this.$.modal.set('opened', true);
@@ -150,24 +209,15 @@
     modalClose: function(evt) {
 
       //process data and assign to currentChart
-      var seriesFound,
-          val,
-          newData;
+      var newData;
 
-      if(this.isRadarParallel) {
-        seriesFound = this.currentDimension;
-      } else {
-        seriesFound = this.dropdownSelected ? this.dropdownSelected : this.dropdownDisplayValue;
-      }
-
-      val = this.currentChart.getDataFromPixel(this.mousePos, seriesFound);
       newData = {
-        x: val[0],
-        y: val[1],
+        x: this.annotationValue[0],
+        y: this.annotationValue[1],
         data: {
           message: this.$.modalText.value.trim()
         },
-        series: seriesFound
+        series: this._seriesFound
       };
       this.currentChart.push('annotationData', newData);
       this.$.modalText.value = '';
