@@ -91,10 +91,12 @@
             'onClick': function () {
               this.set('_internalShowTooltip', false);
               this.set('showStrongIcon', true);
-              this.set('interactionSpaceConfig.searchType', 'closestPoint')
+              this.set('interactionSpaceConfig.searchType', 'closestPoint');
+              this.set('interactionSpaceConfig.searchFor', 'point');
             },
             'onDeselect': function () {
               this.set('showStrongIcon', false);
+              this.set('interactionSpaceConfig.searchFor', 'timestamp');
             },
             'actionConfig': {
               'mouseout': 'resetTooltip',
