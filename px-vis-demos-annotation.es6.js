@@ -140,37 +140,57 @@
 
       //find the series available
       if(this.isRadarParallel) {
-        //find what axis we clicked on. The click target is the interaction
-        //space on top of the axis
-        var axis = evt.detail.data.clickTarget.parentElement;
-        this.set('_seriesFound', axis.getAttribute('dimension'));
-        this.annotationValue = this.getDataFromPixel(mousePos, _seriesFound);
+
+        //we get our data through tooltip data single point search.
+        //it will have only 1 series for parallel and radar
+        this.set('_seriesFound', this.currentChart.tooltipData.series[0].name);
+
+        //for those charts the values are: [axis, yValue]
+        this.annotationValue = [this._seriesFound, this.currentChart.tooltipData.series[0].value[this._seriesFound]];
+
+        //another example of getting sopme value: convert the mouse
+        //position into actual value. The annotation will be placed
+        //where the mouse is rather than on closest point
+        //this.currentChart.getDataFromPixel(mousePos, this._seriesFound);
       } else {
 
-        var closest = this.currentChart.tooltipData.series[0].name,
-            min = Number.MAX_VALUE,
-            distance;
 
-        //we search for the closest point
-        this.currentChart.tooltipData.series.forEach(function(val) {
 
-          //do square distance because we only care about comparing
-          distance = Math.pow(val.coord[0] - mousePos[0], 2) + Math.pow(val.coord[1] - mousePos[1], 2);
+        //example code for searching through 4 data points if tooltip
+        //search were not using single point
+        // var closest = this.currentChart.tooltipData.series[0].name,
+        //     min = Number.MAX_VALUE,
+        //     distance;
 
-          if(distance < min) {
-            closest = {
-              id: val.name,
-              value: [val.value[this.currentChart.completeSeriesConfig[val.name].x], val.value[this.currentChart.completeSeriesConfig[val.name].y]]
-            };
-            min = distance;
+        // //we search for the closest point
+        // this.currentChart.tooltipData.series.forEach(function(val) {
+
+        //   //do square distance because we only care about comparing
+        //   distance = Math.pow(val.coord[0] - mousePos[0], 2) + Math.pow(val.coord[1] - mousePos[1], 2);
+
+        //   if(distance < min) {
+        //     closest = {
+        //       id: val.name,
+        //       value: [val.value[this.currentChart.completeSeriesConfig[val.name].x], val.value[this.currentChart.completeSeriesConfig[val.name].y]]
+        //     };
+        //     min = distance;
+        //   }
+        // }.bind(this));
+
+        //we get our data through tooltip data single point search. This
+        //search returns all series but only 1 has value, so use this one
+        var val;
+        this.currentChart.tooltipData.series.forEach(function(elem) {
+          if(Object.keys(elem.value).length > 0) {
+            val = elem;
           }
-        }.bind(this));
+        });
 
-        this.set('_seriesFound', closest.id);
+        this.set('_seriesFound', val.name);
         //here we use the value of the closest point we found. we could
         //also use the mouse position converted to value and keep track
         //of the closest point
-        this.annotationValue = closest.value;
+        this.annotationValue = [val.value[this.currentChart.completeSeriesConfig[this._seriesFound].x], val.value[this.currentChart.completeSeriesConfig[this._seriesFound].y]];
       }
 
       //open the modal
