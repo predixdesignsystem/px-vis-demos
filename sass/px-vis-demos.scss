@@ -33,8 +33,11 @@ $inuit-enable-btn--primary : true;
 @import "px-meta-buttons-design/_meta.buttons.scss";
 
 // Objects
+$inuit-enable-list-ui--small: true;
 @import 'px-layout-design/_objects.layout.scss';
 @import 'px-box-design/_objects.box.scss';
+@import 'px-list-ui-design/_objects.list-ui.scss';
+
 
 // Component
 .divwrapper {

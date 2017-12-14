@@ -51,14 +51,15 @@
     "px-layout-design": "^1.0.0",
     "px-box-design": "^1.0.0",
     "px-spacing-design": "^1.0.0",
-    "px-demo": "^3.0.0"
+    "px-demo": "^3.0.0",
+    "px-list-ui-design": "^2.0.2"
   },
   "resolutions": {
     "webcomponentsjs": "^1.0.0",
     "promise-polyfill": "^2.0.0"
   },
   "variants": {
-    "1.x":{
+    "1.x": {
       "dependencies": {
         "polymer": "^1.9.0"
       },
