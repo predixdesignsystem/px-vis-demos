@@ -15,7 +15,6 @@
 
 // Generic
 @import "px-normalize-design/_generic.normalize.scss";
-@import "px-box-sizing-design/_generic.box-sizing.scss";
 @import "px-helpers-design/_generic.helpers.scss";
 
 // Base
@@ -41,8 +40,7 @@ $inuit-enable-list-ui--small: true;
 
 // Component
 .divwrapper {
-  height:500px;
-  overflow-y: scroll;
+
 }
 
 

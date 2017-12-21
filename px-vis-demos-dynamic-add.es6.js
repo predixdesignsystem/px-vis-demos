@@ -362,17 +362,18 @@
           }
         }
 
-        var newDiv = document.createElement('div'),
-                newChart,
-                currWidth = this.$.chartHolder.getBoundingClientRect().width;
+        var newDiv,
+            newChart,
+            currWidth = this.$.chartHolder.getBoundingClientRect().width,
+            fragment = document.createElement('div');
 
-        newDiv.classList.add('divwrapper');
-
-        //finally append all charts in our element
-        Polymer.dom(this.$.chartHolder).appendChild(newDiv);
+        fragment.classList.add('creationBatchDiv');
 
         //create the requested number of charts
         for(var i=0;i <this._drawingNumberOfCharts; i++) {
+
+          newDiv = document.createElement('div');
+          newDiv.classList.add('divwrapper');
 
           //reuse charts if asked, create otherwise
           if(this.$.reuse.checked) {
@@ -465,10 +466,13 @@
             newChart.set('toolbarConfig', newConf);
           }
 
+          //append chart in div
+          Polymer.dom(newDiv).appendChild(newChart);
+          Polymer.dom(fragment).appendChild(newDiv);
         }
 
-        //append chart in div
-        Polymer.dom(newDiv).appendChild(newChart);
+        //finally append all charts in our element
+        Polymer.dom(this.$.chartHolder).appendChild(fragment);
         this._startPerfMeasure();
 
       } else {
@@ -714,15 +718,17 @@
     },
 
     _removeChart: function() {
-      var wrappers = Polymer.dom(this.root).querySelectorAll('.divwrapper'),
-          lastWrap = wrappers[wrappers.length - 1];
+      var wrappers = Polymer.dom(this.root).querySelectorAll('.creationBatchDiv'),
+          lastWrap = wrappers[wrappers.length - 1],
+          chart;
 
       if(lastWrap) {
 
         if(this.$.reuse.checked) {
           //store used charts for later
           for(var i=0; i<lastWrap.children.length; i++) {
-            this.chartPool[lastWrap.children[i].nodeName.toLowerCase()].push(lastWrap.children[i]);
+            chart = lastWrap.children[i].children[0];
+            this.chartPool[chart.nodeName.toLowerCase()].push(chart);
           }
         }
 
