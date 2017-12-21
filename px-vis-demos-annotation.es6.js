@@ -4,6 +4,8 @@
     is: 'px-vis-demos-annotation',
 
     properties: {
+
+      //the current chart we are creating an annotation on
       currentChart: {
         type: Object
       },
@@ -13,30 +15,22 @@
         value: false
       },
 
+      //assocaited series with the annotation that will be created
       _seriesFound: {
         type: String
       },
 
+      //chart values assocaited with the annotation that will be created
       annotationValue: {
         type: Array
       },
 
+      //array containing all charts on page
       allCharts: {
         type: Array
       },
 
-      dropdownSeries: {
-        type: Array
-      },
-
-      dropdownDisplayValue: {
-        type: String
-      },
-
-      dropdownSelected: {
-        type: String
-      },
-
+      //annotation text entered by the user
       annotationText: {
         type: String,
         value: ''
@@ -59,9 +53,16 @@
         value: 'cancel'
       },
 
+      //whether the displayed annotation should be in edit mode
       editMode: {
         type: Boolean,
         value: false
+      },
+
+      //human readable values for annotation X and Y values
+      _readableValues: {
+        type: String,
+        computed: '_computeReadableValue(annotationValue, currentChart)'
       }
     },
 
@@ -154,8 +155,6 @@
         //this.currentChart.getDataFromPixel(mousePos, this._seriesFound);
       } else {
 
-
-
         //example code for searching through 4 data points if tooltip
         //search were not using single point
         // var closest = this.currentChart.tooltipData.series[0].name,
@@ -203,7 +202,6 @@
 
         this.$.ttContent.annotationMessage = evt.detail.data.annotationData.data.message;
 
-        //this.$.annotationPopover.set('for', evt.detail.data.icon);
         this.set('_ttTarget', evt.detail.data.icon);
         this.$.tooltip.set('opened', true);
       }
@@ -278,6 +276,21 @@
       }
 
       this._editAction = 'none';
+    },
+
+    _computeReadableValue: function(annotationValue, currentChart) {
+
+      if(annotationValue === undefined || currentChart === undefined || annotationValue.length === 0) {
+        return;
+      }
+
+      if(currentChart.nodeName === 'PX-VIS-TIMESERIES') {
+        return '[' + Px.moment(annotationValue[0]).format() + ', ' + annotationValue[1].toFixed(2) + ']';
+      } else if(this.isRadarParallel) {
+        return '[' + annotationValue[1].toFixed(2)  + ']';
+      } else {
+        return '[' + annotationValue[0].toFixed(2)  + ', ' + annotationValue[1].toFixed(2)  + ']';
+      }
     }
   });
 })();
