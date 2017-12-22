@@ -28,7 +28,7 @@
     "polymer": "#1.9 - 2",
     "px-vis-timeseries": "^3.4.0",
     "px-vis-radar": "^3.5.0",
-    "px-vis-polar": "^3.%.0",
+    "px-vis-polar": "^3.5.0",
     "px-vis-xy-chart": "^3.4.0",
     "px-vis-parallel-coordinates": "^3.5.0",
     "px-dropdown": "^4.0.0",
