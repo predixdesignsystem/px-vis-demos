@@ -1,3 +1,8 @@
+v1.3.0
+==================
+* Adding annotations and demo
+* Updated data search with single point
+
 v1.2.0
 ==================
 * fixed preventResize issue
