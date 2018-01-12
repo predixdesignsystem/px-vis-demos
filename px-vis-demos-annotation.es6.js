@@ -264,6 +264,9 @@
       this._lockTooltip = false;
     },
 
+    /**
+     * Called after the tooltip has hidden
+     */
     _tooltipHide: function() {
 
       var index;
