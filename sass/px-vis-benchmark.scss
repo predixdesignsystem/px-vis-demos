@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+
+
+// Settings
+
+// Tools
+
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-helpers-design/_generic.helpers.scss";
+
+// Base
+@import "px-flexbox-design/_base.flexbox.scss";
+@import "px-headings-design/_base.headings.scss";
+
+// Meta
+$inuit-enable-btn--primary : true;
+$inuit-enable-btn--disabled : true;
+@import "px-meta-buttons-design/_meta.buttons.scss";
+
+// Objects
+
+
+// Trumps
+$inuit-enable-margins : true;
+$inuit-enable-margins--tiny: true;
+$inuit-enable-margins--small: true;
+$inuit-enable-margins--large: true;
+$inuit-enable-paddings : true;
+@import 'px-spacing-design/_trumps.spacing.scss';
+

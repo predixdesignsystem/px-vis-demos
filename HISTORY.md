@@ -1,3 +1,8 @@
+v1.4.0
+==================
+* Added vis benchmark
+* Refactored some of the chart generation code to be used by both the benchamrk and the chart generator
+
 v1.3.0
 ==================
 * Adding annotations and demo
