@@ -54,13 +54,13 @@
       reportData: {
         type: Array,
         value: function() {
-          return [{},{}];
+          return [];
         },
         notify: true
       },
       hasResults: {
         type: Boolean,
-        value: true,
+        value: false,
         notify: true
       },
       contexts: {
