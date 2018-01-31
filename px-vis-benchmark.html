@@ -28,53 +28,57 @@ benchmarking chart drawings
   <template>
     <style include="px-vis-benchmark-styles"></style>
 
-    <template is="dom-if" if="[[!_isRunning]]">
-      <span class="inline--flex flex--col flex--middle">TS - all data
-        <button on-click="_startFullTS" class$="[[_buttonClass(_dataReady)]]">[[_buttonText(_dataReady)]]</button>
-      </span>
-      <span class="inline--flex flex--col flex--middle">All charts - medium data
-        <button on-click="_startAllCharts" class$="[[_buttonClass(_dataReady)]]">[[_buttonText(_dataReady)]]</button>
-      </span>
-      <div id="warmupDiv">
-        <input id="warmup" type="checkbox" checked="{{_buildWarmup::change}}"></input>
-        <label for="warmup" class="label--inline">Include benchmark warmup</label>
-        <px-tooltip for="warmupDiv" delay="50" tooltip-message="If checked the benchmark will run a first loop with one chart of each type to 'warmup' the polymer stamping of those elements" orientation="auto"></px-tooltip>
-      </div>
+    <template is="dom-if" if="[[!hideUi]]">
+      <template is="dom-if" if="[[!isRunning]]">
+        <span class="inline--flex flex--col flex--middle">TS - all data
+          <button on-click="_startFullTS" class$="[[_buttonClass(_dataReady)]]">[[_buttonText(_dataReady)]]</button>
+        </span>
+        <span class="inline--flex flex--col flex--middle">All charts - medium data
+          <button on-click="_startAllCharts" class$="[[_buttonClass(_dataReady)]]">[[_buttonText(_dataReady)]]</button>
+        </span>
+        <div id="warmupDiv">
+          <input id="warmup" type="checkbox" checked="{{_buildWarmup::change}}"></input>
+          <label for="warmup" class="label--inline">Include benchmark warmup</label>
+          <px-tooltip for="warmupDiv" delay="50" tooltip-message="If checked the benchmark will run a first loop with one chart of each type to 'warmup' the polymer stamping of those elements" orientation="auto"></px-tooltip>
+        </div>
+      </template>
     </template>
-    <template is="dom-if" if="[[_isRunning]]">
+    <template is="dom-if" if="[[isRunning]]">
       <span>[[_status]]</span>
     </template>
     <iron-ajax
-      url="benchmark_data/4x1k.json"
+      url="[[dataRootPath]]4x1k.json"
       handle-as="json"
       auto
       last-response="{{data4x1k}}"
       >
     </iron-ajax>
     <iron-ajax
-      url="benchmark_data/4x10k.json"
+      url="[[dataRootPath]]4x10k.json"
       handle-as="json"
       auto
       last-response="{{data4x10k}}"
       >
     </iron-ajax>
     <iron-ajax
-      url="benchmark_data/40x1k.json"
+      url="[[dataRootPath]]40x1k.json"
       handle-as="json"
       auto
       last-response="{{data40x1k}}"
       >
     </iron-ajax>
     <iron-ajax
-      url="benchmark_data/40x10k.json"
+      url="[[dataRootPath]]40x10k.json"
       handle-as="json"
       auto
       last-response="{{data40x10k}}"
       >
     </iron-ajax>
     <div id="chartHolder"></div>
+    <px-data-grid
 
-    <template is="dom-if" if="[[_showResults]]">
+  ></px-data-grid>
+    <template is="dom-if" if="[[hasResults]]">
       <template is="dom-repeat" items="[[reportData]]">
       <span class="heading--page">[[item.title]]</span><br>
       <span class="heading--section">Total time: [[item.total]]ms</span><br>

@@ -1,3 +1,7 @@
+v1.4.1
+==================
+* improvements/new features for benchmark
+
 v1.4.0
 ==================
 * Added vis benchmark

@@ -756,10 +756,14 @@ PxVisBehaviorDemo.propertyWatch = {
 
   _measureTiming: function(name, timingStart, timingEnd, result) {
 
-    window.performance.measure(name, timingStart, timingEnd);
-    var measures = window.performance.getEntriesByName(name);
+    if(window.performance.getEntriesByName(timingEnd, 'mark').length) {
+      window.performance.measure(name, timingStart, timingEnd);
+      var measures = window.performance.getEntriesByName(name);
 
-    return measures[measures.length -1].duration;
+      return measures[measures.length -1].duration;
+    } else {
+      return -1;
+    }
   },
 }
 

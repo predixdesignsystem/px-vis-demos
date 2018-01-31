@@ -18,7 +18,12 @@
         type: Function
       },
       perfResult: {
-        type: Array
+        type: Array,
+        notify: true
+      },
+      dataRootPath: {
+        type: String,
+        value: 'benchmark_data/'
       },
       data4x1k: {
         type: Object
@@ -49,31 +54,39 @@
       reportData: {
         type: Array,
         value: function() {
-          return [];
-        }
+          return [{},{}];
+        },
+        notify: true
       },
-      _showResults: {
+      hasResults: {
         type: Boolean,
-        value: false
+        value: true,
+        notify: true
       },
-      _contexts: {
+      contexts: {
         type: Array
       },
       _status: {
         type: String,
-        computed: '_computeStatus(_currentBenchIndex, _contexts, _cleaningUp)'
+        computed: '_computeStatus(_currentBenchIndex, contexts, _cleaningUp)'
       },
-      _isRunning: {
+      isRunning: {
         type: Boolean,
-        value: false
+        value: false,
+        notify: true
       },
       _cleaningUp: {
         type: Boolean,
-        value: false
+        value: false,
+        notify: true
       },
       _buildWarmup: {
         type: Boolean,
         value: true
+      },
+      hideUi: {
+        type: Boolean,
+        value: false
       }
     },
 
@@ -84,21 +97,21 @@
     },
 
     _startFullTS: function() {
-      this._contexts = [];
+      this.contexts = [];
       this._buildContexts('fullTS');
       this._start();
     },
 
     _startAllCharts: function() {
-      this._contexts = [];
+      this.contexts = [];
       this._buildContexts('allCharts');
       this._start();
     },
 
     _start: function() {
 
-      this.set('_showResults', false);
-      this.set('_isRunning', true);
+      this.set('hasResults', false);
+      this.set('isRunning', true);
       this.perfResult = [];
       this._currentBenchIndex = 0;
 
@@ -109,10 +122,17 @@
 
       var ctx;
 
-      if(this._currentBenchIndex < this._contexts.length) {
+      if(this._currentBenchIndex < this.contexts.length) {
 
-        var timeout = this._currentBenchIndex === 0 ? 0 : 100;
-        ctx = this._contexts[this._currentBenchIndex];
+        var timeout;
+        ctx = this.contexts[this._currentBenchIndex];
+
+        if(this._currentBenchIndex === 0 || ctx.disableMeasures) {
+          timeout = 0;
+        } else {
+          timeout = ctx.cleaningTimeout || ctx.cleaningTimeout === 0 ? ctx.cleaningTimeout : 1000;
+        }
+
         this._currentBenchIndex++;
 
         if(timeout) {
@@ -126,8 +146,8 @@
       } else {
         //DONE
         this._buildReportData();
-        this.set('_showResults', true);
-        this.set('_isRunning', false);
+        this.set('hasResults', true);
+        this.set('isRunning', false);
       }
     },
 
@@ -147,7 +167,7 @@
         }
       }
 
-      
+
 
       //END
       if(this._drawingCounter%(this._drawingMultiplier*Number(this._drawingNumberOfCharts)) === 0) {
@@ -441,7 +461,7 @@
     _buildContexts: function(type) {
 
       if(this._buildWarmup) {
-        this._buildWarmupContext();
+        this.contexts = this.buildWarmupContext();
       }
 
       if(type === 'fullTS') {
@@ -451,110 +471,113 @@
       }
     },
 
-    _buildWarmupContext: function() {
-      var ctx;
+    buildWarmupContext: function() {
+      var ctx,
+          result = [];
       //canvas small
-      ctx = this._createContext(1, 'px-vis-timeseries', 'small', '', '');
+      ctx = this.createContext(1, 'px-vis-timeseries', 'small', '', '');
       ctx.options.canvas = true;
       ctx.disableMeasures = true;
 
-      this._contexts.push(ctx);
+      result.push(ctx);
 
       //svg small
-      ctx = this._createContext(1, 'px-vis-xy-chart', 'small', '', '');
+      ctx = this.createContext(1, 'px-vis-xy-chart', 'small', '', '');
       ctx.options.canvas = true;
       ctx.disableMeasures = true;
 
-      this._contexts.push(ctx);
+      result.push(ctx);
 
       //svg medium series
-      ctx = this._createContext(1, 'px-vis-parallel-coordinates', 'small', '', '');
+      ctx = this.createContext(1, 'px-vis-parallel-coordinates', 'small', '', '');
       ctx.options.canvas = true;
       ctx.disableMeasures = true;
 
-      this._contexts.push(ctx);
+      result.push(ctx);
 
       //canvas medium series (same total amount of points as medium but with 40 series)
-      ctx = this._createContext(1, 'px-vis-radar', 'small', '', '');
+      ctx = this.createContext(1, 'px-vis-radar', 'small', '', '');
       ctx.options.canvas = true;
       ctx.disableMeasures = true;
 
-      this._contexts.push(ctx);
+      result.push(ctx);
 
       //canvas large
-      ctx = this._createContext(1, 'px-vis-polar', 'small', '', '');
+      ctx = this.createContext(1, 'px-vis-polar', 'small', '', '');
       ctx.options.canvas = true;
       ctx.disableMeasures = true;
 
-      this._contexts.push(ctx);
+      result.push(ctx);
+
+      return result;
     },
 
     _buildAllChartsContext: function() {
       var ctx;
       // canvas small
-      ctx = this._createContext(10, 'px-vis-timeseries', 'large', '10 TS canvas 4x10k', '10 timeseries chart rendering on canvas. 4 series, 10000 points per series');
+      ctx = this.createContext(10, 'px-vis-timeseries', 'large', '10 TS canvas 4x10k', '10 timeseries chart rendering on canvas. 4 series, 10000 points per series');
       ctx.options.canvas = true;
       ctx.options.disableNav = true;
 
-      this._contexts.push(ctx);
+      this.contexts.push(ctx);
 
       //svg small
-      ctx = this._createContext(10, 'px-vis-xy-chart', 'large', '10 XY canvas 4x10k', '10 XY chart rendering on canvas. 4 series, 10000 points per series');
+      ctx = this.createContext(10, 'px-vis-xy-chart', 'large', '10 XY canvas 4x10k', '10 XY chart rendering on canvas. 4 series, 10000 points per series');
       ctx.options.canvas = true;
 
-      this._contexts.push(ctx);
+      this.contexts.push(ctx);
 
       //svg medium series
-      ctx = this._createContext(10, 'px-vis-parallel-coordinates', 'large', '10 // canvas 4x10k', '10 parallel coordinates chart rendering on canvas. 4 series, 10000 points per series');
+      ctx = this.createContext(10, 'px-vis-parallel-coordinates', 'large', '10 // canvas 4x10k', '10 parallel coordinates chart rendering on canvas. 4 series, 10000 points per series');
       ctx.options.canvas = true;
 
-      this._contexts.push(ctx);
+      this.contexts.push(ctx);
 
       //canvas medium series (same total amount of points as medium but with 40 series)
-      ctx = this._createContext(10, 'px-vis-radar', 'large', '10 radar canvas 4x10k', '10 radar chart rendering on canvas. 4 series, 10000 points per series');
+      ctx = this.createContext(10, 'px-vis-radar', 'large', '10 radar canvas 4x10k', '10 radar chart rendering on canvas. 4 series, 10000 points per series');
       ctx.options.canvas = true;
 
-      this._contexts.push(ctx);
+      this.contexts.push(ctx);
 
       //canvas large
-      ctx = this._createContext(10, 'px-vis-polar', 'large', '10 polar canvas 4x10k', '10 polar chart rendering on canvas. 4 series, 10000 points per series');
+      ctx = this.createContext(10, 'px-vis-polar', 'medium', '10 polar canvas 4x10k', '10 polar chart rendering on canvas. 4 series, 10000 points per series');
       ctx.options.canvas = true;
 
-       this._contexts.push(ctx);
+       this.contexts.push(ctx);
     },
 
     _buildFullTSContext: function() {
       var ctx;
       // canvas small
-      ctx = this._createContext(10, 'px-vis-timeseries', 'small', '10 TS canvas 4x1k', '10 timeseries chart rendering on canvas. 4 series, 1000 points per series');
+      ctx = this.createContext(10, 'px-vis-timeseries', 'small', '10 TS canvas 4x1k', '10 timeseries chart rendering on canvas. 4 series, 1000 points per series');
       ctx.options.canvas = true;
 
-      this._contexts.push(ctx);
+      this.contexts.push(ctx);
 
       //svg small
-      ctx = this._createContext(10, 'px-vis-timeseries', 'small', '10 SVG canvas 4x1k', '10 timeseries chart rendering on svg. 4 series, 1000 points per series');
-      this._contexts.push(ctx);
+      ctx = this.createContext(10, 'px-vis-timeseries', 'small', '10 SVG canvas 4x1k', '10 timeseries chart rendering on svg. 4 series, 1000 points per series');
+      this.contexts.push(ctx);
 
       //svg medium series
-      ctx = this._createContext(1, 'px-vis-timeseries', 'mediumSeries', '10 TS SVG 40x1k', '10 timeseries chart rendering on svg. 40 series, 1000 points per series');
+      ctx = this.createContext(1, 'px-vis-timeseries', 'mediumSeries', '10 TS SVG 40x1k', '10 timeseries chart rendering on svg. 40 series, 1000 points per series');
       ctx.options.canvas = true;
 
-      this._contexts.push(ctx);
+      this.contexts.push(ctx);
 
       //canvas medium series (same total amount of points as medium but with 40 series)
-      ctx = this._createContext(10, 'px-vis-timeseries', 'mediumSeries', '10 TS canvas 40x1k', '10 timeseries chart rendering on canvas. 40 series, 1000 points per series');
+      ctx = this.createContext(10, 'px-vis-timeseries', 'mediumSeries', '10 TS canvas 40x1k', '10 timeseries chart rendering on canvas. 40 series, 1000 points per series');
       ctx.options.canvas = true;
 
-      this._contexts.push(ctx);
+      this.contexts.push(ctx);
 
       //canvas large
-      ctx = this._createContext(5, 'px-vis-timeseries', 'large', '5 TS canvas 40x10k', '5 timeseries chart rendering on canvas. 40 series, 10000 points per series');
+      ctx = this.createContext(5, 'px-vis-timeseries', 'large', '5 TS canvas 40x10k', '5 timeseries chart rendering on canvas. 40 series, 10000 points per series');
       ctx.options.canvas = true;
 
-      this._contexts.push(ctx);
+      this.contexts.push(ctx);
     },
 
-    _createContext: function(number, type, size, title, description) {
+    createContext: function(number, type, size, title, description) {
 
       var data,
           ctx;
@@ -589,8 +612,33 @@
         return 'cleaning up between loops...';
       }
 
-      if(this._contexts && this._contexts.length) {
-        return 'Running loop ' + this._currentBenchIndex + ' of ' + this._contexts.length;
+      if(this.contexts && this.contexts.length) {
+        return 'Running loop ' + this._currentBenchIndex + ' of ' + this.contexts.length;
+      }
+    },
+
+    getDatasetSize: function(dataset) {
+
+      var numberOfSeries = Object.keys(dataset[0]).length;
+      if(dataset.length === 1000) {
+
+        if(numberOfSeries === 6) {
+          return 'small';
+        } else if(numberOfSeries === 42) {
+          return 'mediumSeries';
+        } else {
+          return 'unknown';
+        }
+      } else if(dataset.length === 10000) {
+        if(numberOfSeries === 6) {
+          return 'medium';
+        } else if(numberOfSeries === 42) {
+          return 'large';
+        } else {
+          return 'unknown';
+        }
+      } else {
+        return 'unknown';
       }
     }
   });
