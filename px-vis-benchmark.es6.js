@@ -95,9 +95,9 @@
       this._renderingStarted = this._renderingStarted.bind(this);
       this.set('_isPolymer1', !Polymer.Element);
       if(this._isPolymer1) {
-        this.importHref("../chimera-table/px-data-table.html");
+        Polymer.Base.importHref(Polymer.ResolveUrl.resolveUrl('bower_components/chimera-table/px-data-table.html',''))
       } else {
-        this.importHref("../chimera-table/px-data-grid.html");
+        Polymer.importHref(Polymer.ResolveUrl.resolveUrl('bower_components/chimera-table/px-data-grid.html',''))
       }
     },
 
