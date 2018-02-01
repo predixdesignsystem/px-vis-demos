@@ -94,6 +94,11 @@
       this._drawingListener = this._drawingListen.bind(this);
       this._renderingStarted = this._renderingStarted.bind(this);
       this.set('_isPolymer1', !Polymer.Element);
+      if(this._isPolymer1) {
+        this.importHref("../chimera-table/px-data-table.html");
+      } else {
+        this.importHref("../chimera-table/px-data-grid.html");
+      }
     },
 
     _startFullTS: function() {
