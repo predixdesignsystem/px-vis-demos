@@ -68,9 +68,19 @@
       },
       _status: {
         type: String,
-        computed: '_computeStatus(_currentBenchIndex, contexts, _cleaningUp)'
+        computed: '_computeStatus(_currentBenchIndex, contexts, _cleaningUp, buildingReport, buildingDt)'
       },
       isRunning: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+      buildingReport: {
+        type: Boolean,
+        value: false,
+        notify: true
+      },
+      buildingDt: {
         type: Boolean,
         value: false,
         notify: true
@@ -95,9 +105,9 @@
       this._renderingStarted = this._renderingStarted.bind(this);
       this.set('_isPolymer1', !Polymer.Element);
       if(this._isPolymer1) {
-        Polymer.Base.importHref(Polymer.ResolveUrl.resolveUrl('bower_components/chimera-table/px-data-table.html',''))
+        Polymer.Base.importHref(Polymer.ResolveUrl.resolveUrl('bower_components/chimera-table/px-data-table.html',''));
       } else {
-        Polymer.importHref(Polymer.ResolveUrl.resolveUrl('bower_components/chimera-table/px-data-grid.html',''))
+        Polymer.importHref(Polymer.ResolveUrl.resolveUrl('bower_components/chimera-table/px-data-grid.html',''));
       }
     },
 
@@ -150,9 +160,19 @@
         }.bind(this), timeout);
       } else {
         //DONE
-        this._buildReportData();
-        this.set('hasResults', true);
-        this.set('isRunning', false);
+        window.requestAnimationFrame(function() {
+
+            this._buildReportData();
+            this.set('buildingDt', true);
+
+            window.requestAnimationFrame(function() {
+
+              this.set('buildingDt', false);
+              this.set('isRunning', false);
+              this.set('hasResults', true);
+
+            }.bind(this));
+        }.bind(this));
       }
     },
 
@@ -178,11 +198,13 @@
       if(this._drawingCounter%(this._drawingMultiplier*Number(this._drawingNumberOfCharts)) === 0) {
 
         window.performance.mark('endLoop');
+        this._removeCharts();
 
         this._processPerfTimings();
-        this._endLoop();
 
         console.log('End loop');
+
+        this._scheduleNextLoop();
       }
     },
 
@@ -282,22 +304,16 @@
       chart.removeEventListener('px-vis-chart-canvas-rendering-started', this._renderingStarted);
     },
 
-    _endLoop: function() {
+    _removeCharts: function() {
+      //remove all
+      var myNode = this.$.chartHolder;
+      while (myNode.firstChild) {
+          myNode.removeChild(myNode.firstChild);
+      };
 
-      window.setTimeout(function(){
-
-        //remove all
-        var myNode = this.$.chartHolder;
-        while (myNode.firstChild) {
-            myNode.removeChild(myNode.firstChild);
-        };
-
-        if(!this._currentPerfMeasure.loopInfo.ctx.disableMeasures) {
-          this.perfResult.push(this._currentPerfMeasure);
-        }
-
-        this._scheduleNextLoop();
-      }.bind(this), 100);
+      if(!this._currentPerfMeasure.loopInfo.ctx.disableMeasures) {
+        this.perfResult.push(this._currentPerfMeasure);
+      }
     },
 
     _processPerfTimings: function() {
@@ -339,6 +355,8 @@
           min,
           max,
           val;
+
+      this.set('buildingReport', true);
 
       for(var p=0; p<this.perfResult.length; p++) {
 
@@ -404,6 +422,7 @@
         reportData.push(currentReportData);
       }
 
+      this.set('buildingReport', false);
       this.set('reportData', reportData);
     },
 
@@ -613,13 +632,24 @@
     },
 
     _computeStatus: function() {
+
+      if(this.buildingReport) {
+        return 'Building report from results...';
+      }
+
+      if(this.buildingDt) {
+        return 'Building data table...';
+      }
+
       if(this._cleaningUp) {
-        return 'cleaning up between loops...';
+        return 'Cleaning up before loop ' + this._currentBenchIndex + ' of ' + this.contexts.length + '...';
       }
 
       if(this.contexts && this.contexts.length) {
         return 'Running loop ' + this._currentBenchIndex + ' of ' + this.contexts.length;
       }
+
+      return 'invalid state';
     },
 
     getDatasetSize: function(dataset) {

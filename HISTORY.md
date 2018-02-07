@@ -1,3 +1,7 @@
+v1.4.3
+==================
+* better status reporting for benchmark
+
 v1.4.2
 ==================
 * use importhref for chimera table
