@@ -1,3 +1,7 @@
+v1.4.4
+==================
+* add resolutions in bower for d3
+
 v1.4.3
 ==================
 * better status reporting for benchmark

@@ -1,6 +1,6 @@
 {
   "name": "px-vis-demos",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "main": [
     "px-vis-demos.html"
   ],
@@ -57,7 +57,9 @@
   },
   "resolutions": {
     "webcomponentsjs": "^1.0.0",
-    "promise-polyfill": "^2.0.0"
+    "promise-polyfill": "^2.0.0",
+    "px-d3-imports": "^2.0.0",
+    "pxd3": "^4.7.0"
   },
   "variants": {
     "1.x": {
@@ -66,7 +68,9 @@
         "chimera-table": "PredixDev/px-data-table#^5.1.10"
       },
       "resolutions": {
-        "webcomponentsjs": "^0.7.24"
+        "webcomponentsjs": "^0.7.24",
+        "px-d3-imports": "^2.0.0",
+        "pxd3": "^4.7.0"
       }
     }
   }
