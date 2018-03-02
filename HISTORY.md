@@ -1,3 +1,7 @@
+v1.4.5
+==================
+* Update px-data-grid version
+
 v1.4.4
 ==================
 * add resolutions in bower for d3

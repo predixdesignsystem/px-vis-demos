@@ -1,6 +1,6 @@
 {
   "name": "px-vis-demos",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "main": [
     "px-vis-demos.html"
   ],
@@ -37,7 +37,7 @@
     "iron-list": "^2.0.0",
     "px-demo-data": "^1.0.0",
     "px-modal": "^3.0.0",
-    "chimera-table": "vaadin/px-data-grid#^1.1.0"
+    "chimera-table": "predixdesignsystem/px-data-grid#^1.0.0"
   },
   "devDependencies": {
     "px-theme": "^3.0.0",
