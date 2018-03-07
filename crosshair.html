@@ -64,8 +64,19 @@
                 "horizontalLine": "none"
               }'
               highlighter-config='{
-                "showTooltipData": "true"
+                "showTooltipData": "true",
+                "drawWithLocalCrosshairData": "true"
               }'
+              toolbar-config='{
+                "config": {
+                  "tooltip": {"selected": true},
+                  "advancedZoom": true,
+                  "crosshairLasso": true,
+                  "crosshair": true,
+                  "crosshairFrozen": true
+                }
+              }'
+              hard-mute
               chart-data="[[chartData]]"
               render-to-canvas
               crosshair-data="{{crosshairData}}">
@@ -102,7 +113,18 @@
                 "x": "y0"
               }'
               highlighter-config='{
-                "showTooltipData": "true"
+                "showTooltipData": "true",
+                "drawWithLocalCrosshairData": true
+              }'
+              hard-mute
+              toolbar-config='{
+                "config": {
+                  "tooltip": {"selected": true},
+                  "advancedZoom": true,
+                  "crosshairLasso": true,
+                  "crosshair": true,
+                  "crosshairFrozen": true
+                }
               }'
               chart-data="[[chartData]]"
               complete-series-config="{{completeSeriesConfigXY}}"
@@ -114,7 +136,7 @@
             <px-vis-parallel-coordinates
               id="para"
               chart-data="[[chartData]]"
-              show-tooltip
+
               category-key="category"
               categories='["a","b","c","d"]'
               skip-keys='{"x":true}'
@@ -122,12 +144,25 @@
               match-ticks
               generate-axes-from-data
               highlighter-config='{
-
+                "drawWithLocalCrosshairData": true,
                 "showTooltipData": "true"
               }'
+              show-tooltip
               axis-register-config='{
                 "forceDateTimeDisplay": true
               }'
+              toolbar-config='{
+                "config": {
+                  "tooltip": {"selected": true},
+                  "advancedZoom": true,
+                  "axisMuteSeries": true,
+                  "axisDrag": true,
+                  "crosshairLasso": true,
+                  "crosshair": true,
+                  "crosshairFrozen": true
+                }
+              }'
+              hard-mute
               crosshair-data="{{crosshairData}}">
             </px-vis-parallel-coordinates>
           </div>
@@ -142,12 +177,24 @@
               series-key="timeStamp"
               generate-axes-from-data
               highlighter-config='{
-
+                "drawWithLocalCrosshairData": true,
                 "showTooltipData": "true"
               }'
               axis-register-config='{
                 "forceDateTimeDisplay": true
               }'
+              toolbar-config='{
+                "config": {
+                  "tooltip": {"selected": true},
+                  "advancedZoom": true,
+                  "axisMuteSeries": true,
+                  "axisDrag": true,
+                  "crosshairLasso": true,
+                  "crosshair": true,
+                  "crosshairFrozen": true
+                }
+              }'
+              hard-mute
               crosshair-data="{{crosshairData}}">
             </px-vis-radar>
           </div>
@@ -167,20 +214,24 @@
                 }
               }'
               highlighter-config='{
-
+                "drawWithLocalCrosshairData": true,
                 "showTooltipData": "true"
               }'
               render-to-canvas
               crosshair-data="{{crosshairData}}"
               toolbar-config='{
                 "config": {
-                  "crosshairWithOptions": "true",
-                  "advancedZoom": "true"
-                  }
-                }'
+                  "tooltip": {"selected": true},
+                  "advancedZoom": true,
+                  "crosshairLasso": true,
+                  "crosshair": true,
+                  "crosshairFrozen": true
+                }
+              }'
               register-config='{
                 "forceDateTimeDisplay": true
               }'
+              hard-mute
               time-data="timeStamp">
             </px-vis-polar>
           </div>
@@ -196,158 +247,26 @@
     </dom-bind>
     <script type="text/javascript">
 
-      var timeseries,
-          xy,
-          para,
-          radar,
-          polar,
-          // define toolbar configs for each chart for both a "normal" and a "freeze" state
-          configs = {
-            "timeseries": {
-              config: {
-                // because we are splicing in an on-click listener (which is not standard for toolbar), for each other config item, we need to clear it.
-                advancedZoom: { actionConfig: { click: null, mousemove: null } },
-                pan: { actionConfig: { click: null, mousemove: null } },
-                tooltip: {selected: true, actionConfig: { click: null } },
-                crosshairLasso: { actionConfig: {click: null}},
-                crosshair: {
-                  actionConfig: {
-                  // splice an on-click listener on the chart interaction space which just fires an event we can catch in our app
-                    click: function() {
-                      this.fire("px-freeze-crosshair");
-                    }
-                  }
-                }
-              }
-            },
-            "timeseriesFreeze": {
-              config: {
-                advancedZoom: { actionConfig: { click: null, mousemove: null } },
-                pan: { actionConfig: { click: null, mousemove: null } },
-                tooltip: {selected: true, actionConfig: { click: null } },
-                // When in a frozen state, change the crosshair button into a frozen button
-                frozen: {
-                  tooltipLabel: 'Crosshair Frozen',
-                  icon: 'px-vis:pin',
-                  eventName: "px-unfreeze-crosshair", //when the button is clicked, fire an event for the app to catch
-                  onClickContext: "toolbar",
-                  customButtonStyle: "color: salmon;" //set a custom color so it stands out
-                }
-              }
-            },
-            "xy": {
-              config: {
-                advancedZoom: { actionConfig: { click: null, mousemove: null } },
-                pan: { actionConfig: { click: null, mousemove: null } },
-                tooltip: {selected: true, actionConfig: { click: null } },
-                crosshairLasso: { actionConfig: {click: null}},
-                crosshairWithOptions: {
-                  actionConfig: {
-                    click: function() {
-                      this.fire("px-freeze-crosshair");
-                    }
-                  }
-                }
-              }
-            },
-            "xyFreeze": {
-              config: {
-                advancedZoom: { actionConfig: { click: null, mousemove: null } },
-                pan: { actionConfig: { click: null, mousemove: null } },
-                tooltip: {selected: true, actionConfig: { click: null } },
-                frozen: {
-                  tooltipLabel: 'Crosshair Frozen',
-                  icon: 'px-vis:pin',
-                  eventName: "px-unfreeze-crosshair",
-                  onClickContext: "toolbar",
-                  customButtonStyle: "color: salmon;"
-                }
-              }
-            },
-            "paraRadar": {
-              config: {
-                tooltip: {selected: true, actionConfig: { click: null } },
-                pan: { actionConfig: { click: null, mousemove: null } },
-                axisDrag: { actionConfig: { click: null } },
-                axisMuteSeries: { actionConfig: { click: null } },
-                crosshairLasso: { actionConfig: {click: null}},
-                crosshair: {
-                  actionConfig: {
-                    click: function() {
-                      this.fire("px-freeze-crosshair");
-                    }
-                  }
-                }
-              }
-            },
-            "paraRadarFreeze": {
-              config: {
-                tooltip: {selected: true, actionConfig: { click: null } },
-                axisBrush: { actionConfig: { click: null } },
-                axisDrag: { actionConfig: { click: null } },
-                frozen: {
-                  tooltipLabel: 'Crosshair Frozen',
-                  icon: 'px-vis:pin',
-                  eventName: "px-unfreeze-crosshair",
-                  onClickContext: "toolbar",
-                  customButtonStyle: "color: salmon;"
-                }
-              }
-            },
-            "polar": {
-                "config": {
-                  tooltip: {selected: true, actionConfig: { click: null } },
-                  crosshairLasso: { actionConfig: {click: null}},
-                  crosshairWithOptions: {
-                  actionConfig: {
-                    click: function() {
-                      this.fire("px-freeze-crosshair");
-                    }
-                  }
-                },
-                advancedZoom: { actionConfig: { click: null, mousemove: 'null' } }
-              }
-            },
-            "polarFreeze": {
-              "config": {
-                tooltip: {selected: true, actionConfig: { click: null } },
-                frozen: {
-                  tooltipLabel: 'Crosshair Frozen',
-                  icon: 'px-vis:pin',
-                  eventName: "px-unfreeze-crosshair",
-                  onClickContext: "toolbar",
-                  customButtonStyle: "color: salmon;"
-                },
-                advancedZoom: { actionConfig: { click: null, mousemove: 'null' } }
-              }
-            }
-          };
-
-      // add our listener for our freeze event.
-      document.addEventListener('px-freeze-crosshair', function() {
-
-        // Apply the freeze toolbar configs to freeze the charts
-        timeseries.set("toolbarConfig", configs.timeseriesFreeze);
-        xy.set("toolbarConfig", configs.xyFreeze);
-        para.set("toolbarConfig", configs.paraRadarFreeze);
-        radar.set("toolbarConfig", configs.paraRadarFreeze);
-        polar.set("toolbarConfig", configs.polarFreeze);
-      });
+      var timeseries = document.getElementById('timeseries'),
+          xy = document.getElementById('xy'),
+          para = document.getElementById('para'),
+          radar = document.getElementById('radar'),
+          polar = document.getElementById('polar');
 
       // add listener for our unfreeze event.
       document.addEventListener('px-unfreeze-crosshair', function() {
-        // define an empty dataset to clear our crosshairData
+
         var empty = {
           rawData: [],
           timeStamps: []
         };
 
-        // apply our normal toolbar
-        timeseries.set("toolbarConfig", configs.timeseries);
-        xy.set("toolbarConfig", configs.xy);
-        para.set("toolbarConfig", configs.paraRadar);
-        radar.set("toolbarConfig", configs.paraRadar);
-        polar.set("toolbarConfig", configs.polar);
+        //get in unfrozen mode
+        timeseries.getToolbar().switchConfigItems('crosshairFrozen', 'crosshair');
+        xy.getToolbar().switchConfigItems('crosshairFrozen', 'crosshair');
+        para.getToolbar().switchConfigItems('crosshairFrozen', 'crosshair');
+        radar.getToolbar().switchConfigItems('crosshairFrozen', 'crosshair');
+        polar.getToolbar().switchConfigItems('crosshairFrozen', 'crosshair');
 
         // clear our the crosshairData on all charts
         timeseries.set("crosshairData", empty);
@@ -357,36 +276,15 @@
         polar.set("crosshairData", empty);
       });
 
-      // Set up our toolbar config initially
-      document.addEventListener('WebComponentsReady', function() {
-        setTimeout(function() {
-          timeseries = document.getElementById('timeseries'),
-          xy = document.getElementById('xy'),
-          para = document.getElementById('para'),
-          radar = document.getElementById('radar'),
-          polar = document.getElementById('polar'),
+      document.addEventListener('px-freeze-crosshair', function() {
 
-          timeseries.set("toolbarConfig", configs.timeseries);
-          xy.set("toolbarConfig", configs.xy);
-          para.set("toolbarConfig", configs.paraRadar);
-          radar.set("toolbarConfig", configs.paraRadar);
-          polar.set("toolbarConfig", configs.polar);
-
-          // make sure the origin chart draws the crosshairData
-          timeseries.set("highlighterConfig.drawWithLocalCrosshairData", true);
-          xy.set("highlighterConfig.drawWithLocalCrosshairData", true);
-          para.set("highlighterConfig.drawWithLocalCrosshairData", true);
-          radar.set("highlighterConfig.drawWithLocalCrosshairData", true);
-          polar.set("highlighterConfig.drawWithLocalCrosshairData", true);
-
-          timeseries.set("hardMute", true);
-          xy.set("hardMute", true);
-          para.set("hardMute", true);
-          radar.set("hardMute", true);
-          polar.set("hardMute", true);
-        });
+        //get in frozen mode
+        timeseries.getToolbar().switchConfigItems('crosshair', 'crosshairFrozen');
+        xy.getToolbar().switchConfigItems('crosshair', 'crosshairFrozen');
+        para.getToolbar().switchConfigItems('crosshair', 'crosshairFrozen');
+        radar.getToolbar().switchConfigItems('crosshair', 'crosshairFrozen');
+        polar.getToolbar().switchConfigItems('crosshair', 'crosshairFrozen');
       });
-
 
       (function() {
         'use strict';
