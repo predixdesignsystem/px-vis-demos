@@ -836,6 +836,7 @@
       }};
 
       chart.hideRegister = this._chartOptions.hideRegister;
+      chart.showGaps = this._chartOptions.showGaps;
 
       if(this._chartOptions.includeChartExtents) {
         chart.chartExtents = extents;
@@ -1057,6 +1058,8 @@
       }
 
       chart.hideRegister = this._chartOptions.hideRegister;
+      chart.showGaps = this._chartOptions.showGaps;
+
       chart.registerConfig = {
         'forceDateTimeDisplay': 'true',
         'width': 250
