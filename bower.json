@@ -73,5 +73,6 @@
         "pxd3": "^4.7.0"
       }
     }
-  }
+  },
+  "license": "BSD-3-Clause"
 }
