@@ -257,14 +257,14 @@
               chart.stripeData['algorithmic'] = [];
             }
 
-            // for(var i = 0; i < 10; i++) {
-            //   var dataIndex = Math.floor(Math.random() * length),
-            //       len = chart.stripeData.algorithmic.length,
-            //       ts1 = data[dataIndex]['timeStamp'],
-            //       ts2 = dataIndex + 5 < length ? data[dataIndex + 5]['timeStamp'] : data[length - 1]['timeStamp'];
+            for(var i = 0; i < 10; i++) {
+              var dataIndex = Math.floor(Math.random() * length),
+                  len = chart.stripeData.algorithmic.length,
+                  ts1 = data[dataIndex]['timeStamp'],
+                  ts2 = dataIndex + 5 < length ? data[dataIndex + 5]['timeStamp'] : data[length - 1]['timeStamp'];
 
-            //   chart.splice('stripeData.algorithmic', len, 0, [ts1, ts2]);
-            // }
+              chart.splice('stripeData.algorithmic', len, 0, [ts1, ts2]);
+            }
 
             // add a single vector
             var dataIndex = Math.floor(Math.random() * length),
