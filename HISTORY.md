@@ -1,3 +1,7 @@
+v2.0.0
+==================
+* Updated versions for all charts
+
 v1.4.5
 ==================
 * Update px-data-grid version
