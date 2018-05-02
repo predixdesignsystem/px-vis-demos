@@ -1,3 +1,7 @@
+v1.5.0
+==================
+* use new major version of charts
+
 v1.4.5
 ==================
 * Update px-data-grid version
