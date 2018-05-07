@@ -1,3 +1,7 @@
+v1.5.1
+==================
+* Update demo
+
 v1.5.0
 ==================
 * use new major version of charts
