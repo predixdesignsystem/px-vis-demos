@@ -32,8 +32,7 @@ limitations under the License.
       <style include="px-theme-styles" is="custom-style"></style>
     </custom-style>
 
-    <link rel="import" href="px-vis-demos-ts-split-x.html" defer />
-    <link rel="import" href="../iron-ajax/iron-ajax.html" defer />
+    <link rel="import" href="px-vis-demos-split-x-module.html" defer>
 
     <link rel="import" href="css/px-vis-demos-styles.html" defer>
     <custom-style>
@@ -42,31 +41,7 @@ limitations under the License.
   </head>
 
   <body style="padding:30px; ">
-    <dom-bind>
-      <template is="dom-bind">
-
-        <iron-ajax
-          id="random1"
-          url="../px-demo-data/demo-data/random/d4x1000.json"
-          handle-as="json"
-          last-response="{{chartData}}"
-          auto>
-        </iron-ajax>
-        <px-vis-demos-ts-split-x
-          chart-data="[[chartData]]"
-          series-config='{
-            "y0":{"y":"y0"},
-            "y1":{"y":"y1"},
-            "y2":{"y":"y2"},
-            "y3":{"y":"y3"}
-          }'
-          default-series-config='{
-            "type": "line",
-            "x": "timeStamp"
-          }'>
-        </px-vis-demos-ts-split-x>
-      </template>
-    </dom-bind>
+    <px-vis-demos-split-x-module></px-vis-demos-split-x-module>
 
     <script type="text/javascript">
 

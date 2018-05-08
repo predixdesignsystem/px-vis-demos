@@ -72,55 +72,12 @@ limitations under the License.
           <style include="px-theme-styles" is="custom-style"></style>
         </custom-style>
 
-        <link rel="import" href="px-vis-iron-list.html" />
-        <link rel="import" href="../iron-ajax/iron-ajax.html" />
+        <link rel="import" href="px-vis-demos-iron-list-module.html" />
 
     </head>
 
     <body style="padding:30px; ">
-      <h1>Create 70 random charts with all different datasets</h1>
-      <p id="text">Wainting for data to load...</p>
-      <button hidden id="btnStart">Generate list</button>
-
-      <iron-ajax
-        id="randomData"
-        url="70_4k.json"
-        handle-as="json">
-      </iron-ajax>
-      <px-vis-iron-list id="list"></px-vis-iron-list>
-    <script>
-
-      var run = function() {
-       // document.getElementById('template').render();
-
-        var ironAjax = document.getElementById('randomData'),
-            list = document.getElementById('list'),
-            text = document.getElementById('text'),
-            btn = document.getElementById('btnStart');
-
-        ironAjax.addEventListener('last-response-changed', function(evt) {
-          text.hidden = true;
-          btn.hidden = false;
-        });
-
-        btn.addEventListener('click', function() {
-          if(!list.data) {
-            list.set('data', ironAjax.lastResponse);
-            btn.hidden = true;
-          }
-        });
-
-        ironAjax.generateRequest();
-      };
-
-      if(window.WebComponents && window.WebComponents.ready) {
-        run();
-      } else {
-        window.addEventListener('WebComponentsReady', run);
-      }
-
-
-    </script>
+      <px-vis-demos-iron-list-module></px-vis-demos-iron-list-module>
   </body>
 
 </html>
