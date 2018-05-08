@@ -61,28 +61,28 @@ benchmarking chart drawings
       <span>[[_status]]</span>
     </template>
     <iron-ajax
-      url="[[dataRootPath]]4x1k.json"
+      url="[[importPath]][[dataRootPath]]4x1k.json"
       handle-as="json"
       auto
       last-response="{{data4x1k}}"
       >
     </iron-ajax>
     <iron-ajax
-      url="[[dataRootPath]]4x10k.json"
+      url="[[importPath]][[dataRootPath]]4x10k.json"
       handle-as="json"
       auto
       last-response="{{data4x10k}}"
       >
     </iron-ajax>
     <iron-ajax
-      url="[[dataRootPath]]40x1k.json"
+      url="[[importPath]][[dataRootPath]]40x1k.json"
       handle-as="json"
       auto
       last-response="{{data40x1k}}"
       >
     </iron-ajax>
     <iron-ajax
-      url="[[dataRootPath]]40x10k.json"
+      url="[[importPath]][[dataRootPath]]40x10k.json"
       handle-as="json"
       auto
       last-response="{{data40x10k}}"

@@ -41,8 +41,8 @@ limitations under the License.
     Polymer({
       is: 'px-vis-demos-dynamic-add-module',
       attached: function() {
-        var tipsList = Polymer.dom(this).querySelector('#tipsList'),
-            btnPerf = Polymer.dom(this).querySelector('#btnPerf');
+        var tipsList = this.$.tipsList,
+            btnPerf = this.$.btnPerf;
 
         btnPerf.addEventListener('click', function() {
           tipsList.hidden = !tipsList.hidden;

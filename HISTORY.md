@@ -1,3 +1,7 @@
+v1.6.1
+==================
+* misc fixes
+
 v1.6.0
 ==================
 * turn demos into dom-modules

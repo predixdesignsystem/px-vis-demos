@@ -241,7 +241,7 @@ REPLACE THIS TEXT WITH A COMPONENT DESCRIPTION
 
     <iron-ajax
       id="random1"
-      url="../px-demo-data/demo-data/random/d4x1000.json"
+      url="[[importPath]]../px-demo-data/demo-data/random/d4x1000.json"
       handle-as="json"
       last-response="{{chartData}}"
       auto>
@@ -249,5 +249,5 @@ REPLACE THIS TEXT WITH A COMPONENT DESCRIPTION
 
 
   </template>
+  <script src="dist/px-vis-demos-annotation.js"></script>
 </dom-module>
-<script src="dist/px-vis-demos-annotation.js" type="type/javascript"></script>
