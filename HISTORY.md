@@ -1,3 +1,7 @@
+v1.6.2
+==================
+* Add options to timeseries lasso
+
 v1.6.1
 ==================
 * misc fixes
