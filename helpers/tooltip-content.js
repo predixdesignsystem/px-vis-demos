@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright (c) 2018, General Electric
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +12,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
--->
-
-<link rel="import" href="../../polymer/polymer.html"/>
-<link rel="import" href="../css/tooltip-content-styles.html">
-
-<!--
+*/
+/**
 
 ### Usage
 
@@ -29,10 +25,19 @@ limitations under the License.
 @homepage index.html
 @demo demo/index.html
 
--->
+*/
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+import '@polymer/polymer/polymer-legacy.js';
 
-<dom-module id="tooltip-content">
-  <template>
+import '../css/tooltip-content-styles.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+Polymer({
+  _template: html`
     <style include="tooltip-content-styles"></style>
 
     <div style="pointer-events:all">
@@ -41,10 +46,7 @@ limitations under the License.
       </template>
       <template id="templateEdit" is="dom-if" if="[[editMode]]">
         <!-- don't put closing tag on next line or textarea gets empty spaces -->
-        <textarea
-          id="ttEditText"
-          value="{{annotationMessage::input}}"
-          style="width: 380px; height:100px"></textarea>
+        <textarea id="ttEditText" value="{{annotationMessage::input}}" style="width: 380px; height:100px"></textarea>
         <div style="display: flex; flex-direction:row-reverse">
           <button id="ttOk" class="btn btn--call-to-action u-ml-" on-click="_saveEdit">Save</button>
           <button id="ttDelete" class="btn" on-click="_deleteEdit">Delete</button>
@@ -52,50 +54,44 @@ limitations under the License.
         </div>
       </template>
     </div>
-  </template>
-</dom-module>
+`,
 
-<script>
-  Polymer({
+  is: 'tooltip-content',
 
-    is: 'tooltip-content',
-
-
-    /**
-     * Properties block, expose attribute values to the DOM via 'reflect'
-     *
-     * @property properties
-     * @type Object
-     */
-    properties: {
-      annotationMessage: {
-        type: String,
-        value: ''
-      },
-
-      editMode: {
-        type: Boolean,
-        value: false
-      }
-
-    }, //properties
-
-    _saveEdit: function(evt) {
-      this.fire('tooltip-content-save');
+  /**
+   * Properties block, expose attribute values to the DOM via 'reflect'
+   *
+   * @property properties
+   * @type Object
+   */
+  //properties
+  properties: {
+    annotationMessage: {
+      type: String,
+      value: ''
     },
 
-    _cancelEdit: function(evt) {
-      this.fire('tooltip-content-cancel');
-    },
-
-    _deleteEdit: function(evt) {
-      this.fire('tooltip-content-delete');
-    },
-
-    forceTemplateRender: function() {
-      this.$.templateEdit.render();
-      this.$.templateView.render();
+    editMode: {
+      type: Boolean,
+      value: false
     }
 
-  });
-</script>
+  },
+
+  _saveEdit: function(evt) {
+    this.fire('tooltip-content-save');
+  },
+
+  _cancelEdit: function(evt) {
+    this.fire('tooltip-content-cancel');
+  },
+
+  _deleteEdit: function(evt) {
+    this.fire('tooltip-content-delete');
+  },
+
+  forceTemplateRender: function() {
+    this.$.templateEdit.render();
+    this.$.templateView.render();
+  }
+});

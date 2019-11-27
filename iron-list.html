@@ -24,60 +24,80 @@ limitations under the License.
         <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
         <!--<script src="../webcomponentsjs/webcomponents-lite.js"></script>-->
         <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
-        <script type="text/javascript">
+        <script type="module">
+import 'px-theme/px-theme-styles.js';
+import './px-vis-demos-iron-list-module.js';
+window.WebComponents = window.WebComponents || {};
+var onload = function() {
+  // Ensure `WebComponentsReady` is fired also when there are no polyfills loaded.
+  // however, we have to wait for the document to be in 'interactive' state,
+  // otherwise a rAF may fire before scripts in <body>
 
-        (function() {
-          'use strict';
-          window.WebComponents = window.WebComponents || {};
-          var onload = function() {
-            // Ensure `WebComponentsReady` is fired also when there are no polyfills loaded.
-            // however, we have to wait for the document to be in 'interactive' state,
-            // otherwise a rAF may fire before scripts in <body>
+  var fire = function() {
+    requestAnimationFrame(function() {
+      window.WebComponents.ready = true;
+      document.dispatchEvent(new CustomEvent('WebComponentsReady', {bubbles: true}));
+    });
+  };
 
-            var fire = function() {
-              requestAnimationFrame(function() {
-                window.WebComponents.ready = true;
-                document.dispatchEvent(new CustomEvent('WebComponentsReady', {bubbles: true}));
-              });
-            };
+  if (document.readyState !== 'loading') {
+    fire();
+  } else {
+    document.addEventListener('readystatechange', function wait() {
+      fire();
+      document.removeEventListener('readystatechange', wait);
+    });
+  }
+};
 
-            if (document.readyState !== 'loading') {
-              fire();
-            } else {
-              document.addEventListener('readystatechange', function wait() {
-                fire();
-                document.removeEventListener('readystatechange', wait);
-              });
-            }
-          };
+var webComponentsSupported = (
+  'registerElement' in document && 'import' in document.createElement('link') && 'content' in document.createElement('template')
+);
 
-          var webComponentsSupported = (
-            'registerElement' in document && 'import' in document.createElement('link') && 'content' in document.createElement('template')
-          );
-
-          if (!webComponentsSupported) {
-            var script = document.createElement('script');
-            script.async = true;
-            script.src = '../webcomponentsjs/webcomponents-lite.js';
-            script.onload = onload;
-            document.head.appendChild(script);
-          } else {
-            onload();
-          }
-        })();
-        </script>
-        <link rel="import" href="../px-theme/px-theme-styles.html" >
+if (!webComponentsSupported) {
+  var script = document.createElement('script');
+  script.async = true;
+  script.src = '../webcomponentsjs/webcomponents-lite.js';
+  script.onload = onload;
+  document.head.appendChild(script);
+} else {
+  onload();
+}
+</script>
+        <script type="module" src="../px-theme/px-theme-styles.js"></script>
         <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
-        <custom-style>
-          <style include="px-theme-styles" is="custom-style"></style>
-        </custom-style>
+        <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
 
-        <link rel="import" href="px-vis-demos-iron-list-module.html" />
+$_documentContainer.innerHTML = `<custom-style>
+          <style include="px-theme-styles" is="custom-style"></style>
+        </custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
+
+        <script type="module">
+const $_documentContainer = document.createElement('template');
+$_documentContainer.innerHTML = `<link rel="import" href="px-vis-demos-iron-list-module.html">`;
+document.body.appendChild($_documentContainer.content);
+</script></script>
 
     </head>
 
     <body style="padding:30px; ">
-      <px-vis-demos-iron-list-module></px-vis-demos-iron-list-module>
+      <script type="module">
+const $_documentContainer = document.createElement('template');
+$_documentContainer.innerHTML = `<px-vis-demos-iron-list-module></px-vis-demos-iron-list-module>`;
+document.body.appendChild($_documentContainer.content);
+</script>
   </body>
 
 </html>

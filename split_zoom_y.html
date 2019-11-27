@@ -24,51 +24,81 @@ limitations under the License.
     <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
     <!--<script src="../webcomponentsjs/webcomponents-lite.js"></script>-->
     <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
-    <link rel="import" href="../px-theme/px-theme-styles.html" defer>
+    <script type="module" src="../px-theme/px-theme-styles.js"></script>
     <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
-    <custom-style>
+    <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<custom-style>
       <style include="px-theme-styles" is="custom-style"></style>
-    </custom-style>
+    </custom-style>`;
 
-    <link rel="import" href="px-vis-demos-split-y-module.html" defer />
+document.body.appendChild($_documentContainer.content);
+</script>
 
-    <link rel="import" href="css/px-vis-demos-styles.html" defer>
-    <style include="px-vis-demos-styles" is="custom-style"></style>
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+$_documentContainer.innerHTML = `<link rel="import" href="px-vis-demos-split-y-module.html" defer="">`;
+document.body.appendChild($_documentContainer.content);
+</script>pt>
+
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+$_documentContainer.innerHTML = `<link rel="import" href="css/px-vis-demos-styles.html" defer="">`;
+document.body.appendChild($_documentContainer.content);
+</script>ript>
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+$_documentContainer.innerHTML = `<style include="px-vis-demos-styles" is="custom-style"></style>`;
+document.body.appendChild($_documentContainer.content);
+</script>
 
   </head>
 
   <body style="padding:30px; ">
-    <px-vis-demos-split-y-module></px-vis-demos-split-y-module>
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+$_documentContainer.innerHTML = `<px-vis-demos-split-y-module></px-vis-demos-split-y-module>`;
+document.body.appendChild($_documentContainer.content);
+</script>
 
-    <script type="text/javascript">
-      (function() {
-        'use strict';
+    <script type="module">
+import 'px-theme/px-theme-styles.js';
+import './px-vis-demos-split-y-module.js';
+import './css/px-vis-demos-styles.js';
 
-        var onload = function() {
-          // For native Imports, manually fire WebComponentsReady so user code
-          // can use the same code path for native and polyfill'd imports.
-          if (!window.HTMLImports) {
-            document.dispatchEvent(
-              new CustomEvent('WebComponentsReady', {bubbles: true})
-            );
-          }
-        };
+var onload = function() {
+  // For native Imports, manually fire WebComponentsReady so user code
+  // can use the same code path for native and polyfill'd imports.
+  if (!window.HTMLImports) {
+    document.dispatchEvent(
+      new CustomEvent('WebComponentsReady', {bubbles: true})
+    );
+  }
+};
 
-        var webComponentsSupported = (
-          'registerElement' in document && 'import' in document.createElement('link') && 'content' in document.createElement('template')
-        );
+var webComponentsSupported = (
+  'registerElement' in document && 'import' in document.createElement('link') && 'content' in document.createElement('template')
+);
 
-        if (!webComponentsSupported) {
-          var script = document.createElement('script');
-          script.async = true;
-          script.src = '../webcomponentsjs/webcomponents-lite.js';
-          script.onload = onload;
-          document.head.appendChild(script);
-        } else {
-          onload();
-        }
-      })();
-    </script>
+if (!webComponentsSupported) {
+  var script = document.createElement('script');
+  script.async = true;
+  script.src = '../webcomponentsjs/webcomponents-lite.js';
+  script.onload = onload;
+  document.head.appendChild(script);
+} else {
+  onload();
+}
+</script>
   </body>
 
 </html>

@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright (c) 2018, General Electric
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,17 +12,23 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
--->
+*/
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+import '@polymer/polymer/polymer-legacy.js';
 
-<link rel="import" href="../polymer/polymer.html" />
-<link rel="import" href="px-vis-demos-dynamic-add.html" defer />
-<link rel="import" href="../iron-ajax/iron-ajax.html" defer />
-
-<dom-module id="px-vis-demos-dynamic-add-module">
-  <template>
+import './px-vis-demos-dynamic-add.js';
+import '@polymer/iron-ajax/iron-ajax.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+Polymer({
+  _template: html`
     <h1>Add charts dynamically</h1>
     <p>This page aims at helping benchmarking dynamically adding charts as well as making sure we don't introduce performance breaking changes. Look in the console for timing results for each batch of charts you've added <button id="btnPerf" style="background-color: salmon" class="btn">Click me for vis performance tips!</button></p>
-    <ul id="tipsList" hidden>
+    <ul id="tipsList" hidden="">
       <li><strong>progressive rendering</strong> now can be customized through progressiveRenderingPointsPerFrame (16000 by default for lines, 2000 byy default for scatter) and progressiveRenderingMinimumFrames. Increase progressiveRenderingPointsPerFrame for better performance and decrease for smoother drawing. When at the right value no performance cost incurs and drawing is smooth but if value is too small can incur a performance cost (i.e the drawing will take longer but will still start at the same time, also the UI won't be frozen)</li>
       <li>progressive rendering is great for big dataset, it can incur a very small performance costs for smaller one. This is usually offseted by the fact that the UI doesn't freeze</li>
       <li>scatter exacerbate perfomance issue, i.e big dataset on svg scatter can be very slow. This is <strong>always</strong> true on IE. Always use <strong>canvas</strong> rendering on IE for scatter. Preferably with progressive rendering</li>
@@ -36,18 +42,16 @@ limitations under the License.
       <li><strong>Disable web worker synchronization</strong> if you don't need it. Having it enabled means the chart will synchronize its data with the webworker, which will force the main thread to copy the data over which can be very slow for large dataset. More info: https://www.predix-ui.com/#/develop/vis/web-workers</li>
     </ul>
     <px-vis-demos-dynamic-add></px-vis-demos-dynamic-add>
-  </template>
-  <script>
-    Polymer({
-      is: 'px-vis-demos-dynamic-add-module',
-      attached: function() {
-        var tipsList = this.$.tipsList,
-            btnPerf = this.$.btnPerf;
+`,
 
-        btnPerf.addEventListener('click', function() {
-          tipsList.hidden = !tipsList.hidden;
-        });
-      }
+  is: 'px-vis-demos-dynamic-add-module',
+
+  attached: function() {
+    var tipsList = this.$.tipsList,
+        btnPerf = this.$.btnPerf;
+
+    btnPerf.addEventListener('click', function() {
+      tipsList.hidden = !tipsList.hidden;
     });
-  </script>
-</dom-module>
+  }
+});

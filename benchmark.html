@@ -24,23 +24,41 @@ limitations under the License.
       <!-- Requires Webcomponents.js polyfill is provided by the page for browsers that don't support html imports -->
       <!-- <script>window.ShadyDOM = { force: true };ShadyCSS = { shimcssproperties: true};</script>
       <script src="../webcomponentsjs/webcomponents-hi-sd-ce.js"></script> -->
-      <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+      <script src="../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
       <!-- Import custom element. Note: see comment about relative paths to dependencies in the *.html file referenced below -->
-      <link rel="import" href="../promise-polyfill/promise-polyfill-lite.html">
+      <script type="module" src="../@polymer/promise-polyfill/promise-polyfill-lite.js"></script>
       <!-- <link rel="import" href="../promise-polyfill/promise.js"/> -->
-      <link rel="import" href="../px-theme/px-theme-styles.html" defer>
+      <script type="module" src="../px-theme/px-theme-styles.js"></script>
       <!-- <link rel="import" href="../px-dark-theme/px-dark-theme-styles.html"> -->
-      <link rel="import" href="px-vis-benchmark.html" defer>
-      <link rel="import" href="css/px-vis-demos-styles.html" defer>
-      <custom-style>
+      <script type="module" src="./px-vis-benchmark.js"></script>
+      <script type="module" src="./css/px-vis-demos-styles.js"></script>
+      <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<custom-style>
         <style include="px-theme-styles" is="custom-style"></style>
         <style include="px-vis-demos-styles" is="custom-style"></style>
-      </custom-style>
+      </custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
 
   </head>
 
   <body style="padding:30px; ">
-    <px-vis-benchmark></px-vis-benchmark>
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+$_documentContainer.innerHTML = `<px-vis-benchmark></px-vis-benchmark>`;
+document.body.appendChild($_documentContainer.content);
+</script>
   </body>
 
 </html>
